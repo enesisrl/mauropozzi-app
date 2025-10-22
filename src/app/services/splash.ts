@@ -23,9 +23,7 @@ export class Splash {
   }
 
   onSplashComplete(): void {
-    console.log('completed');
     this.markSplashAsShown();
-    
     this.router.navigate(['/home'], { replaceUrl: true });
   }
 }

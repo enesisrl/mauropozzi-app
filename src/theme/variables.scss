@@ -1,2 +1,9 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+
+:root {
+  --primary-color: #BD1921;
+  --primary-color-darken: darken(#BD1921, 5%);
+  --secondary-color: #000000;
+  --brand-gradient: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+}

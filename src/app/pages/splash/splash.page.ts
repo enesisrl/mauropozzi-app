@@ -19,7 +19,7 @@ export class SplashPage implements OnInit {
 
   private async showSplash() {
     if(this.splashService.shouldShowSplash()) {
-      await this.delay(3000);
+      await this.delay(1500);
     }
     this.splashService.onSplashComplete();
   }

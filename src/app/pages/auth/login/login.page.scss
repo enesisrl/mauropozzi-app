@@ -1,0 +1,115 @@
+.login-page-container {
+    --background: linear-gradient(to bottom, var(--primary-color), #000000);
+    min-height: 100vh;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+        height: 100vh;
+        padding: 70px 15px;
+        background-image: url(/assets/images/bg-mauro.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-attachment: fixed;
+
+        .form {
+            width: 100%;
+
+            .logo-container {
+                margin-bottom: 58px;
+
+                .logo {
+                    width: 110px;
+                    height: 185px;
+                }
+            }
+            .intro {
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 800;
+                font-style: italic;
+                font-size: 20px;
+                line-height: 100%;
+                letter-spacing: 0%;
+                text-align: center;
+                color: white;
+            }
+            .input {
+                margin: 14px 0 0;
+                --background: #FFFDFD99;
+                --color: #555555;
+                --placeholder-color: #555555;
+                --placeholder-opacity: 0.8;
+                --border-radius: 8px;
+                --padding-bottom: 15px;
+                --padding-end: 15px;
+                --padding-start: 15px;
+                --padding-top: 15px;
+                text-align: left;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 30px;
+
+                --highlight-color: transparent;
+                --highlight-color-focused: transparent;
+                --highlight-color-valid: transparent;
+                --highlight-color-invalid: transparent;
+            }
+            .button {
+                --background: var(--primary-color);
+                --background-hover: var(--primary-color-darken);
+                --background-activated: var(--primary-color-darken);
+                --background-focused: var(--primary-color-darken);
+                --border-radius: 8px;
+                --color: #FFF;
+                --padding-top: 15px;
+                --padding-bottom: 14px;
+                font-family: 'Roboto Condensed', sans-serif;
+                font-size: 21px;
+                font-weight: 700;
+                line-height: 30px;
+                margin: 14px 0 0;
+                text-align: center;
+                width: 100%;
+                --box-shadow: none;
+            }
+        }
+
+        .recovery {
+            width: 100%;
+
+            .title {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 500;
+                font-size: 16px;
+                text-align: center;
+                color: #FFFFFF;
+            }
+            .link {
+                color: var(--primary-color);
+                font-family: 'Roboto', sans-serif;
+                font-weight: 500;
+                font-style: Medium;
+                font-size: 16px;
+                text-align: center;
+                text-decoration: underline;
+                cursor: pointer; 
+
+                &:hover {
+                    opacity: 0.8;
+                }
+                &:active {
+                    opacity: 0.6;
+                }
+                &:focus {
+                    outline: none;
+                    text-shadow: 0 0 3px var(--primary-color);
+                }
+            }
+        }
+    }
+}

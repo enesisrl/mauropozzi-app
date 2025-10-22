@@ -1,38 +1,20 @@
-<ion-content>
-  <div style="padding: 40px; text-align: center;">
-    <h1>Login</h1>
-    
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input 
-        type="email" 
-        [(ngModel)]="email"
-        placeholder="Inserisci email">
-      </ion-input>
-    </ion-item>
-    
-    <ion-item>
-      <ion-label position="floating">Password</ion-label>
-      <ion-input 
-        type="password" 
-        [(ngModel)]="password"
-        placeholder="Inserisci password">
-      </ion-input>
-    </ion-item>
-    
-    <ion-button 
-      expand="block" 
-      (click)="login()" 
-      style="margin-top: 20px;">
-      Accedi
-    </ion-button>
-    
-    <ion-button 
-      expand="block" 
-      fill="outline" 
-      (click)="quickLogin()" 
-      style="margin-top: 10px;">
-      Quick Login (Test)
-    </ion-button>
+<ion-content class="login-page-container" fullscreen>
+  <div class="content">
+    <div class="form">
+      <div class="logo-container">  
+        <img src="assets/images/logo-vertical.svg" alt="Mauro Pozzi Fitness Coach" class="logo">
+      </div>
+      
+      <div class="intro">Entra in Mauro Pozzi<br>Fitness Coach!</div>
+
+      <ion-input class="input" type="email" [(ngModel)]="email" placeholder="Username"></ion-input>
+      <ion-input class="input" type="password" [(ngModel)]="password" placeholder="Password"></ion-input>
+      
+      <ion-button class="button" expand="block" (click)="login()">Entra</ion-button>
+    </div>
+    <div class="recovery">
+      <div class="title">Password dimenticata?</div>
+      <a (click)="openPasswordRecovery()" class="link">Clicca qui per recuperarla</a>
+    </div>
   </div>
 </ion-content>

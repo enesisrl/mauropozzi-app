@@ -12,6 +12,8 @@ import {
 import { Auth } from '../../../services/auth';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AppConfig } from '../../../config/app.config';
+import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-login',
@@ -39,6 +41,10 @@ export class LoginPage {
     private router: Router
   ) {}
 
+  async openExternalLink(url: string) {
+    await Browser.open({ url: url });
+  }
+
   login() {
     console.log('Login tentativo con:', this.email, this.password);
     
@@ -50,9 +56,7 @@ export class LoginPage {
   }
 
   // Metodo rapido per testare
-  quickLogin() {
-    this.email = 'test@test.com';
-    this.password = 'password';
-    this.login();
+  openPasswordRecovery() {
+    this.openExternalLink(AppConfig.urls.passwordRecovery);
   }
 }
