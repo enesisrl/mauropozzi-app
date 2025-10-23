@@ -7,10 +7,13 @@
       
       <div class="intro">Entra in Mauro Pozzi<br>Fitness Coach!</div>
 
-      <ion-input class="input" type="email" [(ngModel)]="email" placeholder="Username"></ion-input>
+      <ion-input class="input" type="email" [(ngModel)]="email" placeholder="E-mail"></ion-input>
       <ion-input class="input" type="password" [(ngModel)]="password" placeholder="Password"></ion-input>
       
-      <ion-button class="button" expand="block" (click)="login()">Entra</ion-button>
+      <ion-button class="button" expand="block" (click)="login()" [disabled]="isLoading">
+        <ion-spinner *ngIf="isLoading" name="crescent" slot="start"></ion-spinner>
+        {{ isLoading ? 'Attendi...' : 'Entra' }}
+      </ion-button>
     </div>
     <div class="recovery">
       <div class="title">Password dimenticata?</div>
