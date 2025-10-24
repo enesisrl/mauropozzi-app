@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { AppConfig } from '../config/app.config';
+import { environment } from '../../environments/environment';
 
 export interface User {
   id: string;
@@ -68,7 +68,7 @@ export class Auth {
 
   login(email: string, password: string): Observable<LoginResponse> {
     const loginData: LoginRequest = { email, password };
-    const url = `${AppConfig.api.baseUrl}${AppConfig.api.endpoints.login}`;
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.login}`;
     
     return this.http.post<LoginResponse>(url, loginData).pipe(
       tap(response => {
@@ -83,7 +83,7 @@ export class Auth {
   }
 
   loadProfile(): Observable<ProfileResponse> {
-    const url = `${AppConfig.api.baseUrl}${AppConfig.api.endpoints.profile}`;
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.profile}`;
     return this.http.post<ProfileResponse>(url, {}, { headers: this.getAuthHeaders() }).pipe(
       tap(response => {
         if (response.success) {

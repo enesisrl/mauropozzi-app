@@ -2,8 +2,6 @@
 // http://ionicframework.com/docs/theming/
 
 :root {
-  --primary-color: #BD1921;
-  --primary-color-darken: darken(#BD1921, 5%);
-  --secondary-color: #000000;
-  --brand-gradient: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+  --ion-color-primary: #BD1921;
+  --ion-color-primary-shade: darken(#BD1921, 5%);
 }

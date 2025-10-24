@@ -1,0 +1,33 @@
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: var(--ion-color-primary);
+
+    .header-logo {
+        width: 61px;
+        height: 61px;
+    }
+    .header-content {
+        flex: 1 1 auto;
+        padding: 0 15px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 18px;
+        text-align: center;
+        color: #FFF;
+    }
+    .header-profile {
+        cursor: pointer;
+        position: relative;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #000;
+        opacity: 0.4;
+
+        img {
+            width: 61px;
+            height: 61px;
+        }
+    }
+}

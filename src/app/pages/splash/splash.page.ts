@@ -40,7 +40,7 @@ export class SplashPage implements OnInit {
       ]);
 
       if (response?.success) {
-        this.router.navigate(['/home'], { replaceUrl: true });
+        this.router.navigate(['/main/home'], { replaceUrl: true });
       } else {
         this.auth.logout();
         this.router.navigate(['/login'], { replaceUrl: true });

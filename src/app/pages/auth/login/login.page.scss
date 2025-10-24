@@ -1,5 +1,5 @@
 .login-page-container {
-    --background: linear-gradient(to bottom, var(--primary-color), #000000);
+    --background: linear-gradient(to bottom, var(--ion-color-primary), #000000);
     min-height: 100vh;
 
     .content {
@@ -60,10 +60,10 @@
                 --highlight-color-invalid: transparent;
             }
             .button {
-                --background: var(--primary-color);
-                --background-hover: var(--primary-color-darken);
-                --background-activated: var(--primary-color-darken);
-                --background-focused: var(--primary-color-darken);
+                --background: var(--ion-color-primary);
+                --background-hover: var(--ion-color-primary-shade);
+                --background-activated: var(--ion-color-primary-shade);
+                --background-focused: var(--ion-color-primary-shade);
                 --border-radius: 8px;
                 --color: #FFF;
                 --padding-top: 15px;
@@ -90,7 +90,7 @@
                 color: #FFFFFF;
             }
             .link {
-                color: var(--primary-color);
+                color: var(--ion-color-primary);
                 font-family: 'Roboto', sans-serif;
                 font-weight: 500;
                 font-style: Medium;
@@ -107,7 +107,7 @@
                 }
                 &:focus {
                     outline: none;
-                    text-shadow: 0 0 3px var(--primary-color);
+                    text-shadow: 0 0 3px var(--ion-color-primary);
                 }
             }
         }

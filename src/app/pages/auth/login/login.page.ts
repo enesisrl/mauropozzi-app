@@ -15,7 +15,7 @@ import {
 import { Auth } from '../../../services/auth';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AppConfig } from '../../../config/app.config';
+import { environment } from '../../../../environments/environment';
 import { Browser } from '@capacitor/browser';
 
 @Component({
@@ -67,7 +67,7 @@ export class LoginPage {
         this.isLoading = false;
         
         if (response.success) {
-          this.router.navigate(['/home'], { replaceUrl: true });
+          this.router.navigate(['/main/home'], { replaceUrl: true });
         } else {
           this.showAlert('Ops!', response.message || 'Sembra che le tue credenziali non siano corrette, riprova.');
         }
@@ -94,6 +94,6 @@ export class LoginPage {
   }
 
   openPasswordRecovery() {
-    this.openExternalLink(AppConfig.urls.passwordRecovery);
+    this.openExternalLink(environment.urls.passwordRecovery);
   }
 }
