@@ -1,23 +1,15 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { 
-  IonTabs, 
+  IonHeader,
+  IonLabel,
+  IonRippleEffect,
   IonTabBar, 
   IonTabButton, 
-  IonIcon, 
-  IonLabel,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonButtons,
-  IonRippleEffect,
-  IonButton,
-  IonAvatar
+  IonTabs
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { home, person, calendar, barbell, settings, notifications } from 'ionicons/icons';
 import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -27,19 +19,13 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet, 
-    IonTabs,
+    IonHeader,
+    IonLabel,
+    IonRippleEffect,
     IonTabBar, 
     IonTabButton,
-    IonIcon,
-    IonLabel,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonButtons,
-    IonRippleEffect,
-    IonButton,
-    IonAvatar
+    IonTabs,
+    RouterOutlet
   ]
 })
 export class MainPage {

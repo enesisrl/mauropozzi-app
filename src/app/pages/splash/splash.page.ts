@@ -1,8 +1,8 @@
+import { Auth } from '../../services/auth';
 import { Component, OnInit } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { IonContent } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { Auth } from '../../services/auth';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-splash',
