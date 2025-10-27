@@ -1,22 +1,18 @@
-import { Component } from '@angular/core';
 import { 
-  IonHeader, 
-  IonToolbar, 
-  IonTitle, 
-  IonContent,
+  AlertController,
   IonButton,
-  IonItem,
+  IonContent,
   IonInput,
-  IonLabel,
   IonSpinner,
-  LoadingController,
-  AlertController
+  LoadingController
 } from '@ionic/angular/standalone';
 import { Auth } from '../../../services/auth';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { environment } from '../../../../environments/environment';
 import { Browser } from '@capacitor/browser';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -24,16 +20,12 @@ import { Browser } from '@capacitor/browser';
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
+    CommonModule,
+    FormsModule,
     IonButton,
-    IonItem,
+    IonContent,
     IonInput,
-    IonLabel,
-    IonSpinner,
-    FormsModule
+    IonSpinner
   ]
 })
 export class LoginPage {

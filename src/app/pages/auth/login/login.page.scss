@@ -53,6 +53,7 @@
                 font-weight: 400;
                 font-size: 16px;
                 line-height: 30px;
+                min-height: 50px;
 
                 --highlight-color: transparent;
                 --highlight-color-focused: transparent;
@@ -71,11 +72,14 @@
                 font-family: 'Roboto Condensed', sans-serif;
                 font-size: 21px;
                 font-weight: 700;
-                line-height: 30px;
+                line-height: 1;
                 margin: 14px 0 0;
                 text-align: center;
+                letter-spacing: 0;
                 width: 100%;
                 --box-shadow: none;
+                text-transform: uppercase;
+                min-height: 50px;
             }
         }
 
