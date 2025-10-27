@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-workouts',
-  templateUrl: './workouts.page.html',
-  styleUrls: ['./workouts.page.scss'],
+  selector: 'app-calendar',
+  templateUrl: './calendar.page.html',
+  styleUrls: ['./calendar.page.scss'],
   standalone: true,
   imports: [IonContent, CommonModule, FormsModule]
 })
-export class WorkoutsPage implements OnInit {
+export class CalendarPage implements OnInit {
 
   constructor() { }
 

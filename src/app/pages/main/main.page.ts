@@ -7,10 +7,13 @@ import {
   IonTabs
 } from '@ionic/angular/standalone';
 import { Auth } from '../../services/auth';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import { Component, LOCALE_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
+import localeIt from '@angular/common/locales/it';
+
+registerLocaleData(localeIt);
 
 @Component({
   selector: 'app-main',
@@ -19,6 +22,7 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
+    DatePipe,
     IonHeader,
     IonLabel,
     IonRippleEffect,
@@ -26,10 +30,14 @@ import { RouterOutlet } from '@angular/router';
     IonTabButton,
     IonTabs,
     RouterOutlet
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'it-IT' }
   ]
 })
 export class MainPage {
   currentUser: any = null;
+  today = new Date();
 
   constructor(
     private auth: Auth,

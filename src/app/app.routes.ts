@@ -37,6 +37,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/main/tabs/profile/profile.page').then( m => m.ProfilePage)
       },
       {
+        path: 'calendar',
+        loadComponent: () => import('./pages/main/tabs/calendar/calendar.page').then( m => m.CalendarPage)
+      },
+      {
         path: '',
         redirectTo: '/main/home',
         pathMatch: 'full'

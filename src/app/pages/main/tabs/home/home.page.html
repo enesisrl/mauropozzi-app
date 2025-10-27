@@ -1,13 +1,33 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>home</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="home-content">
+  <div class="inner">
+    <div class="calendar-widget">
+      <div 
+          class="item day" 
+          *ngFor="let day of calendarDays"
+          [class.today]="day.isToday"
+          [class.has-workout]="day.hasWorkout"
+          (click)="onDayClick(day)"
+        >
+        <div class="day-name">{{ day.dayName }}</div>
+        <div class="workout">
+          <img width="20" height="20"*ngIf="day.hasWorkout" src="assets/images/icon-checked.svg">
+          <img width="20" height="20"*ngIf="!day.hasWorkout" src="assets/images/icon-unchecked.svg">
+        </div>
+        <div class="day-number">{{ day.dayNumber }}</div>
+      </div>
+      <div class="item expand ion-activatable ripple-parent" (click)="openCalendar()">
+        <ion-ripple-effect></ion-ripple-effect>
+        <img width="35" height="40" src="assets/images/icon-calendar-black.svg">
+      </div>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <div class="workout">
+      <div class="title">Prossimo allenamento</div>
+
+      <div class="list">
+        
+      </div>
+    </div>
+
+  </div>
 </ion-content>

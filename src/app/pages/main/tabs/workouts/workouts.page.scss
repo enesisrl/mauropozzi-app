@@ -1,0 +1,17 @@
+ion-content {
+  --background: transparent;
+}
+
+.content-area {
+  padding: 20px;
+  color: white;
+  
+  h1 {
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}

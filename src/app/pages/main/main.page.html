@@ -1,37 +1,42 @@
-<ion-tabs>
+<ion-tabs class="main-page-container" fullscreen>
   <ion-header class="header">
       <img src="assets/images/logo-icon.svg" alt="Mauro Pozzi" class="header-logo">
 
       <div class="header-content">
-        Ciao {{ currentUser?.name || '' }}!<br>
-        <!-- {{ date:'fullDate' }} -->
+        <span>Ciao {{ currentUser?.name || '' }}!</span>
+        {{ today | date:'EEEE d MMMM y':'':'it-IT' }}
       </div>
       
       <div class="header-profile ion-activatable ripple-parent" (click)="openProfile()">
         <ion-ripple-effect></ion-ripple-effect>
-        <img src="assets/images/icon-account.svg" alt="Mauro Pozzi">
+        <img src="assets/images/icon-account-black.svg" alt="Mauro Pozzi">
       </div>
   </ion-header> 
 
   <router-outlet></router-outlet>
 
-  <ion-tab-bar slot="bottom" color="light" class="main-tabs">
+  <ion-tab-bar slot="bottom" class="main-tabs">
     
     <ion-tab-button tab="home" href="/main/home">
-      <!-- <ion-icon name="home"></ion-icon> -->
+      <div class="icon">
+        <img src="assets/images/icon-home.svg" alt="Home">
+      </div>
       <ion-label>Home</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="workouts" href="/main/workouts">
-      <!-- <ion-icon name="barbell"></ion-icon> -->
+      <div class="icon">
+        <img src="assets/images/icon-workout.svg" alt="Le mie schede">
+      </div>
       <ion-label>Le mie schede</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="nutrition" href="/main/nutrition">
-      <!-- <ion-icon name="calendar"></ion-icon> -->
+      <div class="icon">
+        <img src="assets/images/icon-nutrition.svg" alt="Nutrizione">
+      </div>
       <ion-label>Nutrizione</ion-label>
     </ion-tab-button>
 
   </ion-tab-bar>
-
 </ion-tabs>
