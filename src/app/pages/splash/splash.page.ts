@@ -32,8 +32,7 @@ export class SplashPage implements OnInit {
         this.router.navigate(['/login'], { replaceUrl: true });
         return;
       }
-
-      // ✅ METODO MODERNO
+      
       const [response] = await Promise.all([
         firstValueFrom(this.auth.loadProfile()),
         minSplashTime

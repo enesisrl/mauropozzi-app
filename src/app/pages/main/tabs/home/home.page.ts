@@ -1,7 +1,9 @@
 
 import { 
   IonContent,
-  IonRippleEffect
+  IonRippleEffect,
+  IonButton,
+  IonIcon
 } from '@ionic/angular/standalone';
 import { Auth } from '../../../../services/auth';
 import { CommonModule } from '@angular/common';
@@ -22,7 +24,7 @@ interface CalendarDay {
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, IonRippleEffect, CommonModule, FormsModule]
+  imports: [IonContent, IonRippleEffect, IonButton, IonIcon, CommonModule, FormsModule]
 })
 export class HomePage implements OnInit {
 
@@ -76,6 +78,15 @@ export class HomePage implements OnInit {
 
   openCalendar() {
     this.router.navigate(['/main/calendar']);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('it-IT', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit'
+    });
   }
 
 }

@@ -22,10 +22,38 @@
     </div>
 
     <div class="workout">
-      <div class="title">Prossimo allenamento</div>
+      <div class="title">Le tue schede</div>
 
       <div class="list">
+        <div class="workout-item" *ngFor="let workout of currentUser?.activeWorkouts">
+          <div class="workout-cover icon">
+            <img src="assets/images/icon-workout.svg">
+          </div>
+          <div class="workout-info">
+            <div class="workout-title">{{ workout.descrizione }}</div>
+            <div class="workout-detail">
+              <span class="label">Durata</span>
+              <span class="value">{{ workout.durata }} settimane</span>
+            </div>
+            <div class="workout-detail">
+              <span class="label">Data inizio</span>
+              <span class="value">{{ formatDate(workout.data_inizio) }}</span>
+            </div>
+            <div class="workout-detail">
+              <span class="label">Data fine</span>
+              <span class="value">{{ formatDate(workout.data_scadenza) }}</span>
+            </div>
+          </div>
+          <div class="workout-action">
+            <div class="action">
+              <img src="assets/images/icon-plus-black.svg">
+            </div>
+          </div>
+        </div>
         
+        <div class="no-workouts" *ngIf="!currentUser?.activeWorkouts || currentUser?.activeWorkouts.length === 0">
+          <p>Nessuna scheda attiva al momento</p>
+        </div>
       </div>
     </div>
 
