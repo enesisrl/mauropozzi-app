@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, firstValueFrom } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -8,8 +8,12 @@ import { Router } from '@angular/router';
 export interface User {
   id: string;
   email: string;
-  name: string;
-  latestWorkouts: any[];
+  firstName: string;
+  lastName: string;
+  profileCompleted: boolean;
+  subscriptions: any[];
+  latestWorkoutDates: any[];
+  activeWorkouts: any[];
 }
 
 export interface LoginRequest {
@@ -33,14 +37,17 @@ export interface ProfileResponse {
   providedIn: 'root'
 })
 export class Auth {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_KEY = 'user_data';
+  private readonly TOKEN_KEY = 'at';
+  private readonly USER_KEY = 'ud';
+  private readonly USER_LAST_REFRESH = 'udlr';
+  private readonly USER_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minuti
   
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   
   private userSubject = new BehaviorSubject<User | null>(null);
   public user$ = this.userSubject.asObservable();
+
 
   constructor(
     private http: HttpClient,
@@ -97,9 +104,30 @@ export class Auth {
     );
   }
 
+  public async smartRefresh(): Promise<void> {
+    console.log('Auth Service - smartRefresh invoked');
+
+    const lastRefresh = localStorage.getItem(this.USER_LAST_REFRESH);
+    const timeSinceLastRefresh = Date.now() - (lastRefresh ? parseInt(lastRefresh, 10) : 0);
+
+    if (timeSinceLastRefresh > this.USER_REFRESH_INTERVAL) {
+      try {
+        const response = await firstValueFrom(this.loadProfile());
+    
+        if (!(response?.success)) {
+          this.logout();
+        }
+      } catch (error: any) {
+        if (error?.status === 401 || error?.status === 403 || error?.error?.err) {
+          this.logout();
+        }
+      }
+    }
+  }
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem(this.USER_LAST_REFRESH);
     
     this.userSubject.next(null);
     this.isAuthenticatedSubject.next(false);
@@ -126,15 +154,20 @@ export class Auth {
   // User Data
 
   private saveUserData(token: string, user: User): void {
+    const now = Date.now();
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    localStorage.setItem(this.USER_LAST_REFRESH, now.toString());
     
     this.userSubject.next(user);
     this.isAuthenticatedSubject.next(true);
   }
   
   private updateUserData(userData: User): void {
+    const now = Date.now();
     localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
+    localStorage.setItem(this.USER_LAST_REFRESH, now.toString());
+
     this.userSubject.next(userData);
     this.isAuthenticatedSubject.next(true);
   }

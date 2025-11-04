@@ -22,23 +22,28 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadComponent: () => import('./pages/main/tabs/home/home.page').then( m => m.HomePage)
+        loadComponent: () => import('./pages/main/tabs/home/home.page').then( m => m.HomePage),
+        canActivate: [authGuard]
       },
       {
         path: 'workouts',
-        loadComponent: () => import('./pages/main/tabs/workouts/workouts.page').then( m => m.WorkoutsPage)
+        loadComponent: () => import('./pages/main/tabs/workouts/workouts.page').then( m => m.WorkoutsPage),
+        canActivate: [authGuard]
       },
       {
         path: 'nutrition',
-        loadComponent: () => import('./pages/main/tabs/nutrition/nutrition.page').then( m => m.NutritionPage)
+        loadComponent: () => import('./pages/main/tabs/nutrition/nutrition.page').then( m => m.NutritionPage),
+        canActivate: [authGuard]
       },
       {
         path: 'profile',
-        loadComponent: () => import('./pages/main/tabs/profile/profile.page').then( m => m.ProfilePage)
+        loadComponent: () => import('./pages/main/tabs/profile/profile.page').then( m => m.ProfilePage),
+        canActivate: [authGuard]
       },
       {
         path: 'calendar',
-        loadComponent: () => import('./pages/main/tabs/calendar/calendar.page').then( m => m.CalendarPage)
+        loadComponent: () => import('./pages/main/tabs/calendar/calendar.page').then( m => m.CalendarPage),
+        canActivate: [authGuard]
       },
       {
         path: '',
