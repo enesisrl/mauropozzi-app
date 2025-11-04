@@ -9,6 +9,7 @@ export const environment = {
   },
 
   urls: {
+    profile: 'http://mauropozzi.test:8074/it/coaching/profile/',
     passwordRecovery: 'http://mauropozzi.test:8074/it/coaching/password-recovery/',
   }
 };

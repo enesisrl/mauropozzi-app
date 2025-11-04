@@ -1,9 +1,7 @@
 
 import { 
   IonContent,
-  IonRippleEffect,
-  IonButton,
-  IonIcon
+  IonRippleEffect
 } from '@ionic/angular/standalone';
 import { Auth } from '../../../../services/auth';
 import { CommonModule } from '@angular/common';
@@ -25,7 +23,7 @@ interface CalendarDay {
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, IonRippleEffect, IonButton, IonIcon, CommonModule, FormsModule, WorkoutListComponent]
+  imports: [IonContent, IonRippleEffect, CommonModule, FormsModule, WorkoutListComponent]
 })
 export class HomePage implements OnInit {
 

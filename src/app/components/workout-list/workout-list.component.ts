@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IonButton, IonIcon } from '@ionic/angular/standalone';
 
 export interface WorkoutListConfig {
   showActions?: boolean;
@@ -14,7 +13,7 @@ export interface WorkoutListConfig {
   templateUrl: './workout-list.component.html',
   styleUrls: ['./workout-list.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonButton, IonIcon]
+  imports: [CommonModule]
 })
 export class WorkoutListComponent {
   
@@ -39,6 +38,7 @@ export class WorkoutListComponent {
   }
 
   formatDate(dateString: string): string {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('it-IT', {
       day: '2-digit',

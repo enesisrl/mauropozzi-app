@@ -1,9 +1,85 @@
-<ion-content>
-  <div class="content-area">
-    <h1>Il Mio Profilo</h1>
-    <p>Le tue informazioni personali</p>
+<ion-content class="profile-content">
+  <div class="inner">
+    
+    <div class="profile-header">
+      <div class="avatar">
+        <div class="avatar-placeholder">
+          {{ getInitials() }}
+        </div>
+      </div>
+      <div class="user-info">
+        <h2>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h2>
+        <p class="email">{{ currentUser?.email }}</p>
+        <ion-button size="small" fill="outline" (click)="completeProfile()">
+          {{ currentUser?.profileCompleted ? 'Vai al tuo profilo' : 'Completa il tuo profilo' }}
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Sezione Abbonamenti -->
+    <div class="subscriptions-section">
+      <h3>I tuoi abbonamenti</h3>
+      
+      <div class="subscription-item" *ngFor="let subscription of currentUser?.subscriptions">
+        <div class="package-head">
+          <div class="package-title">{{ subscription.pacchetto_descrizione }}</div>
+          <span class="package-expired" *ngIf="subscription.scaduto">Scaduto</span>
+        </div>
+
+        <!-- Plan Info -->
+        <div class="plan-row">
+          <div class="plan-info">
+            <p class="plan-name">{{ subscription.piano }}</p>
+            <span class="badge" *ngIf="subscription?.pacchetto_prezzo_metodo === 'rate-3'">
+              Pagamento in 3 rate da {{ formatPrice(subscription?.pacchetto_prezzo_rata) }}
+            </span>
+          </div>
+          <div class="plan-price">{{ subscription.prezzo }}</div>
+        </div>
+
+        <!-- Dates -->
+        <div class="plan-row">
+          <div class="plan-label">Data Acquisto</div>
+          <div class="plan-value">{{ formatDate(subscription.data_acquisto) }}</div>
+        </div>
+        
+        <div class="plan-row">
+          <div class="plan-label">Data Scadenza</div>
+          <div class="plan-value">{{ formatDate(subscription.data_scadenza) }}</div>
+        </div>
+
+        <!-- Progress Bar per Rate -->
+        <div 
+          class="installments-progress" 
+          *ngIf="subscription?.pacchetto_prezzo_metodo === 'rate-3' && subscription.paid_installments > 0"
+        >
+          <div class="progress-label">
+            Rate pagate: {{ subscription.paid_installments }} su {{ subscription.payment_installments }}
+          </div>
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              [style.width.%]="getProgressPercentage(subscription)"
+            >
+              {{ subscription.paid_installments }}/{{ subscription.payment_installments }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Rinnova Button -->
+        <!-- <div class="renewal-section" *ngIf="subscription.rinnovabile">
+          <ion-button expand="block" fill="outline" (click)="renewSubscription(subscription)">Rinnova</ion-button>
+        </div> -->
+      </div>
+
+      <!-- Nessun abbonamento -->
+      <div class="no-subscriptions" *ngIf="!currentUser?.subscriptions || currentUser?.subscriptions.length === 0">
+        <p>Nessun abbonamento attivo al momento</p>
+      </div>
+    </div>
+    
+    <div class="logout-section">
+      <ion-button expand="block" fill="clear" color="danger" (click)="logout()">Esci dall'app</ion-button>
+    </div>
   </div>
-  <ion-button fill="clear" (click)="logout()">
-    Logout
-  </ion-button>
 </ion-content>

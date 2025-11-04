@@ -1,17 +1,208 @@
-ion-content {
+.profile-content {
   --background: transparent;
-}
 
-.content-area {
-  padding: 20px;
-  color: white;
-  
-  h1 {
-    color: white;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    color: rgba(255, 255, 255, 0.8);
+  .inner {
+    padding: 20px 12px;
+
+    // Header Profilo
+    .profile-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+
+      .avatar {
+        margin-right: 16px;
+
+        .avatar-placeholder {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          font-size: 24px;
+          color: white;
+        }
+      }
+
+      .user-info {
+        flex: 1;
+
+        h2 {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          font-size: 20px;
+          color: white;
+          margin: 0 0 4px 0;
+        }
+
+        .email {
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.7);
+          margin: 0 0 4px 0;
+        }
+      }
+    }
+
+    // Sezione Abbonamenti
+    .subscriptions-section {
+      margin-bottom: 32px;
+
+      h3 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-style: italic;
+        font-size: 20px;
+        text-align: center;
+        margin-bottom: 16px;
+      }
+
+      .subscription-item {
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+        backdrop-filter: blur(10px);
+
+        .package-head {
+          margin: 0 0 16px 0;
+
+          .package-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+          }
+          .package-expired {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+          }
+        }
+
+        .plan-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          
+          &:last-of-type {
+            margin-bottom: 16px;
+          }
+
+          .plan-info {
+            flex: 1;
+
+            .plan-name {
+              font-weight: 600;
+              color: white;
+              margin: 0 0 4px 0;
+            }
+
+            .badge {
+              display: inline-block;
+              padding: 4px 8px;
+              background: rgba(255, 255, 255, 0.1);
+              border-radius: 12px;
+              font-size: 12px;
+              color: rgba(255, 255, 255, 0.8);
+            }
+          }
+
+          .plan-price {
+            font-weight: 700;
+            font-size: 18px;
+            color: #4ade80;
+          }
+
+          .plan-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+          }
+
+          .plan-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+          }
+        }
+
+        .installments-progress {
+          margin-top: 16px;
+
+          .progress-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+          }
+
+          .progress-bar {
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+
+            .progress-fill {
+              height: 100%;
+              background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+              border-radius: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 12px;
+              font-weight: 600;
+              color: white;
+              transition: width 0.3s ease;
+            }
+          }
+        }
+
+        .renewal-section {
+          margin-top: 16px;
+
+          ion-button {
+            --color: #667eea;
+            --border-color: #667eea;
+          }
+        }
+      }
+
+      .no-subscriptions {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+
+        ion-icon {
+          font-size: 48px;
+          margin-bottom: 16px;
+          display: block;
+        }
+
+        p {
+          margin: 0;
+          font-style: italic;
+        }
+      }
+    }
+
+    // Logout Section
+    .logout-section {
+      margin-top: 32px;
+
+      ion-button {
+        --color: #ef4444;
+      }
+    }
   }
 }
