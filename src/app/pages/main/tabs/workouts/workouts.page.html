@@ -1,6 +1,12 @@
-<ion-content>
-  <div class="content-area">
-    <h1>Le Mie Schede</h1>
-    <p>I tuoi allenamenti personalizzati</p>
+<ion-content class="workouts-content">
+  <div class="inner">
+    <div class="workout">
+      <div class="title">Le tue schede</div>
+
+      <app-workout-list 
+        [workouts]="currentUser?.activeWorkouts || []"
+        [config]="homeWorkoutConfig">
+      </app-workout-list>
+    </div>
   </div>
 </ion-content>

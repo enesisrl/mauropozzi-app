@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { WorkoutListComponent, WorkoutListConfig } from '../../../../components/workout-list/workout-list.component';
 
 interface CalendarDay {
   date: Date;
@@ -24,12 +25,20 @@ interface CalendarDay {
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, IonRippleEffect, IonButton, IonIcon, CommonModule, FormsModule]
+  imports: [IonContent, IonRippleEffect, IonButton, IonIcon, CommonModule, FormsModule, WorkoutListComponent]
 })
 export class HomePage implements OnInit {
 
   calendarDays: CalendarDay[] = [];
   currentUser: any = null;
+  
+  // Configurazione per la workout list nella home
+  homeWorkoutConfig: WorkoutListConfig = {
+    showActions: true,
+    showDetails: true,
+    maxItems: 3, // Mostra solo le prime 3 nella home
+    emptyMessage: 'Nessuna scheda attiva al momento'
+  };
 
   constructor(
     private auth: Auth,
@@ -39,9 +48,8 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.auth.user$.subscribe(user => {
       this.currentUser = user;
+      this.generateCalendarDays();
     });
-
-    this.generateCalendarDays();
   }
 
   private generateCalendarDays() {
@@ -55,8 +63,8 @@ export class HomePage implements OnInit {
       const dayNames = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
 
       let hasWorkout = false;
-      if(this.currentUser && this.currentUser.latestWorkouts) {
-        hasWorkout = this.currentUser.latestWorkouts.includes(date.toISOString().split('T')[0]);
+      if(this.currentUser && this.currentUser.latestWorkoutDates) {
+        hasWorkout = this.currentUser.latestWorkoutDates.includes(date.toISOString().split('T')[0]);
       }
       
       days.push({
@@ -71,6 +79,7 @@ export class HomePage implements OnInit {
     this.calendarDays = days;
   }
 
+  // Azioni
 
   onDayClick(day: CalendarDay) {
     this.router.navigate(['/main/calendar']);
@@ -78,15 +87,6 @@ export class HomePage implements OnInit {
 
   openCalendar() {
     this.router.navigate(['/main/calendar']);
-  }
-
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('it-IT', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit'
-    });
   }
 
 }

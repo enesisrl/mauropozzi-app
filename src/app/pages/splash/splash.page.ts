@@ -26,6 +26,7 @@ export class SplashPage implements OnInit {
     const minSplashTime = this.delay(1500);
 
     try {
+      // Se non sono loggato, vado subito al login
       const token = this.auth.getToken();
       if (!token) {
         await minSplashTime;
@@ -33,6 +34,7 @@ export class SplashPage implements OnInit {
         return;
       }
       
+      // Se sono loggato provo a caricare i dati utente
       const [response] = await Promise.all([
         firstValueFrom(this.auth.loadProfile()),
         minSplashTime
@@ -40,11 +42,17 @@ export class SplashPage implements OnInit {
 
       if (response?.success) {
         this.router.navigate(['/main/home'], { replaceUrl: true });
-      } else {
+      } 
+      
+      // In caso di errore faccio logout e vado al login
+      else {
         this.auth.logout();
         this.router.navigate(['/login'], { replaceUrl: true });
       }
-    } catch (error: any) {
+    } 
+    
+    // In caso di errore faccio logout e vado al login
+    catch (error: any) {
       await minSplashTime;
       this.auth.logout();
       this.router.navigate(['/login'], { replaceUrl: true });

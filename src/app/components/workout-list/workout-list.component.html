@@ -1,0 +1,37 @@
+<div class="workout-list">
+  <!-- Lista workouts -->
+  <div 
+    class="workout-item" 
+    *ngFor="let workout of displayWorkouts"
+    (click)="onWorkoutClick(workout)"
+  >
+    <div class="workout-cover icon">
+      <img src="assets/images/icon-workout.svg" alt="Workout">
+    </div>
+    <div class="workout-info">
+      <div class="workout-title">{{ workout.descrizione }}</div>
+      <div class="workout-detail" *ngIf="config.showDetails !== false">
+        <span class="label">Durata</span>
+        <span class="value">{{ workout.durata }} settimane</span>
+      </div>
+      <div class="workout-detail" *ngIf="config.showDetails !== false">
+        <span class="label">Data inizio</span>
+        <span class="value">{{ formatDate(workout.data_inizio) }}</span>
+      </div>
+      <div class="workout-detail" *ngIf="config.showDetails !== false">
+        <span class="label">Data fine</span>
+        <span class="value">{{ formatDate(workout.data_scadenza) }}</span>
+      </div>
+    </div>
+    <div class="workout-action" *ngIf="config.showActions !== false">
+      <div class="action">
+        <img src="assets/images/icon-plus-black.svg" alt="Action">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Stato vuoto -->
+  <div class="no-workouts" *ngIf="!workouts || workouts.length === 0">
+    <p>{{ emptyMessage }}</p>
+  </div>
+</div>

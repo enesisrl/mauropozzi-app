@@ -3,7 +3,7 @@
       <img src="assets/images/logo-icon.svg" alt="Mauro Pozzi" class="header-logo">
 
       <div class="header-content">
-        <span>Ciao {{ currentUser?.name || '' }}!</span>
+        <span>Ciao {{ currentUser?.firstName || '' }}!</span>
         {{ today | date:'EEEE d MMMM y':'':'it-IT' }}
       </div>
       
