@@ -32,10 +32,7 @@ export class HomePage implements OnInit {
   
   // Configurazione per la workout list nella home
   homeWorkoutConfig: WorkoutListConfig = {
-    showActions: true,
-    showDetails: true,
-    maxItems: 3, // Mostra solo le prime 3 nella home
-    emptyMessage: 'Nessuna scheda attiva al momento'
+    maxItems: 3
   };
 
   constructor(

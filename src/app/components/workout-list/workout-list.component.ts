@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+import { 
+  IonCard,
+} from '@ionic/angular/standalone';
+
 export interface WorkoutListConfig {
-  showActions?: boolean;
-  showDetails?: boolean;
   maxItems?: number;
-  emptyMessage?: string;
 }
 
 @Component({
@@ -13,7 +14,10 @@ export interface WorkoutListConfig {
   templateUrl: './workout-list.component.html',
   styleUrls: ['./workout-list.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    IonCard
+  ]
 })
 export class WorkoutListComponent {
   
@@ -27,10 +31,6 @@ export class WorkoutListComponent {
       return this.workouts.slice(0, this.config.maxItems);
     }
     return this.workouts;
-  }
-
-  get emptyMessage() {
-    return this.config.emptyMessage || 'Nessuna scheda attiva al momento';
   }
 
   onWorkoutClick(workout: any) {

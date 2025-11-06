@@ -4,7 +4,8 @@ export const environment = {
     baseUrl: 'http://mauropozzi.test:8074/it/app/v1',
     endpoints: {
       login: '/auth-login/',
-      profile: '/user-profile/'
+      profile: '/user-profile/',
+      nutritionList: '/nutrition-list/',
     }
   },
 

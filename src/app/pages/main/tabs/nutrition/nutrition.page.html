@@ -1,6 +1,45 @@
-<ion-content>
-  <div class="content-area">
-    <h1>Nutrizione</h1>
-    <p>Il tuo piano alimentare</p>
+<ion-content class="nutrition-content">
+  <div class="inner">
+    <div class="page-title">Le tue schede nutrizionali</div>
+
+    <div *ngIf="initialLoad && isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Ci siamo quasi...</p>
+    </div>
+
+    <div class="nutrition-list" *ngIf="!initialLoad">
+      <ion-card 
+        *ngFor="let item of nutritionItems; trackBy: trackById" 
+        class="nutrition-item"
+        button="true"
+        (click)="openNutritionFile(item)">
+
+        <div class="nutrition-inner">
+          <div class="nutrition-content">
+            <div class="nutrition-dates">{{ getPeriodLabel(item.data_dal, item.data_al) }}</div>
+            <div class="nutrition-title">{{ item.descrizione }}</div>
+          </div>
+          <img class="nutrition-pdf" src="assets/images/icon-pdf.svg" alt="Downlaod PDF">
+        </div>
+      </ion-card>
+
+      <div class="no-nutrition" *ngIf="nutritionItems.length === 0 && !isLoading">
+        <div class="icon">
+          <img src="assets/images/icon-nutrition.svg" alt="Nutrizione">
+        </div>
+        <h3>Nessuna scheda disponibile</h3>
+        <p>Non sono ancora presenti schede nutrizionali <br>per il tuo profilo.</p>
+      </div>
+    </div>
+
+    <ion-infinite-scroll 
+      (ionInfinite)="onInfiniteScroll($event)"
+      threshold="100px"
+      [disabled]="!hasMoreData">
+      <ion-infinite-scroll-content
+        loadingSpinner="crescent"
+        loadingText="Ci siamo quasi...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </div>
 </ion-content>

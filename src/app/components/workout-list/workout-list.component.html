@@ -1,37 +1,44 @@
 <div class="workout-list">
-  <!-- Lista workouts -->
-  <div 
-    class="workout-item" 
-    *ngFor="let workout of displayWorkouts"
-    (click)="onWorkoutClick(workout)"
-  >
-    <div class="workout-cover icon">
-      <img src="assets/images/icon-workout.svg" alt="Workout">
+  <ion-card 
+      *ngFor="let workout of displayWorkouts"
+      class="workout-item" 
+      button="true"
+      (click)="onWorkoutClick(workout)"
+    >
+    <div class="workout-inner">
+      <div class="workout-cover icon">
+        <img src="assets/images/icon-workout.svg" alt="Workout">
+      </div>
+
+      <div class="workout-info">
+        <div class="workout-title">{{ workout.descrizione }}</div>
+        <div class="workout-detail">
+          <span class="label">Durata</span>
+          <span class="value">{{ workout.durata }} settimane</span>
+        </div>
+        <div class="workout-detail">
+          <span class="label">Data inizio</span>
+          <span class="value">{{ formatDate(workout.data_inizio) }}</span>
+        </div>
+        <div class="workout-detail">
+          <span class="label">Data fine</span>
+          <span class="value">{{ formatDate(workout.data_scadenza) }}</span>
+        </div>
+      </div>
+
+      <div class="workout-action">
+        <div class="action">
+          <img src="assets/images/icon-plus-black.svg" alt="Action">
+        </div>
+      </div>
     </div>
-    <div class="workout-info">
-      <div class="workout-title">{{ workout.descrizione }}</div>
-      <div class="workout-detail" *ngIf="config.showDetails !== false">
-        <span class="label">Durata</span>
-        <span class="value">{{ workout.durata }} settimane</span>
-      </div>
-      <div class="workout-detail" *ngIf="config.showDetails !== false">
-        <span class="label">Data inizio</span>
-        <span class="value">{{ formatDate(workout.data_inizio) }}</span>
-      </div>
-      <div class="workout-detail" *ngIf="config.showDetails !== false">
-        <span class="label">Data fine</span>
-        <span class="value">{{ formatDate(workout.data_scadenza) }}</span>
-      </div>
-    </div>
-    <div class="workout-action" *ngIf="config.showActions !== false">
-      <div class="action">
-        <img src="assets/images/icon-plus-black.svg" alt="Action">
-      </div>
-    </div>
-  </div>
+  </ion-card>
   
-  <!-- Stato vuoto -->
   <div class="no-workouts" *ngIf="!workouts || workouts.length === 0">
-    <p>{{ emptyMessage }}</p>
+    <div class="icon">
+      <img src="assets/images/icon-workout.svg" alt="Allenamento">
+    </div>
+    <h3>Nessuna scheda disponibile</h3>
+    <p>Non sono ancora presenti schede di allenamento <br>per il tuo profilo.</p>
   </div>
 </div>

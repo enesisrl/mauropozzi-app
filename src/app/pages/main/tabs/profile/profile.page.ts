@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonButton } from '@ionic/angular/standalone';
 import { Auth } from '../../../../services/auth';
 import { Browser } from '@capacitor/browser';
 import { environment } from '../../../../../environments/environment';
@@ -11,7 +11,7 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonContent, IonButton, IonIcon, CommonModule, FormsModule]
+  imports: [IonContent, IonButton, CommonModule, FormsModule]
 })
 export class ProfilePage implements OnInit {
 
