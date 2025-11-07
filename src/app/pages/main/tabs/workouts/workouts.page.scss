@@ -17,10 +17,10 @@ ion-header {
 }
 
 
-.workouts-content {
+.workouts-container {
     --background: transparent;
 
-    .inner {
-        padding: 0 12px;
+    .scrolling-content {
+        padding: 20px 12px;
     }
 }
