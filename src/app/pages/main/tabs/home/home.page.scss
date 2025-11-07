@@ -1,7 +1,8 @@
-.home-content {
-    --background: transparent;
-
-    .inner {
+ion-header {
+    ion-toolbar {
+        --background: transparent;
+        --border-width: 0;
+        --color: #FFF;
         padding: 20px 12px;
 
         .calendar-widget {
@@ -61,15 +62,20 @@
             }
         }
 
-        .workout {
-            .title {
-                font-family: 'Montserrat', sans-serif;
-                font-weight: 800;
-                font-style: italic;
-                font-size: 20px;
-                text-align: center;
-                margin-bottom: 16px;
-            }
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 18px;
+            text-align: center;
         }
+    }
+}
+
+.home-content {
+    --background: transparent;
+
+    .inner {
+        padding: 0 12px;
     }
 }

@@ -1,7 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="title">Le tue schede nutrizionali</div>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="nutrition-content">
   <div class="inner">
-    <div class="page-title">Le tue schede nutrizionali</div>
-
     <div *ngIf="initialLoad && isLoading" class="loading-container">
       <ion-spinner name="crescent"></ion-spinner>
       <p>Ci siamo quasi...</p>

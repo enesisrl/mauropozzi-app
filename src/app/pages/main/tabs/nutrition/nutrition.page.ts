@@ -7,7 +7,9 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonCard,
-  InfiniteScrollCustomEvent
+  InfiniteScrollCustomEvent,
+  IonHeader,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { documentTextOutline, downloadOutline, personOutline, calendarOutline } from 'ionicons/icons';
@@ -26,6 +28,8 @@ import { NutritionService, NutritionItem } from '../../../../services/nutrition.
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonCard,
+    IonHeader,
+    IonToolbar,
   ]
 })
 export class NutritionPage implements OnInit {

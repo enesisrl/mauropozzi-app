@@ -11,6 +11,6 @@ export class AppComponent {
   constructor(private router: Router) {
     // 🐛 DEBUG: Forza sempre il passaggio allo splash
     // Rimuovi questa riga quando non serve più per debug
-    this.router.navigate(['/splash'], { replaceUrl: true });
+    // this.router.navigate(['/splash'], { replaceUrl: true });
   }
 }

@@ -1,5 +1,6 @@
-<ion-content class="home-content">
-  <div class="inner">
+<ion-header>
+  <ion-toolbar>
+
     <div class="calendar-widget">
       <div 
           class="item day" 
@@ -21,13 +22,15 @@
       </div>
     </div>
 
-    <div class="workout">
-      <div class="title">Prossimo allenamento</div>
+    <div class="title">Prossimo allenamento</div>
+  </ion-toolbar>
+</ion-header>
 
-      <app-workout-list 
-        [workouts]="currentUser?.activeWorkouts || []"
-        [config]="homeWorkoutConfig">
-      </app-workout-list>
-    </div>
+<ion-content class="home-content">
+  <div class="inner">
+    <app-workout-list 
+      [workouts]="currentUser?.activeWorkouts || []"
+      [config]="homeWorkoutConfig">
+    </app-workout-list>
   </div>
 </ion-content>

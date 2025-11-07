@@ -1,7 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="title">Le tue schede di allenamento</div>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="workouts-content">
   <div class="inner">
-    <div class="page-title">Le tue schede di allenamento</div>
-
     <app-workout-list 
       [workouts]="currentUser?.activeWorkouts || []"
       [config]="homeWorkoutConfig">

@@ -3,15 +3,26 @@ import { Auth } from '../../../../services/auth';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent } from '@ionic/angular/standalone';
 import { WorkoutListComponent, WorkoutListConfig } from '../../../../components/workout-list/workout-list.component';
+import { 
+  IonContent, 
+  IonHeader,
+  IonToolbar,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-workouts',
   templateUrl: './workouts.page.html',
   styleUrls: ['./workouts.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule, WorkoutListComponent]
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    WorkoutListComponent
+  ]
 })
 export class WorkoutsPage implements OnInit {
 

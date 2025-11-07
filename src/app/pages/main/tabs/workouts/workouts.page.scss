@@ -1,16 +1,26 @@
+ion-header {
+    ion-toolbar {
+        --background: transparent;
+        --border-width: 0;
+        --color: #FFF;
+        --min-height: 20px; // Aumentato da default 56px
+        padding: 20px 12px;
+
+        .title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 18px;
+            text-align: center;
+        }
+    }
+}
+
+
 .workouts-content {
     --background: transparent;
 
     .inner {
-        padding: 20px 12px;
-
-        .page-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-style: italic;
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
+        padding: 0 12px;
     }
 }
