@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppEvents } from './app-events.service';
 
 export interface User {
   id: string;
@@ -52,7 +53,8 @@ export class Auth {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private appEvents: AppEvents
   ) {
     this.checkExistingAuth();
   }
@@ -126,13 +128,19 @@ export class Auth {
     }
   }
   logout(): void {
+    // Pulisce localStorage
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     localStorage.removeItem(this.USER_LAST_REFRESH);
     
+    // Emette evento di logout per notificare altri servizi
+    this.appEvents.emitLogout();
+    
+    // Reset stati
     this.userSubject.next(null);
     this.isAuthenticatedSubject.next(false);
     
+    // Redirect al login
     this.router.navigate(['/login'], { replaceUrl: true });
   }
 
@@ -175,8 +183,7 @@ export class Auth {
 
 
   // Helpers
-
-  private getAuthHeaders(): HttpHeaders {
+  public getAuthHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({
       'Content-Type': 'application/json',

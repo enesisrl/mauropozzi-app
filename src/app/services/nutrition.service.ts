@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Auth } from './auth';
+import { AppEvents } from './app-events.service';
 
 export interface NutritionItem {
     id: string;
@@ -29,7 +31,16 @@ export class NutritionService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient, 
+    private auth: Auth,
+    private appEvents: AppEvents
+  ) {
+    // Ascolta eventi di logout per pulire la cache
+    this.appEvents.onLogout$.subscribe(() => {
+      this.clearCache();
+    });
+  }
 
   /**
    * Carica le schede nutrizionali con paginazione
@@ -51,7 +62,7 @@ export class NutritionService {
 
     const url = `${environment.api.baseUrl}${environment.api.endpoints.nutritionList}`;
 
-    return this.http.post<NutritionResponse>(url, { page: page, limit: pageSize }).pipe(
+    return this.http.post<NutritionResponse>(url, { page: page, limit: pageSize }, { headers: this.auth.getAuthHeaders() }).pipe(
       map(response => {
         // Formattiamo le date se necessario
         if (response.success && response.items) {
@@ -112,10 +123,11 @@ export class NutritionService {
   }
 
   /**
-   * Pulisce la cache
+   * Svuota la cache delle schede nutrizionali (usato durante logout)
    */
   clearCache(): void {
     this.cache.clear();
+    this.loadingSubject.next(false);
   }
 
   /**
