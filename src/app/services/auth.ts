@@ -10,6 +10,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  subscribed: boolean;
   profileCompleted: boolean;
   subscriptions: any[];
   latestWorkoutDates: any[];
