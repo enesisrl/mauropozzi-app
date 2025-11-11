@@ -8,7 +8,7 @@
   <div class="scrolling-content">
     <div *ngIf="initialLoad && isLoading" class="loading-container">
       <ion-spinner name="crescent"></ion-spinner>
-      <p>Ci siamo quasi...</p>
+      <p>{{ environment.ln.generalLoading }}</p>
     </div>
 
     <div class="nutrition-list" *ngIf="!initialLoad">
@@ -42,7 +42,7 @@
       [disabled]="!hasMoreData">
       <ion-infinite-scroll-content
         loadingSpinner="crescent"
-        loadingText="Ci siamo quasi...">
+        loadingText="{{ environment.ln.generalLoading }}">
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
   </div>

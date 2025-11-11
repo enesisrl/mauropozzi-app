@@ -48,7 +48,7 @@ export class LoginPage {
 
     this.isLoading = true;
     const loading = await this.loadingController.create({
-      message: 'Ci siamo quasi…',
+      message: environment.ln.generalLoading,
       spinner: 'crescent'
     });
     await loading.present();

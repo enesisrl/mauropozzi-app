@@ -14,6 +14,7 @@ import {
 import { addIcons } from 'ionicons';
 import { documentTextOutline, downloadOutline, personOutline, calendarOutline } from 'ionicons/icons';
 import { NutritionService, NutritionItem } from '../../../../services/nutrition.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-nutrition',
@@ -41,6 +42,7 @@ export class NutritionPage implements OnInit {
   isLoading = false;
   hasMoreData = true;
   initialLoad = true;
+  environment = environment;
 
   constructor(private nutritionService: NutritionService) {
     addIcons({ documentTextOutline, downloadOutline, personOutline, calendarOutline });
@@ -85,7 +87,6 @@ export class NutritionPage implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Errore nel caricamento delle schede nutrizionali:', error);
           this.hasMoreData = false;
         },
         complete: () => {
@@ -94,7 +95,6 @@ export class NutritionPage implements OnInit {
         }
       });
     } catch (error) {
-      console.error('Errore nel caricamento:', error);
       this.isLoading = false;
       this.initialLoad = false;
     }

@@ -30,8 +30,8 @@
         <div class="plan-row">
           <div class="plan-info">
             <p class="plan-name">{{ subscription.piano }}</p>
-            <span class="badge" *ngIf="subscription?.pacchetto_prezzo_metodo === 'rate-3'">
-              Pagamento in 3 rate da {{ formatPrice(subscription?.pacchetto_prezzo_rata) }}
+            <span class="badge" *ngIf="subscription?.pacchetto_prezzo_metodo === 'rate-3' && subscription?.pacchetto_prezzo_rata">
+              Pagamento in 3 rate da {{ subscription?.pacchetto_prezzo_rata }}
             </span>
           </div>
           <div class="plan-price">{{ subscription.prezzo }}</div>
@@ -40,12 +40,12 @@
         <!-- Dates -->
         <div class="plan-row">
           <div class="plan-label">Data Acquisto</div>
-          <div class="plan-value">{{ formatDate(subscription.data_acquisto) }}</div>
+          <div class="plan-value">{{ subscription.data_acquisto }}</div>
         </div>
         
         <div class="plan-row">
           <div class="plan-label">Data Scadenza</div>
-          <div class="plan-value">{{ formatDate(subscription.data_scadenza) }}</div>
+          <div class="plan-value">{{ subscription.data_scadenza }}</div>
         </div>
 
         <!-- Progress Bar per Rate -->

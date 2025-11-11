@@ -41,24 +41,6 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('it-IT', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit'
-    });
-  }
-
-  formatPrice(price: number): string {
-    if (!price) return '';
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price);
-  }
-
   getProgressPercentage(subscription: any): number {
     if (!subscription.payment_installments || !subscription.paid_installments) return 0;
     return Math.round((subscription.paid_installments / subscription.payment_installments) * 100);

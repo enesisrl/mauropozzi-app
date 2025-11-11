@@ -63,17 +63,6 @@ export class NutritionService {
     const url = `${environment.api.baseUrl}${environment.api.endpoints.nutritionList}`;
 
     return this.http.post<NutritionResponse>(url, { page: page, limit: pageSize }, { headers: this.auth.getAuthHeaders() }).pipe(
-      map(response => {
-        // Formattiamo le date se necessario
-        if (response.success && response.items) {
-          response.items = response.items.map(item => ({
-            ...item,
-            data_dal: this.formatDate(item.data_dal),
-            data_al: this.formatDate(item.data_al)
-          }));
-        }
-        return response;
-      }),
       tap(response => {
         // Salviamo in cache
         if (response.success && response.items) {
@@ -128,24 +117,6 @@ export class NutritionService {
   clearCache(): void {
     this.cache.clear();
     this.loadingSubject.next(false);
-  }
-
-  /**
-   * Formatta la data in formato italiano
-   */
-  private formatDate(dateString: string): string {
-    if (!dateString) return '';
-    
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('it-IT', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-    } catch {
-      return dateString;
-    }
   }
 
   /**

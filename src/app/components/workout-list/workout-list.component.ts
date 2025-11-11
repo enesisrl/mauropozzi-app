@@ -1,13 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, Input, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { 
   IonCard,
 } from '@ionic/angular/standalone';
-
-export interface WorkoutListConfig {
-  maxItems?: number;
-}
 
 @Component({
   selector: 'app-workout-list',
@@ -22,28 +18,10 @@ export interface WorkoutListConfig {
 export class WorkoutListComponent {
   
   @Input() workouts: any[] = [];
-  @Input() config: WorkoutListConfig = {};
   
-  @Output() workoutAction = new EventEmitter<any>();
-
-  get displayWorkouts() {
-    if (this.config.maxItems) {
-      return this.workouts.slice(0, this.config.maxItems);
-    }
-    return this.workouts;
-  }
+  private router = inject(Router);
 
   onWorkoutClick(workout: any) {
-    console.log('Workout clicked:', workout);
-  }
-
-  formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('it-IT', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit'
-    });
+    this.router.navigate(['/workout-details', workout.id]);
   }
 }

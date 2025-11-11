@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { WorkoutListComponent, WorkoutListConfig } from '../../../../components/workout-list/workout-list.component';
+import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
 
 interface CalendarDay {
   date: Date;
@@ -39,11 +39,6 @@ export class HomePage implements OnInit {
 
   calendarDays: CalendarDay[] = [];
   currentUser: any = null;
-  
-  // Configurazione per la workout list nella home
-  homeWorkoutConfig: WorkoutListConfig = {
-    maxItems: 3
-  };
 
   constructor(
     private auth: Auth,

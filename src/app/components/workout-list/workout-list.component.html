@@ -1,6 +1,6 @@
 <div class="workout-list">
   <ion-card 
-      *ngFor="let workout of displayWorkouts"
+      *ngFor="let workout of workouts"
       class="workout-item" 
       button="true"
       (click)="onWorkoutClick(workout)"
@@ -18,11 +18,11 @@
         </div>
         <div class="workout-detail">
           <span class="label">Data inizio</span>
-          <span class="value">{{ formatDate(workout.data_inizio) }}</span>
+          <span class="value">{{ workout.data_inizio }}</span>
         </div>
         <div class="workout-detail">
           <span class="label">Data fine</span>
-          <span class="value">{{ formatDate(workout.data_scadenza) }}</span>
+          <span class="value">{{ workout.data_scadenza }}</span>
         </div>
       </div>
 

@@ -108,8 +108,6 @@ export class Auth {
   }
 
   public async smartRefresh(): Promise<void> {
-    console.log('Auth Service - smartRefresh invoked');
-
     const lastRefresh = localStorage.getItem(this.USER_LAST_REFRESH);
     const timeSinceLastRefresh = Date.now() - (lastRefresh ? parseInt(lastRefresh, 10) : 0);
 

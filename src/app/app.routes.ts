@@ -56,5 +56,10 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-  }
+  },
+  {
+    path: 'workout-details/:id',
+    loadComponent: () => import('./pages/workout-details/workout-details.page').then( m => m.WorkoutDetailsPage),
+    canActivate: [authGuard, subscriptionGuard]
+  },
 ];

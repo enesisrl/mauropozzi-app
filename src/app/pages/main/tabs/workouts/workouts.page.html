@@ -6,9 +6,6 @@
 
 <ion-content class="workouts-container">
   <div class="scrolling-content">
-    <app-workout-list 
-      [workouts]="currentUser?.activeWorkouts || []"
-      [config]="homeWorkoutConfig">
-    </app-workout-list>
+    <app-workout-list [workouts]="currentUser?.activeWorkouts || []"></app-workout-list>
   </div>
 </ion-content>

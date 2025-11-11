@@ -6,11 +6,16 @@ export const environment = {
       login: '/auth-login/',
       profile: '/user-profile/',
       nutritionList: '/nutrition-list/',
+      workoutDetails: '/workout-details/',
     }
   },
 
   urls: {
     profile: 'http://mauropozzi.test:8074/it/coaching/profile/',
     passwordRecovery: 'http://mauropozzi.test:8074/it/coaching/password-recovery/',
+  },
+
+  ln: {
+    generalLoading: 'Ci siamo quasi...'
   }
 };

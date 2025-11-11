@@ -3,7 +3,7 @@ import { Auth } from '../../../../services/auth';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WorkoutListComponent, WorkoutListConfig } from '../../../../components/workout-list/workout-list.component';
+import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
 import { 
   IonContent, 
   IonHeader,
@@ -28,12 +28,8 @@ export class WorkoutsPage implements OnInit {
 
   currentUser: any = null;
   
-  // Configurazione per la workout list nella home
-  homeWorkoutConfig: WorkoutListConfig = {
-  };
-
   constructor(
-    private auth: Auth,
+    private auth: Auth
   ) { }
 
   ngOnInit() {
