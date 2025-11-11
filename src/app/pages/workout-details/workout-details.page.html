@@ -1,0 +1,140 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="goBack()" defaultHref="/main"></ion-back-button>
+    </ion-buttons>
+    <ion-title>La tua scheda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="workout-details-container" fullscreen>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
+  <div class="content">
+    <div *ngIf="isLoading" class="loading-container">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>{{ environment.ln.generalLoading }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && !workout" class="no-workout">
+        <div class="icon">
+        <img src="assets/images/icon-workout.svg" alt="Allenamento">
+        </div>
+        <h3>Scheda non trovata</h3>
+        <p>Non è stato possibile caricare i dettagli della scheda.</p>
+        <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
+    </div>
+
+    <div *ngIf="!isLoading && workout" class="workout-info">
+        <div class="workout-title">{{ workout.descrizione }}</div>
+        <div class="workout-detail">
+            <span class="label">Durata</span>
+            <span class="value">{{ workout.durata }} settimane</span>
+        </div>
+        <div class="workout-detail">
+            <span class="label">Data inizio</span>
+            <span class="value">{{ workout.data_inizio }}</span>
+        </div>
+        <div class="workout-detail">
+            <span class="label">Data fine</span>
+            <span class="value">{{ workout.data_scadenza }}</span>
+        </div>
+        <div class="workout-detail">
+            <span class="label">Consegnata il</span>
+            <span class="value">{{ workout.data_consegna }}</span>
+        </div>
+        <div class="workout-detail">
+            <span class="label">Note</span>
+            <span class="value">{{ workout.note }}</span>
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Workout Details -->
+  <div *ngIf="!isLoading && workout" class="workout-container">
+    
+    <!-- Giorni di allenamento -->
+    <div *ngFor="let day of workout.esercizi; trackBy: trackByDay" class="workout-day">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title color="primary">
+            <ion-icon name="fitness-outline"></ion-icon>
+            {{ day.descrizione }}
+          </ion-card-title>
+        </ion-card-header>
+
+        <!-- Gruppi di esercizi -->
+        <ion-card-content>
+          <div *ngFor="let group of day.gruppi; trackBy: trackByGroup" class="exercise-group">
+            <h4 *ngIf="day.gruppi.length > 1" class="group-title">
+              <ion-icon name="barbell-outline"></ion-icon>
+              Gruppo {{ group.gruppo }}
+            </h4>
+
+            <!-- Lista esercizi -->
+            <ion-list>
+              <ion-item 
+                *ngFor="let exercise of group.esercizi; trackBy: trackByExercise" 
+                class="exercise-item"
+                button
+                detail="false">
+                
+                <!-- Thumbnail -->
+                <ion-thumbnail slot="start">
+                  <img [src]="exercise.thumb" [alt]="exercise.descrizione" />
+                </ion-thumbnail>
+
+                <!-- Contenuto principale -->
+                <ion-label>
+                  <h2>{{ exercise.descrizione }}</h2>
+                  
+                  <!-- Dettagli esercizio -->
+                  <div class="exercise-details">
+                    <ion-chip *ngIf="exercise.tipo" outline="true" size="small">
+                      <ion-icon name="information-circle-outline"></ion-icon>
+                      <ion-label>{{ exercise.tipo }}</ion-label>
+                    </ion-chip>
+                    
+                    <ion-chip *ngIf="exercise.serie" color="primary" size="small">
+                      <ion-icon name="repeat-outline"></ion-icon>
+                      <ion-label>{{ exercise.serie }}</ion-label>
+                    </ion-chip>
+
+                    <ion-chip *ngIf="exercise.durata_s > 0" color="secondary" size="small">
+                      <ion-icon name="time-outline"></ion-icon>
+                      <ion-label>{{ exercise.durata }}</ion-label>
+                    </ion-chip>
+
+                    <ion-chip *ngIf="exercise.recupero_s > 0" color="tertiary" size="small">
+                      <ion-icon name="pause-outline"></ion-icon>
+                      <ion-label>{{ exercise.recupero }}</ion-label>
+                    </ion-chip>
+                  </div>
+
+                  <!-- Note esercizio -->
+                  <p *ngIf="exercise.note" class="exercise-note">
+                    <ion-icon name="chatbubble-outline" color="medium"></ion-icon>
+                    {{ exercise.note }}
+                  </p>
+                </ion-label>
+              </ion-item>
+            </ion-list>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Messaggio se non ci sono esercizi -->
+    <ion-card *ngIf="workout.esercizi.length === 0" class="no-exercises">
+      <ion-card-content class="text-center">
+        <ion-icon name="fitness-outline" size="large" color="medium"></ion-icon>
+        <h2>Nessun esercizio</h2>
+        <p>Non sono ancora stati assegnati esercizi a questa scheda.</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>
