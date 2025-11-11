@@ -1,0 +1,78 @@
+.workout-exercise-list {
+    .exercise-item {
+        position: relative;
+        padding: 0;
+        background: rgba(0, 0, 0, 0.9);
+        margin: 0 0 8px;
+
+        .exercise-inner {
+            display: flex;
+            position: relative;
+            align-items: stretch;
+            justify-content: space-between;
+            padding: 12px;
+
+            .exercise-cover {
+                margin-right: 12px;
+                overflow: hidden;
+                width: 100px;
+
+                img {
+                    border-radius: 4px;
+                }
+            }
+
+            .exercise-info {
+                flex: 1;
+
+                .exercise-title {
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 700;
+                    font-size: 18px;
+                    color: #FFF;
+                    text-transform: uppercase;
+                    margin-bottom: 4px;
+                }
+
+                .exercise-detail {
+                    margin-top: 7px;
+
+                    .label {
+                        display: block;
+                        font-family: 'Roboto', sans-serif;
+                        font-weight: 700;
+                        font-size: 12px;
+                        color: #B8B8B8;
+                        text-transform: uppercase;
+                    }
+
+                    .value {
+                        display: block;
+                        font-family: 'Roboto', sans-serif;
+                        font-weight: 700;
+                        font-size: 12px;
+                        margin-top: 2px;
+                        color: #FFF;
+                    }
+                }
+            }
+        }
+
+        .exercise-action {
+            position: absolute;
+            display: flex;
+            right: 0;
+            bottom: 0;
+            background-color: #535353;
+            border-radius: 8px 0 0 0;
+
+            .action{
+                display: flex;
+                width: 44px;
+                height: 35px;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+}

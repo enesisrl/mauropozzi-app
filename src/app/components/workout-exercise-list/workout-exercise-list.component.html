@@ -1,0 +1,46 @@
+<div class="workout-exercise-list">
+    <ion-card 
+        *ngFor="let group of groups"
+        class="exercise-item" 
+        button="true"
+        (click)="onExerciseClick(group)"
+      >
+        <div 
+        *ngFor="let exercise of group.esercizi"
+        class="exercise-inner">
+          <div class="exercise-cover icon">
+              <img [src]="exercise.thumb" [alt]="exercise.descrizione" />
+          </div>
+
+          <div class="exercise-info">
+            <div class="exercise-title">{{ exercise.descrizione }}</div>
+
+            <div *ngIf="exercise.tipo == 'reps'" class="exercise-detail">
+              <span class="label">Serie e ripetizioni</span>
+              <span class="value">{{ exercise.serie }}</span>
+            </div>
+
+            <div *ngIf="exercise.tipo == 'time'" class="exercise-detail">
+              <span class="label">Serie a tempo</span>
+              <span class="value">{{ exercise.serie }} x {{ exercise.durata}}</span>
+            </div>
+
+            <div class="exercise-detail">
+              <span class="label">Recupero</span>
+              <span class="value">{{ exercise.recupero }}</span>
+            </div>
+
+            <div *ngIf="exercise.note" class="exercise-detail">
+              <span class="label">Note</span>
+              <span class="value">{{ exercise.note }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise-action">
+          <div class="action">
+            <img src="assets/images/icon-plus-black.svg" alt="Action">
+          </div>
+        </div>
+    </ion-card>
+</div>

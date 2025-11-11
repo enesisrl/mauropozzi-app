@@ -6,31 +6,18 @@ import { WorkoutService, WorkoutDetail, WorkoutDay } from '../../services/workou
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { WorkoutExerciseListComponent } from '../../components/workout-exercise-list/workout-exercise-list.component';
 import { 
   IonContent, 
   IonHeader,
   IonToolbar,
-  IonLabel,
-  IonItem,
-  IonIcon,
-  IonCardHeader,
-  IonCardContent,
-  IonCard,
-  IonChip,
   IonButton,
-  IonThumbnail,
-  IonList,
-  IonCardTitle,
-  IonCol,
-  IonRow,
-  IonGrid,
   IonTitle,
   IonButtons,
   IonBackButton,
   IonRefresher,
   IonRefresherContent,
   IonSpinner,
-  IonCardSubtitle
 } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-workout-details',
@@ -43,27 +30,14 @@ import {
     IonContent, 
     IonHeader,
     IonToolbar,
-    IonLabel,
-    IonItem,
-    IonIcon,
-    IonCardHeader,
-    IonCardContent,
-    IonCard,
-    IonChip,
     IonButton,
-    IonThumbnail,
-    IonList,
-    IonCardTitle,
-    IonCol,
-    IonRow,
-    IonGrid,
     IonTitle,
     IonButtons,
     IonBackButton,
     IonRefresher,
     IonRefresherContent,
     IonSpinner,
-    IonCardSubtitle
+    WorkoutExerciseListComponent
   ]
 })
 export class WorkoutDetailsPage implements OnInit, OnDestroy {
@@ -147,20 +121,5 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  }
-
-  /**
-   * TrackBy functions per ottimizzare il rendering
-   */
-  trackByDay(index: number, day: WorkoutDay): number {
-    return day.seduta;
-  }
-
-  trackByGroup(index: number, group: any): number {
-    return group.gruppo;
-  }
-
-  trackByExercise(index: number, exercise: any): string {
-    return exercise.id;
   }
 }

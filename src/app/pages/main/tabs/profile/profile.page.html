@@ -18,7 +18,7 @@
 
     <!-- Sezione Abbonamenti -->
     <div class="subscriptions-section">
-      <h3>I tuoi abbonamenti</h3>
+      <h3>{{ currentUser?.subscriptions.length == 1 ? 'Il tuo abbonamento' : 'I tuoi abbonamenti' }}</h3>
       
       <div class="subscription-item" *ngFor="let subscription of currentUser?.subscriptions">
         <div class="package-head">
