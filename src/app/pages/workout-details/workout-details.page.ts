@@ -150,26 +150,6 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Verifica se la scheda è scaduta
-   */
-  isExpired(): boolean {
-    if (!this.workout?.data_scadenza_ymd) return false;
-    const today = new Date();
-    const expiryDate = new Date(this.workout.data_scadenza_ymd);
-    return expiryDate < today;
-  }
-
-  /**
-   * Verifica se la scheda è attiva
-   */
-  isActive(): boolean {
-    if (!this.workout?.data_inizio_ymd) return false;
-    const today = new Date();
-    const startDate = new Date(this.workout.data_inizio_ymd);
-    return startDate <= today && !this.isExpired();
-  }
-
-  /**
    * TrackBy functions per ottimizzare il rendering
    */
   trackByDay(index: number, day: WorkoutDay): number {

@@ -11,8 +11,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  
-  <div class="content">
+
     <div *ngIf="isLoading" class="loading-container">
         <ion-spinner name="crescent"></ion-spinner>
         <p>{{ environment.ln.generalLoading }}</p>
@@ -29,28 +28,32 @@
 
     <div *ngIf="!isLoading && workout" class="workout-info">
         <div class="workout-title">{{ workout.descrizione }}</div>
-        <div class="workout-detail">
+        
+        <div *ngIf="workout.note" class="workout-notes">
+            {{ workout.note }}
+        </div>
+        
+        <div class="workout-meta-double">
+            <div class="detail">
+                <span class="label">Data inizio</span>
+                <span class="value">{{ workout.data_inizio }}</span>
+            </div>
+            <div class="detail">
+                <span class="label">Data fine</span>
+                <span class="value">{{ workout.data_scadenza }}</span>
+            </div>
+        </div>
+
+        <div class="workout-meta-single">
             <span class="label">Durata</span>
             <span class="value">{{ workout.durata }} settimane</span>
         </div>
-        <div class="workout-detail">
-            <span class="label">Data inizio</span>
-            <span class="value">{{ workout.data_inizio }}</span>
-        </div>
-        <div class="workout-detail">
-            <span class="label">Data fine</span>
-            <span class="value">{{ workout.data_scadenza }}</span>
-        </div>
-        <div class="workout-detail">
+
+        <div class="workout-meta-single">
             <span class="label">Consegnata il</span>
             <span class="value">{{ workout.data_consegna }}</span>
         </div>
-        <div class="workout-detail">
-            <span class="label">Note</span>
-            <span class="value">{{ workout.note }}</span>
-        </div>
     </div>
-  </div>
 
 
   <!-- Workout Details -->
