@@ -36,7 +36,7 @@ export class ProfilePage implements OnInit {
 
   async completeProfile() {
     await Browser.open({
-      url: environment.urls.profile,
+      url: environment.urls.profile + '?ptk=' + this.auth.getToken(),
       windowName: '_system'
     });
   }
