@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <app-calendar-widget></app-calendar-widget>
-    <div class="title">Le tue schede di allenamento</div>
+    <div class="title">{{ currentUser?.activeWorkouts.length == 1 ? 'La tua scheda di allenamento' : 'Le tue schede di allenamento' }}</div>
   </ion-toolbar>
 </ion-header>
 
