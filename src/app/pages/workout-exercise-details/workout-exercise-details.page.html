@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="goBack()" defaultHref="/main"></ion-back-button>
+    </ion-buttons>
+    <ion-title>La tua scheda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="exercise-details-container">
+    <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div *ngIf="isLoading" class="loading-container">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>{{ environment.ln.generalLoading }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && !exercise" class="no-exercise">
+        <div class="icon">
+        <img src="assets/images/icon-workout.svg" alt="Allenamento">
+        </div>
+        <h3>Esercizio non trovato</h3>
+        <p>Non è stato possibile caricare i dettagli dell'esercizio.</p>
+        <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
+    </div>
+
+    <div *ngIf="!isLoading && exercise" class="exercise-info">
+        <div class="exercise-title">{{ exercise.descrizione }}</div>
+        
+        <div *ngIf="exercise.testo" class="exercise-text">
+            {{ exercise.testo }}
+        </div>
+        
+        <div class="exercise-meta-double">
+            <div *ngIf="exercise.tipo == 'reps'" class="detail">
+                <span class="label">Serie e ripetizioni</span>
+                <span class="value">{{ exercise.serie }}</span>
+            </div>
+            <div *ngIf="exercise.tipo == 'time'" class="detail">
+                <span class="label">Serie a tempo</span>
+                <span class="value">{{ exercise.serie }} x {{ exercise.durata_f }}</span>
+            </div>
+            <div class="detail">
+                <span class="label">Kg</span>
+                <span class="value">{{ exercise.kg }}</span>
+            </div>
+        </div>
+
+        <div class="exercise-meta-single">
+            <span class="label">Recupero</span>
+            <span class="value">{{ exercise.recupero_f }}</span>
+        </div>
+
+        <div *ngIf="exercise.note" class="exercise-meta-single">
+            <span class="label">Note</span>
+            <span class="value">{{ exercise.note }}</span>
+        </div>
+
+        <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio</ion-button>
+        <ion-button class="button workout-start" expand="block" (click)="workoutStart()" [disabled]="isLoading">Inizia ad allenarti</ion-button>
+    </div>
+</ion-content>

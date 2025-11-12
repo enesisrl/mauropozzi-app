@@ -23,12 +23,12 @@
 
             <div *ngIf="exercise.tipo == 'time'" class="exercise-detail">
               <span class="label">Serie a tempo</span>
-              <span class="value">{{ exercise.serie }} x {{ exercise.durata}}</span>
+              <span class="value">{{ exercise.serie }} x {{ exercise.durata_f }}</span>
             </div>
 
             <div class="exercise-detail">
               <span class="label">Recupero</span>
-              <span class="value">{{ exercise.recupero }}</span>
+              <span class="value">{{ exercise.recupero_f }}</span>
             </div>
 
             <div *ngIf="exercise.note" class="exercise-detail">

@@ -61,7 +61,7 @@
                 <div class="title">{{ day.descrizione }}</div>
                 <!-- <div class="subtitle">Ultimo workout lun 11 giugno</div> -->
             </div>
-            <app-workout-exercise-list [groups]="day.gruppi || []"></app-workout-exercise-list>
+            <app-workout-exercise-list [workoutId]="workout.id" [groups]="day.gruppi || []"></app-workout-exercise-list>
         </div>
     </div>
 </ion-content>
