@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonCard,
+  IonIcon
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -12,7 +13,8 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    IonCard
+    IonCard,
+    IonIcon
   ]
 })
 export class WorkoutListComponent {

@@ -18,6 +18,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSpinner,
+  IonIcon
 } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-workout-exercise-details',
@@ -37,6 +38,7 @@ import {
     IonRefresher,
     IonRefresherContent,
     IonSpinner,
+    IonIcon
   ]
 })
 export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {

@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonCard,
+  IonIcon
 } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-workout-exercise-list',
@@ -12,6 +13,7 @@ import {
   imports: [
     CommonModule,
     IonCard,
+    IonIcon
   ]
 })
 export class WorkoutExerciseListComponent {

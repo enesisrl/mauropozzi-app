@@ -45,13 +45,13 @@
                     class="nav-btn prev" 
                     (click)="prevExercise()"
                     [disabled]="!isSuperset">
-                    ←
+                    <ion-icon name="chevron-back-outline"></ion-icon>
                 </button>
                 <button 
                     class="nav-btn next" 
                     (click)="nextExercise()"
                     [disabled]="!isSuperset">
-                    →
+                    <ion-icon name="chevron-forward-outline"></ion-icon>
                 </button>
             </div>
         </div>
@@ -101,7 +101,7 @@
                         <span class="value">{{ exercise.note }}</span>
                     </div>
 
-                    <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio</ion-button>
+                    <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
                     <ion-button class="button workout-start" expand="block" (click)="workoutStart()" [disabled]="isLoading">Inizia ad allenarti</ion-button>
                 </div>
             </div>
