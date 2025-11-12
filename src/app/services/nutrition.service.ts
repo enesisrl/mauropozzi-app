@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Auth } from './auth';
 import { AppEvents } from './app-events.service';
@@ -71,9 +71,6 @@ export class NutritionService {
     );
   }
 
-  /**
-   * Carica tutte le pagine fino a quella specificata (per infinite scroll)
-   */
   loadPages(upToPage: number, pageSize: number = 10): Observable<NutritionItem[]> {
     const allItems: NutritionItem[] = [];
     const requests: Observable<NutritionResponse>[] = [];
@@ -109,22 +106,8 @@ export class NutritionService {
     });
   }
 
-  /**
-   * Svuota la cache delle schede nutrizionali (usato durante logout)
-   */
   clearCache(): void {
     this.cache.clear();
     this.loadingSubject.next(false);
-  }
-
-  /**
-   * Apre il file PDF della scheda
-   */
-  openNutritionFile(fileName: string): void {
-    if (fileName) {
-      // Assumiamo che i file siano in una directory specifica del server
-      const fileUrl = `${environment.api.baseUrl}/files/nutrition/${fileName}`;
-      window.open(fileUrl, '_blank');
-    }
   }
 }

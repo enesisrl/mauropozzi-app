@@ -17,6 +17,7 @@ import { addIcons } from 'ionicons';
 import { documentTextOutline, downloadOutline, personOutline, calendarOutline } from 'ionicons/icons';
 import { NutritionService, NutritionItem } from '../../../../services/nutrition.service';
 import { environment } from '../../../../../environments/environment';
+import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-nutrition',
@@ -118,12 +119,14 @@ export class NutritionPage implements OnInit {
   }
   
 
+  async openExternalLink(url: string) {
+    await Browser.open({ url: url });
+  }
+
   /**
    * Apre il file della scheda nutrizionale
    */
   openNutritionFile(item: NutritionItem) {
-    if (item.file_scheda) {
-      this.nutritionService.openNutritionFile(item.file_scheda);
-    }
+    this.openExternalLink(item.file_scheda);
   }
 }
