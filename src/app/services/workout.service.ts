@@ -165,4 +165,30 @@ export class WorkoutService {
 
     return null;
   }
+
+  /**
+   * Ottiene tutti gli esercizi di un gruppo (superset) dato un exerciseId
+   */
+  getSupersetExercises(workoutId: string, exerciseId: string): WorkoutExercise[] {
+    const workout = this.getCachedWorkout(workoutId);
+    if (!workout || !workout.esercizi) {
+      return [];
+    }
+
+    // Trova il gruppo che contiene l'esercizio
+    for (const giorno of workout.esercizi) {
+      if (giorno.gruppi) {
+        for (const gruppo of giorno.gruppi) {
+          if (gruppo.esercizi) {
+            const hasExercise = gruppo.esercizi.some(ex => ex.id === exerciseId);
+            if (hasExercise) {
+              return gruppo.esercizi;
+            }
+          }
+        }
+      }
+    }
+
+    return [];
+  }
 }

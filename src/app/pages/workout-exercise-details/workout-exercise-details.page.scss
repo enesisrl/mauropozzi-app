@@ -74,149 +74,267 @@ ion-header {
         }
     }
 
-    .exercise-info {
-        display: flex;
-        justify-content: flex-end;
-        flex-direction: column;
+    .exercise-content {
         min-height: 100%;
+        height: 100vh; /* Assicura l'altezza completa */
         position: relative;
-        padding: 200px 12px 12px;
-        background-image: url(../../../assets/images/bg-workout-details.png);
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-
-        &::after {
-            content: '';
+        display: flex;
+        flex-direction: column;
+        
+        .superset-header {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .exercise-title {
-            position: relative;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
-            font-size: 27px;
-            color: #FFF;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-
-        .exercise-text {
-            position: relative;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 400;
-            font-size: 15px;
-            margin: 15px 0 0;
-            z-index: 2;
-        }
-
-        .exercise-meta-double {
-            position: relative;
-            margin: 15px 0 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
+            top: 12px;
+            left: 12px;
+            right: 12px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 8px;
-            z-index: 2;
+            z-index: 10;
 
-            .detail {
+            .superset-badge {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                // background: rgba(237, 186, 34, 0.95);
+                background-color: #edba22;
+                border-radius: 8px;
+                padding: 6px 12px;
+                color: #1b1b1b;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 700;
+                font-style: italic;
+                font-size: 14px;
+                text-transform: uppercase;
+                
+                .superset-indicator {
+                    display: flex;
+                    align-items: center;
+                    
+                    .current {
+                        font-weight: 900;
+                    }
+                    
+                    .separator {
+                        margin: 0 2px;
+                    }
+                    
+                    .total {
+                        font-weight: 400;
+                    }
+                }
+            }
+
+            .superset-navigation {
+                display: flex;
+                gap: 4px;
+
+                .nav-btn {
+                    width: 32px;
+                    height: 32px;
+                    border: none;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.95);
+                    color: #1b1b1b;
+                    font-size: 14px;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: rgba(255, 255, 255, 1);
+                        transform: scale(1.1);
+                    }
+
+                    &:disabled {
+                        opacity: 0.5;
+                        cursor: not-allowed;
+                        transform: scale(1);
+                    }
+                }
+            }
+        }
+
+        .exercise-carousel {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            cursor: grab;
+
+            &:active {
+                cursor: grabbing;
+            }
+            
+            .exercise-slide {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                user-select: none; /* Previene selezione testo durante drag */
+            }
+            
+            .exercise-slides-container {
+                display: flex;
+                width: 100%;
+                height: 100%;
+                transition: transform 0.3s ease-in-out;
+                
+                .exercise-slide {
+                    flex: 0 0 100%;
+                    min-height: 100%;
+                    height: 100%;
+                }
+            }
+        }
+
+        .exercise-info {
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            min-height: 100%;
+            flex: 1;
+            position: relative;
+            padding: 200px 12px 12px;
+            background-image: url(../../../assets/images/bg-workout-details.png);
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            .exercise-title {
+                position: relative;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 700;
+                font-size: 27px;
+                color: #FFF;
+                text-transform: uppercase;
+                z-index: 2;
+            }
+
+            .exercise-text {
+                position: relative;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 400;
+                font-size: 15px;
+                margin: 15px 0 0;
+                z-index: 2;
+            }
+
+            .exercise-meta-double {
+                position: relative;
+                margin: 15px 0 0;
+                background-color: rgba(0, 0, 0, 0.8);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                padding: 8px;
+                z-index: 2;
+
+                .detail {
+                    .label {
+                        display: block;
+                        font-family: 'Roboto', sans-serif;
+                        font-weight: 700;
+                        font-size: 12px;
+                        color: #B8B8B8;
+                    }
+
+                    .value {
+                        display: block;
+                        font-family: 'Roboto', sans-serif;
+                        font-weight: 700;
+                        font-size: 17px;
+                        margin-top: 2px;
+                        color: #FFF;
+                    }
+
+                    &:first-child {
+                        flex: 1 1 auto;
+                        .label {
+                            text-transform: uppercase;
+                        }
+                    }
+                    &:last-child {
+                        min-width: 60px;
+                        .value {
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+
+            .exercise-meta-single {
+                position: relative;
+                margin: 4px 0 0;
+                background-color: rgba(0, 0, 0, 0.8);
+                border-radius: 8px;
+                padding: 8px;
+                z-index: 2;
+
                 .label {
-                    display: block;
+                    display: inline-block;
                     font-family: 'Roboto', sans-serif;
                     font-weight: 700;
                     font-size: 12px;
                     color: #B8B8B8;
+                    text-transform: uppercase;
                 }
 
                 .value {
-                    display: block;
+                    display: inline-block;
                     font-family: 'Roboto', sans-serif;
                     font-weight: 700;
                     font-size: 17px;
-                    margin-top: 2px;
+                    margin-left: 5px;
                     color: #FFF;
                 }
-
-                &:first-child {
-                    flex: 1 1 auto;
-                    .label {
-                        text-transform: uppercase;
-                    }
-                }
-                &:last-child {
-                    min-width: 60px;
-                    .value {
-                        text-align: right;
-                    }
-                }
-            }
-        }
-
-        .exercise-meta-single {
-            position: relative;
-            margin: 4px 0 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-            padding: 8px;
-            z-index: 2;
-
-            .label {
-                display: inline-block;
-                font-family: 'Roboto', sans-serif;
-                font-weight: 700;
-                font-size: 12px;
-                color: #B8B8B8;
-                text-transform: uppercase;
             }
 
-            .value {
-                display: inline-block;
-                font-family: 'Roboto', sans-serif;
-                font-weight: 700;
-                font-size: 17px;
-                margin-left: 5px;
-                color: #FFF;
-            }
-        }
 
-
-        .button  {
-            position: relative;
-            z-index: 2;
-            --background: var(--ion-color-primary);
-            --background-hover: var(--ion-color-primary-shade);
-            --background-activated: var(--ion-color-primary-shade);
-            --background-focused: var(--ion-color-primary-shade);
-            --border-radius: 8px;
-            --color: #FFF;
-            --padding-top: 15px;
-            --padding-bottom: 14px;
-            font-family: 'Roboto Condensed', sans-serif;
-            font-size: 21px;
-            font-weight: 700;
-            line-height: 1;
-            margin: 8px 0 0;
-            text-align: center;
-            letter-spacing: 0;
-            width: 100%;
-            --box-shadow: none;
-            text-transform: uppercase;
-            min-height: 50px;
-
-            &.workout-start {
-                --color: #000;
-                --background: #4CDB1D;
+            .button  {
+                position: relative;
+                z-index: 2;
+                --background: var(--ion-color-primary);
                 --background-hover: var(--ion-color-primary-shade);
                 --background-activated: var(--ion-color-primary-shade);
                 --background-focused: var(--ion-color-primary-shade);
+                --border-radius: 8px;
+                --color: #FFF;
+                --padding-top: 15px;
+                --padding-bottom: 14px;
+                font-family: 'Roboto Condensed', sans-serif;
+                font-size: 21px;
+                font-weight: 700;
+                line-height: 1;
+                margin: 8px 0 0;
+                text-align: center;
+                letter-spacing: 0;
+                width: 100%;
+                --box-shadow: none;
+                text-transform: uppercase;
+                min-height: 50px;
+
+                &.workout-start {
+                    --color: #000;
+                    --background: #4CDB1D;
+                    --background-hover: var(--ion-color-primary-shade);
+                    --background-activated: var(--ion-color-primary-shade);
+                    --background-focused: var(--ion-color-primary-shade);
+                }
             }
         }
     }

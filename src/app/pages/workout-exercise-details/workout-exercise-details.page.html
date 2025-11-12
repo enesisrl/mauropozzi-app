@@ -26,39 +26,132 @@
         <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
     </div>
 
-    <div *ngIf="!isLoading && exercise" class="exercise-info">
-        <div class="exercise-title">{{ exercise.descrizione }}</div>
+    <div *ngIf="!isLoading && exercise" class="exercise-content">
         
-        <div *ngIf="exercise.testo" class="exercise-text">
-            {{ exercise.testo }}
-        </div>
-        
-        <div class="exercise-meta-double">
-            <div *ngIf="exercise.tipo == 'reps'" class="detail">
-                <span class="label">Serie e ripetizioni</span>
-                <span class="value">{{ exercise.serie }}</span>
+        <!-- Indicatore superset -->
+        <div *ngIf="isSuperset" class="superset-header">
+            <div class="superset-badge">
+                <span class="superset-label">SUPERSET</span>
+                <div class="superset-indicator">
+                    <span class="current">{{ currentExerciseIndex + 1 }}</span>
+                    <span class="separator">/</span>
+                    <span class="total">{{ supersetExercises.length }}</span>
+                </div>
             </div>
-            <div *ngIf="exercise.tipo == 'time'" class="detail">
-                <span class="label">Serie a tempo</span>
-                <span class="value">{{ exercise.serie }} x {{ exercise.durata_f }}</span>
-            </div>
-            <div class="detail">
-                <span class="label">Kg</span>
-                <span class="value">{{ exercise.kg }}</span>
+            
+            <!-- Navigation arrows -->
+            <div class="superset-navigation">
+                <button 
+                    class="nav-btn prev" 
+                    (click)="prevExercise()"
+                    [disabled]="!isSuperset">
+                    ←
+                </button>
+                <button 
+                    class="nav-btn next" 
+                    (click)="nextExercise()"
+                    [disabled]="!isSuperset">
+                    →
+                </button>
             </div>
         </div>
 
-        <div class="exercise-meta-single">
-            <span class="label">Recupero</span>
-            <span class="value">{{ exercise.recupero_f }}</span>
-        </div>
+        <!-- Carousel container -->
+        <div class="exercise-carousel" 
+             (pan)="onSwipe($event)"
+             (touchstart)="onTouchStart($event)"
+             (touchmove)="onTouchMove($event)"
+             (touchend)="onTouchEnd($event)"
+             (mousedown)="onMouseDown($event)"
+             (mousemove)="onMouseMove($event)"
+             (mouseup)="onMouseUp($event)"
+             #carouselContainer>
+            
+            <!-- Single exercise -->
+            <div *ngIf="!isSuperset" class="exercise-slide active">
+                <div class="exercise-info">
+                    <div class="exercise-title">{{ exercise.descrizione }}</div>
+                    
+                    <div *ngIf="exercise.testo" class="exercise-text">
+                        {{ exercise.testo }}
+                    </div>
+                    
+                    <div class="exercise-meta-double">
+                        <div *ngIf="exercise.tipo == 'reps'" class="detail">
+                            <span class="label">Serie e ripetizioni</span>
+                            <span class="value">{{ exercise.serie }}</span>
+                        </div>
+                        <div *ngIf="exercise.tipo == 'time'" class="detail">
+                            <span class="label">Serie a tempo</span>
+                            <span class="value">{{ exercise.serie }} x {{ exercise.durata_f }}</span>
+                        </div>
+                        <div class="detail">
+                            <span class="label">Kg</span>
+                            <span class="value">{{ exercise.kg }}</span>
+                        </div>
+                    </div>
 
-        <div *ngIf="exercise.note" class="exercise-meta-single">
-            <span class="label">Note</span>
-            <span class="value">{{ exercise.note }}</span>
-        </div>
+                    <div class="exercise-meta-single">
+                        <span class="label">Recupero</span>
+                        <span class="value">{{ exercise.recupero_f }}</span>
+                    </div>
 
-        <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio</ion-button>
-        <ion-button class="button workout-start" expand="block" (click)="workoutStart()" [disabled]="isLoading">Inizia ad allenarti</ion-button>
+                    <div *ngIf="exercise.note" class="exercise-meta-single">
+                        <span class="label">Note</span>
+                        <span class="value">{{ exercise.note }}</span>
+                    </div>
+
+                    <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio</ion-button>
+                    <ion-button class="button workout-start" expand="block" (click)="workoutStart()" [disabled]="isLoading">Inizia ad allenarti</ion-button>
+                </div>
+            </div>
+
+            <!-- Superset slides -->
+            <div *ngIf="isSuperset" 
+                 class="exercise-slides-container"
+                 [style.transform]="'translateX(' + (-currentExerciseIndex * 100) + '%)'">
+                
+                <div *ngFor="let exerciseItem of supersetExercises; let i = index" 
+                     class="exercise-slide"
+                     [class.active]="i === currentExerciseIndex">
+                    
+                    <div class="exercise-info">
+                        <div class="exercise-title">{{ exerciseItem.descrizione }}</div>
+                        
+                        <div *ngIf="exerciseItem.testo" class="exercise-text">
+                            {{ exerciseItem.testo }}
+                        </div>
+                        
+                        <div class="exercise-meta-double">
+                            <div *ngIf="exerciseItem.tipo == 'reps'" class="detail">
+                                <span class="label">Serie e ripetizioni</span>
+                                <span class="value">{{ exerciseItem.serie }}</span>
+                            </div>
+                            <div *ngIf="exerciseItem.tipo == 'time'" class="detail">
+                                <span class="label">Serie a tempo</span>
+                                <span class="value">{{ exerciseItem.serie }} x {{ exerciseItem.durata_f }}</span>
+                            </div>
+                            <div class="detail">
+                                <span class="label">Kg</span>
+                                <span class="value">{{ exerciseItem.kg }}</span>
+                            </div>
+                        </div>
+
+                        <div class="exercise-meta-single">
+                            <span class="label">Recupero</span>
+                            <span class="value">{{ exerciseItem.recupero_f }}</span>
+                        </div>
+
+                        <div *ngIf="exerciseItem.note" class="exercise-meta-single">
+                            <span class="label">Note</span>
+                            <span class="value">{{ exerciseItem.note }}</span>
+                        </div>
+
+                        <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio</ion-button>
+                        <ion-button class="button workout-start" expand="block" (click)="workoutStart()" [disabled]="isLoading">Inizia ad allenarti</ion-button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </ion-content>
