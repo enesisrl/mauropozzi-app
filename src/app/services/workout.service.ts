@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, tap, BehaviorSubject, forkJoin } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Auth } from './auth';
 
@@ -37,13 +37,20 @@ export interface WorkoutDetail {
   descrizione: string;
   durata?: string;
   data_consegna?: string;
-  data_consegna_ymd?: string;
   data_inizio?: string;
-  data_inizio_ymd?: string;
   data_scadenza?: string;
-  data_scadenza_ymd?: string;
   note?: string;
   esercizi: WorkoutDay[];
+}
+
+export interface WorkoutListItem {
+  id: string;
+  descrizione: string;
+  durata?: string;
+  data_consegna?: string;
+  data_inizio?: string;
+  data_scadenza?: string;
+  note?: string;
 }
 
 export interface WorkoutResponse {
@@ -52,14 +59,27 @@ export interface WorkoutResponse {
   message?: string;
 }
 
+export interface WorkoutListResponse {
+  success: boolean;
+  items?: WorkoutListItem[];
+  page?: number;
+  message?: string;
+}
+
 @Injectable({
   providedIn: 'root' 
 })
 export class WorkoutService {
   
+  // Cache per i dettagli workout
   private workoutCache = new Map<string, WorkoutDetail>();
   private cacheTimeout = 5 * 60 * 1000; // 5 minuti
   private cacheTimestamps = new Map<string, number>();
+  
+  // Cache per la lista workout
+  private workoutListCache = new Map<number, WorkoutListItem[]>();
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loadingSubject.asObservable();
   
   constructor(
       private http: HttpClient, 
@@ -190,5 +210,70 @@ export class WorkoutService {
     }
 
     return [];
+  }
+
+  /**
+   * Carica la lista delle schede di allenamento con paginazione
+   */
+  getWorkoutList(page: number = 1, pageSize: number = 10): Observable<WorkoutListResponse> {
+    // Controllo cache
+    if (this.workoutListCache.has(page)) {
+      return new Observable(observer => {
+        observer.next({
+          success: true,
+          items: this.workoutListCache.get(page) || [],
+          page: page
+        });
+        observer.complete();
+      });
+    }
+
+    this.loadingSubject.next(true);
+
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', pageSize.toString());
+
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.workoutList}`;
+
+    return this.http.post<WorkoutListResponse>(url, {}, {
+      headers: this.auth.getAuthHeaders(),
+      params: params
+    }).pipe(
+      tap(response => {
+        this.loadingSubject.next(false);
+        if (response.success && response.items) {
+          this.workoutListCache.set(page, response.items);
+        }
+      })
+    );
+  }
+
+  /**
+   * Carica tutte le pagine fino a una certa pagina
+   */
+  loadWorkoutPages(upToPage: number, pageSize: number = 10): Observable<WorkoutListResponse[]> {
+    const requests: Observable<WorkoutListResponse>[] = [];
+    
+    for (let i = 1; i <= upToPage; i++) {
+      requests.push(this.getWorkoutList(i, pageSize));
+    }
+
+    return forkJoin(requests);
+  }
+
+  /**
+   * Pulisce la cache della lista workout
+   */
+  clearWorkoutListCache(): void {
+    this.workoutListCache.clear();
+  }
+
+  /**
+   * Pulisce tutta la cache (dettagli + lista)
+   */
+  clearAllCache(): void {
+    this.clearWorkoutCache();
+    this.clearWorkoutListCache();
   }
 }

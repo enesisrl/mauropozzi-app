@@ -8,11 +8,8 @@ import { AppEvents } from './app-events.service';
 
 export interface NutritionItem {
     id: string;
-    // data_dal: string;
-    // data_al: string;
     periodo: string;
     descrizione: string;
-    // nutrizionista: string;
     file_scheda: string;
 }
 

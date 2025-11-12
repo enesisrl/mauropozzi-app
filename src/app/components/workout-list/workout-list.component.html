@@ -1,6 +1,6 @@
 <div class="workout-list">
   <ion-card 
-      *ngFor="let workout of workouts"
+      *ngFor="let workout of workouts; trackBy: trackById"
       class="workout-item" 
       button="true"
       (click)="onWorkoutClick(workout)"

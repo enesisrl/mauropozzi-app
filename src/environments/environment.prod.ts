@@ -6,6 +6,7 @@ export const environment = {
       login: '/auth-login/',
       profile: '/user-profile/',
       nutritionList: '/nutrition-list/',
+      workoutList: '/workout-list/',
       workoutDetails: '/workout-details/',
     }
   },

@@ -15,7 +15,6 @@ export interface User {
   profileCompleted: boolean;
   subscriptions: any[];
   latestWorkoutDates: any[];
-  activeWorkouts: any[];
 }
 
 export interface LoginRequest {

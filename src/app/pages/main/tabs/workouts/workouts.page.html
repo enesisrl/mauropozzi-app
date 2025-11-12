@@ -1,12 +1,41 @@
 <ion-header>
   <ion-toolbar>
     <app-calendar-widget></app-calendar-widget>
-    <div class="title">{{ currentUser?.activeWorkouts.length == 1 ? 'La tua scheda di allenamento' : 'Le tue schede di allenamento' }}</div>
+    <div class="title">{{ workoutItems.length == 1 ? 'La tua scheda di allenamento' : 'Le tue schede di allenamento' }}</div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="workouts-container">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <div class="scrolling-content">
-    <app-workout-list [workouts]="currentUser?.activeWorkouts || []"></app-workout-list>
+    <div *ngIf="initialLoad && isLoading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>{{ environment.ln.generalLoading }}</p>
+    </div>
+
+    <div *ngIf="!initialLoad">
+      <app-workout-list [workouts]="workoutItems" *ngIf="workoutItems.length > 0"></app-workout-list>
+
+      <div class="no-workouts" *ngIf="workoutItems.length === 0 && !isLoading">
+        <div class="icon">
+          <img src="assets/images/icon-workout.svg" alt="Allenamento">
+        </div>
+        <h3>Nessuna scheda disponibile</h3>
+        <p>Non sono ancora presenti schede di allenamento <br>per il tuo profilo.</p>
+      </div>
+    </div>
+
+    <ion-infinite-scroll 
+      (ionInfinite)="onInfiniteScroll($event)"
+      threshold="100px"
+      [disabled]="!hasMoreData">
+      <ion-infinite-scroll-content
+        loadingSpinner="crescent"
+        loadingText="{{ environment.ln.generalLoading }}">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </div>
 </ion-content>

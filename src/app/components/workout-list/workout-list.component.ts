@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { WorkoutListItem } from '../../services/workout.service';
 import { 
   IonCard,
   IonIcon
@@ -19,11 +20,18 @@ import {
 })
 export class WorkoutListComponent {
   
-  @Input() workouts: any[] = [];
+  @Input() workouts: WorkoutListItem[] = [];
   
   constructor(private router: Router) {}
 
-  onWorkoutClick(workout: any) {
+  onWorkoutClick(workout: WorkoutListItem) {
     this.router.navigate(['/workout-details', workout.id]);
+  }
+
+  /**
+   * TrackBy function per ottimizzare il rendering
+   */
+  trackById(index: number, item: WorkoutListItem): string {
+    return item.id;
   }
 }
