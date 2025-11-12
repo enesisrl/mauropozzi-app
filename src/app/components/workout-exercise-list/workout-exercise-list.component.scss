@@ -8,17 +8,31 @@
         .exercise-inner {
             display: flex;
             position: relative;
-            align-items: stretch;
+            align-items: flex-start;
             justify-content: space-between;
             padding: 12px;
 
             .exercise-cover {
                 margin-right: 12px;
+                width: 100px;
+                border-radius: 4px;
+                aspect-ratio: 9 / 14;
+                object-fit: cover;
+            }
+
+            .exercise-no-cover {
+                margin-right: 12px;
                 overflow: hidden;
                 width: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                aspect-ratio: 9 / 14;
+                background: linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
 
                 img {
-                    border-radius: 4px;
+                    opacity: .4;
                 }
             }
 
@@ -56,8 +70,26 @@
                     }
                 }
             }
+
+            & + .exercise-inner {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
         }
 
+        .exercise-superset { 
+            position: absolute;
+            display: flex;
+            left: 0;
+            bottom: 0;
+            background-color: #edba22;
+            border-radius: 0 8px 0 0;
+            padding: 6px 12px;
+            color: #1b1b1b;
+            text-transform: uppercase;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-style: italic;
+        }
         .exercise-action {
             position: absolute;
             display: flex;

@@ -8,8 +8,9 @@
         <div 
         *ngFor="let exercise of group.esercizi"
         class="exercise-inner">
-          <div class="exercise-cover icon">
-              <img [src]="exercise.thumb" [alt]="exercise.descrizione" />
+          <img *ngIf="exercise.thumb" class="exercise-cover" [src]="exercise.thumb" [alt]="exercise.descrizione" />
+          <div *ngIf="!exercise.thumb" class="exercise-no-cover">
+            <img src="assets/images/icon-workout.svg" alt="Workout">
           </div>
 
           <div class="exercise-info">
@@ -36,6 +37,8 @@
             </div>
           </div>
         </div>
+
+        <div *ngIf="group.esercizi.length > 1" class="exercise-superset">Superset</div>
 
         <div class="exercise-action">
           <div class="action">

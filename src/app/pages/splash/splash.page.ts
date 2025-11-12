@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { IonContent } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
+import { AppInit } from '../../services/app-init';
 
 @Component({
   selector: 'app-splash',
@@ -15,7 +16,8 @@ export class SplashPage implements OnInit {
 
   constructor(
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private appInit: AppInit
   ) {}
 
   ngOnInit() {
@@ -26,10 +28,13 @@ export class SplashPage implements OnInit {
     const minSplashTime = this.delay(1500);
 
     try {
+      // Inizializza app e precarica immagini in parallelo
+      const initPromise = this.appInit.initialize();
+      
       // Se non sono loggato, vado subito al login
       const token = this.auth.getToken();
       if (!token) {
-        await minSplashTime;
+        await Promise.all([minSplashTime, initPromise]);
         this.router.navigate(['/login'], { replaceUrl: true });
         return;
       }
@@ -37,7 +42,8 @@ export class SplashPage implements OnInit {
       // Se sono loggato provo a caricare i dati utente
       const [response] = await Promise.all([
         firstValueFrom(this.auth.loadProfile()),
-        minSplashTime
+        minSplashTime,
+        initPromise
       ]);
 
       if (response?.success) {

@@ -17,7 +17,6 @@ export class WorkoutExerciseListComponent {
   
   @Input() groups: any[] = [];
 
-
   onExerciseClick(exercise: any) {
     console.log('Exercise clicked:', exercise);
   }
