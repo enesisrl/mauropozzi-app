@@ -41,11 +41,11 @@ export class NutritionPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
 
   nutritionItems: NutritionItem[] = [];
-  currentPage = 1;
-  pageSize = 10;
-  isLoading = false;
-  hasMoreData = true;
-  initialLoad = true;
+  isLoading: boolean = false;
+  initialLoad: boolean = true;
+  hasMoreData: boolean = true;
+  currentPage: number = 1;
+  pageSize: number = 10;
   environment = environment;
 
   constructor(private nutritionService: NutritionService) {
@@ -55,15 +55,11 @@ export class NutritionPage implements OnInit {
   ngOnInit() {
     this.loadNutritionData();
   }
-
-  /**
-   * Carica i dati nutrizionali
-   */
-  async loadNutritionData(reset: boolean = false) {
+  
+  loadNutritionData(reset: boolean = false) {
     if (reset) {
-      this.initialLoad = true;
-      this.currentPage = 1;
       this.nutritionItems = [];
+      this.currentPage = 1;
       this.hasMoreData = true;
       this.nutritionService.clearCache();
     }
@@ -74,58 +70,53 @@ export class NutritionPage implements OnInit {
 
     this.isLoading = true;
 
-    try {
-      this.nutritionService.getNutritionList(this.currentPage, this.pageSize).subscribe({
-        next: (response) => {
-          if (response.success && response.items) {
-            if (this.currentPage === 1) {
-              this.nutritionItems = response.items;
-            } else {
-              this.nutritionItems = [...this.nutritionItems, ...response.items];
-            }
+    this.nutritionService.getNutritionList(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.initialLoad = false;
 
-            // Controlla se ci sono altri dati
-            this.hasMoreData = response.hasMore !== undefined ? response.hasMore : (response.items.length === this.pageSize);
-            this.currentPage++;
+        if (response.success && response.items) {
+          if (reset) {
+            this.nutritionItems = response.items;
           } else {
-            this.hasMoreData = false;
+            this.nutritionItems = [...this.nutritionItems, ...response.items];
           }
-        },
-        error: (error) => {
-          this.hasMoreData = false;
-        },
-        complete: () => {
-          this.isLoading = false;
-          this.initialLoad = false;
+
+          this.hasMoreData = response.hasMore || false;
         }
-      });
-    } catch (error) {
-      this.isLoading = false;
-      this.initialLoad = false;
-    }
+      },
+      error: (error) => {
+        this.hasMoreData = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.initialLoad = false;
+      }
+    });
   }
 
-  /**
-   * Infinite scroll
-   */
-  async onInfiniteScroll(event: InfiniteScrollCustomEvent) {
-    await this.loadNutritionData();
-    event.target.complete();
-
-    if (!this.hasMoreData) {
-      event.target.disabled = true;
-    }
-  }
-
-  /**
-   * Refresh pull-to-refresh
-   */
-  async onRefresh(event: any) {
-    await this.loadNutritionData(true);
-    if (event?.target) {
+  onRefresh(event: any) {
+    this.loadNutritionData(true);
+    setTimeout(() => {
       event.target.complete();
-    }
+    }, 1000);
   }
+  
+  onInfiniteScroll(event: InfiniteScrollCustomEvent) {
+    if (this.hasMoreData && !this.isLoading) {
+      this.currentPage++;
+      this.loadNutritionData();
+    }
+    
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
+  
+  trackById(index: number, item: NutritionItem): string {
+    return item.id;
+  }
+  
 
   /**
    * Apre il file della scheda nutrizionale
@@ -134,12 +125,5 @@ export class NutritionPage implements OnInit {
     if (item.file_scheda) {
       this.nutritionService.openNutritionFile(item.file_scheda);
     }
-  }
-
-  /**
-   * TrackBy function per ottimizzare il rendering della lista
-   */
-  trackById(index: number, item: NutritionItem): string {
-    return item.id;
   }
 }

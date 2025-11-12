@@ -61,9 +61,10 @@ export interface WorkoutResponse {
 
 export interface WorkoutListResponse {
   success: boolean;
-  items?: WorkoutListItem[];
+  items: WorkoutListItem[];
+  hasMore?: boolean;
+  total?: number;
   page?: number;
-  message?: string;
 }
 
 @Injectable({
