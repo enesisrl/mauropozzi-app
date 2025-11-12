@@ -20,11 +20,8 @@ ion-header {
 
 .workout-details-container {
     --background: linear-gradient(to bottom, var(--ion-color-primary), #000000);
-    min-height: 100vh;
     min-width: 300px;
     overflow: hidden;
-
-
 
     .loading-container {
         display: flex;
@@ -175,7 +172,7 @@ ion-header {
     }
 
     .workout-day {
-        padding: 20px 12px 0;
+        margin: 20px 12px;
 
         .workout-day-head {
             text-align: center;
