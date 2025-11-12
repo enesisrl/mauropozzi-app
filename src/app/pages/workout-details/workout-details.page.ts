@@ -118,15 +118,6 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Formatta la durata in minuti e secondi
-   */
-  formatDuration(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  }
-
-  /**
    * Precarica le immagini degli esercizi per migliorare le performance
    */
   private preloadExerciseImages(): void {
