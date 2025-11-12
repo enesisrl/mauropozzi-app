@@ -3,7 +3,6 @@ ion-header {
         --background: transparent;
         --border-width: 0;
         --color: #FFF;
-        --min-height: 20px; // Aumentato da default 56px
         padding: 20px 12px;
 
         .title {
@@ -15,7 +14,6 @@ ion-header {
         }
     }
 }
-
 
 .workouts-container {
     --background: transparent;

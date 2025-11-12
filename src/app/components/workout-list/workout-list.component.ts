@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonCard,
@@ -19,7 +19,7 @@ export class WorkoutListComponent {
   
   @Input() workouts: any[] = [];
   
-  private router = inject(Router);
+  constructor(private router: Router) {}
 
   onWorkoutClick(workout: any) {
     this.router.navigate(['/workout-details', workout.id]);

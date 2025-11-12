@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
+import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
 import { 
   IonContent, 
   IonHeader,
@@ -21,7 +22,8 @@ import {
     IonContent,
     IonHeader,
     IonToolbar,
-    WorkoutListComponent
+    WorkoutListComponent,
+    CalendarWidgetComponent
   ]
 })
 export class WorkoutsPage implements OnInit {

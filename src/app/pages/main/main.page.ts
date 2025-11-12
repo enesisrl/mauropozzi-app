@@ -1,7 +1,6 @@
 import { 
   IonHeader,
   IonLabel,
-  IonRippleEffect,
   IonTabBar, 
   IonTabButton, 
   IonTabs
@@ -25,7 +24,6 @@ registerLocaleData(localeIt);
     DatePipe,
     IonHeader,
     IonLabel,
-    IonRippleEffect,
     IonTabBar, 
     IonTabButton,
     IonTabs,

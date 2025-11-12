@@ -48,6 +48,9 @@
             overflow: hidden;
             border: 1px solid #000;
             opacity: 0.4;
+            width: 61px;
+            height: 61px;
+            padding: 15px;
 
             img {
                 width: 100%;
@@ -91,6 +94,15 @@
                 ion-label {
                     color: #FFF;
                 }
+            }
+        }
+    }
+
+    &.lt {
+        .header {
+            .header-content {
+                text-align: left;
+                padding: 0 0 0 25px;
             }
         }
     }

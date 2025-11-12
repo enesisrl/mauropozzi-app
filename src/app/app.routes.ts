@@ -25,11 +25,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/main/main.page').then( m => m.MainPage),
     canActivate: [authGuard, subscriptionGuard],
     children: [
-      {
-        path: 'home',
-        loadComponent: () => import('./pages/main/tabs/home/home.page').then( m => m.HomePage),
-        canActivate: [authGuard, subscriptionGuard]
-      },
+      // {
+      //   path: 'home',
+      //   loadComponent: () => import('./pages/main/tabs/home/home.page').then( m => m.HomePage),
+      //   canActivate: [authGuard, subscriptionGuard]
+      // },
       {
         path: 'workouts',
         loadComponent: () => import('./pages/main/tabs/workouts/workouts.page').then( m => m.WorkoutsPage),
@@ -52,7 +52,8 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/main/home',
+        // redirectTo: '/main/home',
+        redirectTo: '/main/workouts',
         pathMatch: 'full'
       }
     ]

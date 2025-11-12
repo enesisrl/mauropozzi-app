@@ -59,7 +59,7 @@ export class LoginPage {
         this.isLoading = false;
         
         if (response.success) {
-          this.router.navigate(['/main/home'], { replaceUrl: true });
+          this.router.navigate(['/main'], { replaceUrl: true });
         } else {
           this.showAlert('Ops!', response.message || 'Sembra che le tue credenziali non siano corrette, riprova.');
         }

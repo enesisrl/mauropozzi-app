@@ -27,7 +27,7 @@ export class NoSubscriptionPage implements OnInit, OnDestroy {
     this.userSubscription = this.auth.user$.subscribe(user => {
       if (user && user.subscribed) {
         // Se l'utente diventa attivo, vai alla home
-        this.router.navigate(['/main/home'], { replaceUrl: true });
+        this.router.navigate(['/main'], { replaceUrl: true });
       }
     });
   }

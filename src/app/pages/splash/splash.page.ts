@@ -41,7 +41,7 @@ export class SplashPage implements OnInit {
       ]);
 
       if (response?.success) {
-        this.router.navigate(['/main/home'], { replaceUrl: true });
+        this.router.navigate(['/main'], { replaceUrl: true });
       } 
       
       // In caso di errore faccio logout e vado al login

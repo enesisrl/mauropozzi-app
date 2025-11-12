@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, AlertController, ToastController } from '@ionic/angular';
+import { LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutDetail, WorkoutDay } from '../../services/workout.service';
 import { CommonModule } from '@angular/common';
@@ -52,9 +52,7 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private loadingController: LoadingController,
-    private alertController: AlertController,
-    private toastController: ToastController
+    private loadingController: LoadingController
   ) {}
 
   ngOnInit() {
