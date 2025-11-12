@@ -5,6 +5,10 @@
 </ion-header>
 
 <ion-content class="nutrition-container">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <div class="scrolling-content">
     <div *ngIf="initialLoad && isLoading" class="loading-container">
       <ion-spinner name="crescent"></ion-spinner>
@@ -20,7 +24,7 @@
 
         <div class="nutrition-inner">
           <div class="nutrition-content">
-            <div class="nutrition-dates">{{ getPeriodLabel(item.data_dal, item.data_al) }}</div>
+            <div class="nutrition-dates">{{ item.periodo }}</div>
             <div class="nutrition-title">{{ item.descrizione }}</div>
           </div>
           <img class="nutrition-pdf" src="assets/images/icon-pdf.svg" alt="Downlaod PDF">

@@ -7,6 +7,8 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonCard,
+  IonRefresher,
+  IonRefresherContent,
   InfiniteScrollCustomEvent,
   IonHeader,
   IonToolbar,
@@ -29,6 +31,8 @@ import { environment } from '../../../../../environments/environment';
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonCard,
+    IonRefresher,
+    IonRefresherContent,
     IonHeader,
     IonToolbar,
   ]
@@ -57,6 +61,7 @@ export class NutritionPage implements OnInit {
    */
   async loadNutritionData(reset: boolean = false) {
     if (reset) {
+      this.initialLoad = true;
       this.currentPage = 1;
       this.nutritionItems = [];
       this.hasMoreData = true;
@@ -113,46 +118,22 @@ export class NutritionPage implements OnInit {
   }
 
   /**
+   * Refresh pull-to-refresh
+   */
+  async onRefresh(event: any) {
+    await this.loadNutritionData(true);
+    if (event?.target) {
+      event.target.complete();
+    }
+  }
+
+  /**
    * Apre il file della scheda nutrizionale
    */
   openNutritionFile(item: NutritionItem) {
     if (item.file_scheda) {
       this.nutritionService.openNutritionFile(item.file_scheda);
     }
-  }
-
-  /**
-   * Calcola il periodo di validità della scheda
-   */
-  getPeriodLabel(dataDal: string, dataAl: string): string {
-    const formatDate = (dateStr: string): string => {
-      if (!dateStr) return '';
-      
-      try {
-        // Se la data è già nel formato DD/MM/YYYY, convertiamola
-        let date: Date;
-        if (dateStr.includes('/')) {
-          const parts = dateStr.split('/');
-          date = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-        } else {
-          date = new Date(dateStr);
-        }
-        
-        return date.toLocaleDateString('it-IT', {
-          day: 'numeric',
-          month: 'short'
-        });
-      } catch {
-        return dateStr; // Fallback al formato originale se c'è un errore
-      }
-    };
-
-    const formattedDal = formatDate(dataDal);
-    const formattedAl = formatDate(dataAl);
-
-    if (!dataAl) return `Dal ${formattedDal}`;
-    if (!dataDal) return `Fino al ${formattedAl}`;
-    return `Dal ${formattedDal} al ${formattedAl}`;
   }
 
   /**
