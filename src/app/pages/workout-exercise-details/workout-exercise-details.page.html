@@ -149,7 +149,7 @@
                             <span class="value">{{ exerciseItem.note }}</span>
                         </div>
 
-                        <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio</ion-button>
+                        <ion-button class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
                         <ion-button class="button workout-start" expand="block" (click)="workoutStart()" [disabled]="isLoading">Inizia ad allenarti</ion-button>
                         
                         <img *ngIf="exercise.thumb" class="exercise-cover" [src]="exerciseItem.thumb" [alt]="exercise.descrizione" />
