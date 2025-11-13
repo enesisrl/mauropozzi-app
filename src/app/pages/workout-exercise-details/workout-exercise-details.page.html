@@ -83,7 +83,7 @@
                         </div>
                         <div *ngIf="exercise.tipo == 'time'" class="detail">
                             <span class="label">Serie a tempo</span>
-                            <span class="value">{{ exercise.serie }} x {{ exercise.durata_f }}</span>
+                            <span class="value">{{ exercise.serie }} x {{ exercise.durata }}</span>
                         </div>
                         <div class="detail">
                             <span class="label">Kg</span>
@@ -93,7 +93,7 @@
 
                     <div class="exercise-meta-single">
                         <span class="label">Recupero</span>
-                        <span class="value">{{ exercise.recupero_f }}</span>
+                        <span class="value">{{ exercise.recupero }}</span>
                     </div>
 
                     <div *ngIf="exercise.note" class="exercise-meta-single">
@@ -131,7 +131,7 @@
                             </div>
                             <div *ngIf="exerciseItem.tipo == 'time'" class="detail">
                                 <span class="label">Serie a tempo</span>
-                                <span class="value">{{ exerciseItem.serie }} x {{ exerciseItem.durata_f }}</span>
+                                <span class="value">{{ exerciseItem.serie }} x {{ exerciseItem.durata }}</span>
                             </div>
                             <div class="detail">
                                 <span class="label">Kg</span>
@@ -141,7 +141,7 @@
 
                         <div class="exercise-meta-single">
                             <span class="label">Recupero</span>
-                            <span class="value">{{ exerciseItem.recupero_f }}</span>
+                            <span class="value">{{ exerciseItem.recupero }}</span>
                         </div>
 
                         <div *ngIf="exerciseItem.note" class="exercise-meta-single">

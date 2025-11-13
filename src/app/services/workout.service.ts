@@ -14,10 +14,8 @@ export interface WorkoutExercise {
   serie: string;
   durata: string;
   durata_s: number;
-  durata_f: string;
   recupero: string;
   recupero_s: number;
-  recupero_f: string;
   kg: number;
   note: string;
 }
