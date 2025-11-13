@@ -1,0 +1,6 @@
+{
+  "splash": {
+    "source": "resources/splash.svg",
+    "backgroundColor": "#BD1921"
+  }
+}
