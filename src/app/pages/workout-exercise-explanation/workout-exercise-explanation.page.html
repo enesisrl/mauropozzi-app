@@ -24,12 +24,13 @@
   <div *ngIf="!isLoading && exercise" class="exercise-content">
     <div *ngIf="exercise.video" class="exercise-media">
       <video 
+        #videoElement
         class="exercise-video"
         [src]="exercise.video"
         playsinline
-        autoplay
         loop
-        preload="metadata">
+        preload="metadata"
+        muted>
         Il tuo browser non supporta i video.
       </video>
     </div>
