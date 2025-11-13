@@ -177,7 +177,22 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   }
 
   exerciseExplanation() {
+    if (!this.workoutId) return;
     
+    // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
+    let currentExerciseId = this.exerciseId;
+    if (this.isSuperset && this.supersetExercises.length > 0) {
+      const currentExercise = this.supersetExercises[this.currentExerciseIndex];
+      if (currentExercise) {
+        currentExerciseId = currentExercise.id;
+        console.log(`Superset: Navigating to explanation for exercise ${currentExercise.descrizione} (ID: ${currentExerciseId}) at index ${this.currentExerciseIndex}`);
+      }
+    } else {
+      console.log(`Single exercise: Navigating to explanation for exercise ID: ${currentExerciseId}`);
+    }
+    
+    // Naviga alla pagina di spiegazione dell'esercizio (senza query params)
+    this.router.navigate(['/workout-details', this.workoutId, currentExerciseId, 'explanation']);
   }
   
   workoutStart() {
@@ -197,13 +212,25 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     this.isSuperset = this.supersetExercises.length > 1;
     
     if (this.isSuperset && this.exercise) {
-      // Trova l'indice dell'esercizio corrente
-      this.currentExerciseIndex = this.supersetExercises.findIndex(ex => ex.id === this.exercise!.id);
+      // Trova l'indice dell'esercizio corrente basandosi sull'exerciseId
+      this.currentExerciseIndex = this.supersetExercises.findIndex(ex => ex.id === this.exerciseId);
+      
+      // Se non trova l'esercizio nell'array, prova con l'esercizio principale
+      if (this.currentExerciseIndex === -1) {
+        this.currentExerciseIndex = this.supersetExercises.findIndex(ex => ex.id === this.exercise!.id);
+      }
+      
+      // Assicurati che l'indice sia valido
+      if (this.currentExerciseIndex < 0) {
+        this.currentExerciseIndex = 0;
+      }
+      
+      console.log(`Superset loaded: ${this.supersetExercises.length} exercises, current index: ${this.currentExerciseIndex} for exerciseId: ${this.exerciseId}`);
       
       // Inizializza la posizione del carousel
-      setTimeout(() => this.snapToCurrentSlide(), 100);
-      
-      console.log(`Superset loaded: ${this.supersetExercises.length} exercises, current index: ${this.currentExerciseIndex}`);
+      setTimeout(() => {
+        this.snapToCurrentSlide();
+      }, 100);
     }
   }
 

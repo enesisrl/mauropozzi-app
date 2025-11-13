@@ -62,4 +62,9 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/workout-exercise-details/workout-exercise-details.page').then( m => m.WorkoutExerciseDetailsPage),
     canActivate: [authGuard, subscriptionGuard]
   },
+  {
+    path: 'workout-details/:workoutId/:exerciseId/explanation',
+    loadComponent: () => import('./pages/workout-exercise-explanation/workout-exercise-explanation.page').then( m => m.WorkoutExerciseExplanationPage),
+    canActivate: [authGuard, subscriptionGuard]
+  },
 ];
