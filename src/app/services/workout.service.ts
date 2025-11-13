@@ -8,6 +8,8 @@ import { AppEvents } from './app-events.service';
 export interface WorkoutExercise {
   id: string;
   thumb: string;
+  images: any[];
+  video: string;
   descrizione: string;
   testo: string;
   tipo: string;

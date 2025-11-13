@@ -20,7 +20,7 @@ addIcons({
   'chevron-back-outline': chevronBackOutline,
   'chevron-forward-outline': chevronForwardOutline,
   'caret-forward-circle-outline': caretForwardCircleOutline,
-  'add-outline': addOutline
+  'add-outline': addOutline,
 });
 
 bootstrapApplication(AppComponent, {
