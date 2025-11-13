@@ -1,92 +1,51 @@
-<ion-header class="transparent-header">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button (click)="goBack()" class="transparent-back"></ion-back-button>
+      <ion-back-button (click)="goBack()" text="" icon="arrow-back-outline"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="explanation-container">
+<ion-content class="exercise-explanation-container">
   <div *ngIf="isLoading" class="loading-container">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Caricamento...</p>
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>{{ environment.ln.generalLoading }}</p>
   </div>
 
-  <div *ngIf="!isLoading && !exercise" class="no-content">
-    <h3>Contenuto non disponibile</h3>
-    <p>Non è stato possibile caricare le informazioni dell'esercizio.</p>
-  </div>
-
-  <div *ngIf="!isLoading && exercise && totalMediaItems === 0" class="no-content">
-    <h3>Media non disponibile</h3>
-    <p>Non sono presenti video o immagini per questo esercizio.</p>
-  </div>
-
-  <!-- Media container -->
-  <div *ngIf="!isLoading && exercise && totalMediaItems > 0" class="media-container">
-    
-    <!-- Media carousel -->
-    <div class="media-carousel" 
-         (touchstart)="onTouchStart($event)"
-         (touchmove)="onTouchMove($event)"
-         (touchend)="onTouchEnd($event)"
-         (mousedown)="onMouseDown($event)"
-         (mousemove)="onMouseMove($event)"
-         (mouseup)="onMouseUp($event)"
-         #mediaCarousel>
-      
-      <div class="media-slides-container"
-           [style.transform]="'translateX(' + (-currentMediaIndex * 100) + '%)'">
-        
-        <!-- Video slide (se presente) -->
-        <div *ngIf="exercise.video" class="media-slide video-slide">
-          <video 
-            #videoElement
-            class="exercise-video"
-            [src]="exercise.video"
-            controls
-            playsinline
-            muted
-            autoplay
-            loop>
-            Il tuo browser non supporta i video.
-          </video>
-        </div>
-
-        <!-- Photo slides -->
-        <div *ngFor="let imageUrl of exercise.images; let i = index" 
-             class="media-slide photo-slide">
-          <img 
-            [src]="imageUrl" 
-            [alt]="exercise.descrizione"
-            class="exercise-photo">
-        </div>
+  <div *ngIf="!isLoading && !exercise" class="no-exercise">
+      <div class="icon">
+      <img src="assets/images/icon-workout.svg" alt="Allenamento">
       </div>
+      <h3>Contenuto non disponibile</h3>
+      <p>Non è stato possibile caricare le informazioni dell'esercizio.</p>
+      <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
+  </div>
 
-      <!-- Media navigation dots -->
-      <div *ngIf="totalMediaItems > 1" class="media-navigation">
-        <span *ngFor="let item of mediaItems; let i = index" 
-              class="nav-dot"
-              [class.active]="i === currentMediaIndex"
-              (click)="goToMediaSlide(i)">
-        </span>
-      </div>
+  <div *ngIf="!isLoading && exercise" class="exercise-content">
+    <div *ngIf="exercise.video" class="exercise-media">
+      <video 
+        class="exercise-video"
+        [src]="exercise.video"
+        playsinline
+        autoplay
+        loop
+        preload="metadata">
+        Il tuo browser non supporta i video.
+      </video>
     </div>
 
-    <!-- Text overlay -->
-    <div class="text-overlay" [class.expanded]="isTextExpanded">
-      <div class="text-container">
-        <h2 class="exercise-title">{{ exercise.descrizione }}</h2>
-        <div class="exercise-text" 
-             [class.collapsed]="!isTextExpanded">
-          <p>{{ exercise.testo || 'Nessuna descrizione disponibile per questo esercizio.' }}</p>
-        </div>
-        <button *ngIf="hasLongText" 
-                class="read-more-btn"
-                (click)="toggleText()">
-          {{ isTextExpanded ? 'Mostra meno' : 'Leggi tutto' }}
-        </button>
-      </div>
+    <div *ngFor="let imageUrl of exercise.images" class="exercise-media">
+      <img [src]="imageUrl" [alt]="exercise.descrizione" class="exercise-photo">
+    </div>
+
+    <div *ngIf="exercise.testo" class="exercise-info" #exerciseInfo>
+      <div class="exercise-title">{{ exercise.descrizione }}</div>
+      <div class="exercise-text" [innerHTML]="exercise.testo"></div>
+    </div>
+
+    <div class="exercise-overlay" [class.hidden]="!showOverlay">
+      <div class="exercise-title">{{ exercise.descrizione }}</div>
+      <div *ngIf="exercise.testo" class="exercise-text" >Scorri in fondo per la spiegazione</div>
     </div>
   </div>
 </ion-content>

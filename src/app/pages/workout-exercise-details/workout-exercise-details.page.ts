@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, GestureController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { WorkoutService, WorkoutExercise, WorkoutDetail, WorkoutDay, WorkoutGroup } from '../../services/workout.service';
+import { WorkoutService, WorkoutExercise } from '../../services/workout.service';
 import { ImagePreloaderService } from '../../services/image-preloader.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -71,8 +71,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     private router: Router,
     private workoutService: WorkoutService,
     private loadingController: LoadingController,
-    private imagePreloader: ImagePreloaderService,
-    private gestureCtrl: GestureController
+    private imagePreloader: ImagePreloaderService
   ) {}
 
   ngOnInit() {
@@ -93,7 +92,11 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   /**
    * Carica i dettagli dell'esercizio dalla cache
    */
-  async loadExerciseDetails() {
+  async loadExerciseDetails(reset: boolean = false) {
+    if (reset) {
+      this.workoutService.clearWorkoutDetailsCache();
+    }
+
     // Prima prova a caricare dalla cache
     const cachedExercise = this.workoutService.getCachedExerciseById(this.workoutId, this.exerciseId);
     
@@ -106,7 +109,6 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       // Precarica l'immagine dell'esercizio
       this.preloadExerciseImage();
       
-      console.log('Exercise loaded from cache');
       return;
     }
 
@@ -125,15 +127,10 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
             this.exercise = exercise;
             this.loadSupersetData();
             this.preloadExerciseImage();
-          } else {
-            console.error('Exercise not found in workout');
           }
         }
-        this.isLoading = false;
-        loading.dismiss();
       },
-      error: (error) => {
-        console.error('Error loading workout:', error);
+      complete: () => {
         this.isLoading = false;
         loading.dismiss();
       }
@@ -146,7 +143,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
    * Ricarica i dati
    */
   async onRefresh(event: any) {
-    await this.loadExerciseDetails();
+    await this.loadExerciseDetails(true);
     if (event?.target) {
       event.target.complete();
     }
@@ -170,9 +167,6 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
 
     // Precarica l'immagine
     this.imagePreloader.preloadImage(exerciseImageUrl).then(() => {
-      console.log('Exercise image preloaded successfully');
-    }).catch(error => {
-      console.warn('Exercise image failed to preload:', error);
     });
   }
 
@@ -185,10 +179,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       const currentExercise = this.supersetExercises[this.currentExerciseIndex];
       if (currentExercise) {
         currentExerciseId = currentExercise.id;
-        console.log(`Superset: Navigating to explanation for exercise ${currentExercise.descrizione} (ID: ${currentExerciseId}) at index ${this.currentExerciseIndex}`);
       }
-    } else {
-      console.log(`Single exercise: Navigating to explanation for exercise ID: ${currentExerciseId}`);
     }
     
     // Naviga alla pagina di spiegazione dell'esercizio (senza query params)
@@ -224,8 +215,6 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       if (this.currentExerciseIndex < 0) {
         this.currentExerciseIndex = 0;
       }
-      
-      console.log(`Superset loaded: ${this.supersetExercises.length} exercises, current index: ${this.currentExerciseIndex} for exerciseId: ${this.exerciseId}`);
       
       // Inizializza la posizione del carousel
       setTimeout(() => {
