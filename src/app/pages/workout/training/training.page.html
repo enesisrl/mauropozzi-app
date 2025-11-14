@@ -1,0 +1,49 @@
+<ion-content class="container bg-gradient" fullscreen>
+    <div *ngIf="isLoading" class="loading-container">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>{{ environment.ln.generalLoading }}</p>
+    </div>
+
+    <div *ngIf="!isLoading && !exercise" class="no-content">
+        <div class="icon">
+        <img src="assets/images/icon-workout.svg" alt="Allenamento">
+        </div>
+        <h3>Esercizio non trovato</h3>
+        <p>Non è stato possibile caricare i dettagli dell'esercizio.</p>
+        <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
+    </div>
+
+    <div *ngIf="!isLoading && exercise" class="training-content">
+        <div class="exercise-title">{{ exercise.descrizione }}</div>
+        
+        <div class="exercise-meta-double">
+            <div *ngIf="exercise.tipo == 'reps'" class="detail">
+                <span class="label">Serie e ripetizioni</span>
+                <span class="value">{{ exercise.serie }}</span>
+            </div>
+            <div *ngIf="exercise.tipo == 'time'" class="detail">
+                <span class="label">Serie a tempo</span>
+                <span class="value">{{ exercise.serie }} x {{ exercise.durata }}</span>
+            </div>
+            <div class="detail">
+                <span class="label">Kg</span>
+                <span class="value">{{ exercise.kg }}</span>
+            </div>
+        </div>
+
+        <div class="exercise-meta-single">
+            <span class="label">Recupero</span>
+            <span class="value">{{ exercise.recupero }}</span>
+        </div>
+
+        <div *ngIf="exercise.note" class="exercise-meta-single">
+            <span class="label">Note</span>
+            <span class="value">{{ exercise.note }}</span>
+        </div>
+
+        <ion-button *ngIf="exercise.video || exercise.images?.length || exercise.testo" class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
+        <ion-button class="button workout-stop" expand="block" (click)="workoutStop()" [disabled]="isLoading">Esci dall'allenamento</ion-button>
+        
+        <img *ngIf="exercise.thumb" class="exercise-cover" [src]="exercise.thumb" [alt]="exercise.descrizione" />
+    </div>
+</ion-content>

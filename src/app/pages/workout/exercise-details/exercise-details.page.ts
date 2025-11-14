@@ -163,10 +163,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   private preloadExerciseImage(): void {
     if (!this.exercise?.thumb) return;
 
-    const exerciseImageUrl = `${environment.api.baseUrl.replace('/v1', '')}/assets/media/allenamento_esercizio/${this.exercise.thumb}`;
-
-    // Precarica l'immagine
-    this.imagePreloader.preloadImage(exerciseImageUrl).then(() => {
+    this.imagePreloader.preloadImage(this.exercise.thumb).then(() => {
     });
   }
 
@@ -187,7 +184,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   }
   
   workoutStart() {
-    
+    this.router.navigate(['/workout-details', this.workoutId, this.exerciseId, 'training']);
   }
 
   /**
