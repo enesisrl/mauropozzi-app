@@ -18,7 +18,7 @@ ion-header {
   }
 }
 
-.workout-details-container {
+.container {
     --background: linear-gradient(to bottom, var(--ion-color-primary), #000000);
     min-width: 300px;
     overflow: hidden;
@@ -77,7 +77,7 @@ ion-header {
     .workout-info {
         position: relative;
         padding: 200px 12px 12px;
-        background-image: url(../../../assets/images/bg-workout-details.png);
+        background-image: url(../../../../assets/images/bg-workout-details.png);
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;

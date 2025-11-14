@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { lockClosed } from 'ionicons/icons';
-import { Auth } from '../../services/auth';
+import { Auth } from '../../../services/auth';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 

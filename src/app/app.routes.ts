@@ -14,7 +14,7 @@ export const routes: Routes = [
   },
   {
     path: 'no-subscription',
-    loadComponent: () => import('./pages/no-subscription/no-subscription.page').then( m => m.NoSubscriptionPage)
+    loadComponent: () => import('./pages/auth/no-subscription/no-subscription.page').then( m => m.NoSubscriptionPage)
   },
   {
     path: 'main',
@@ -50,17 +50,17 @@ export const routes: Routes = [
   },
   {
     path: 'workout-details/:id',
-    loadComponent: () => import('./pages/workout-details/workout-details.page').then( m => m.WorkoutDetailsPage),
+    loadComponent: () => import('./pages/workout/details/details.page').then( m => m.WorkoutDetailsPage),
     canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'workout-details/:workoutId/:exerciseId',
-    loadComponent: () => import('./pages/workout-exercise-details/workout-exercise-details.page').then( m => m.WorkoutExerciseDetailsPage),
+    loadComponent: () => import('./pages/workout/exercise-details/exercise-details.page').then( m => m.WorkoutExerciseDetailsPage),
     canActivate: [authGuard, subscriptionGuard]
   },
   {
     path: 'workout-details/:workoutId/:exerciseId/explanation',
-    loadComponent: () => import('./pages/workout-exercise-explanation/workout-exercise-explanation.page').then( m => m.WorkoutExerciseExplanationPage),
+    loadComponent: () => import('./pages/workout/exercise-explanation/exercise-explanation.page').then( m => m.WorkoutExerciseExplanationPage),
     canActivate: [authGuard, subscriptionGuard]
   },
 ];

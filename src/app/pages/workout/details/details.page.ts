@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { WorkoutService, WorkoutDetail, WorkoutDay, WorkoutExercise } from '../../services/workout.service';
-import { ImagePreloaderService } from '../../services/image-preloader.service';
+import { WorkoutService, WorkoutDetail, WorkoutDay, WorkoutExercise } from '../../../services/workout.service';
+import { ImagePreloaderService } from '../../../services/image-preloader.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../environments/environment';
-import { WorkoutExerciseListComponent } from '../../components/workout-exercise-list/workout-exercise-list.component';
+import { environment } from '../../../../environments/environment';
+import { WorkoutExerciseListComponent } from '../../../components/workout-exercise-list/workout-exercise-list.component';
 import { 
   IonContent, 
   IonHeader,
@@ -22,8 +22,8 @@ import {
 } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-workout-details',
-  templateUrl: './workout-details.page.html',
-  styleUrls: ['./workout-details.page.scss'],
+  templateUrl: './details.page.html',
+  styleUrls: ['./details.page.scss'],
   standalone: true,
   imports: [
     CommonModule,

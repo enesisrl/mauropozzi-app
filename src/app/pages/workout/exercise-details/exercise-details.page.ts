@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, GestureController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { WorkoutService, WorkoutExercise } from '../../services/workout.service';
-import { ImagePreloaderService } from '../../services/image-preloader.service';
+import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
+import { ImagePreloaderService } from '../../../services/image-preloader.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { 
   IonContent, 
   IonHeader,
@@ -22,8 +22,8 @@ import {
 } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-workout-exercise-details',
-  templateUrl: './workout-exercise-details.page.html',
-  styleUrls: ['./workout-exercise-details.page.scss'],
+  templateUrl: './exercise-details.page.html',
+  styleUrls: ['./exercise-details.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
