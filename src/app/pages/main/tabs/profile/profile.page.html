@@ -1,4 +1,4 @@
-<ion-content class="container">
+<ion-content class="container bg-transparent">
   <div class="content">
     
     <div class="header">
@@ -16,7 +16,6 @@
       </div>
     </div>
 
-    <!-- Sezione Abbonamenti -->
     <div class="subscriptions-section">
       <h3>{{ currentUser?.subscriptions.length == 1 ? 'Il tuo abbonamento' : 'I tuoi abbonamenti' }}</h3>
       
@@ -70,11 +69,6 @@
         <!-- <div class="renewal-section" *ngIf="subscription.rinnovabile">
           <ion-button expand="block" fill="outline" (click)="renewSubscription(subscription)">Rinnova</ion-button>
         </div> -->
-      </div>
-
-      <!-- Nessun abbonamento -->
-      <div class="no-subscriptions" *ngIf="!currentUser?.subscriptions || currentUser?.subscriptions.length === 0">
-        <p>Nessun abbonamento attivo al momento</p>
       </div>
     </div>
     

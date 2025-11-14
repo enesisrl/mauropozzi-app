@@ -1,6 +1,4 @@
 .container {
-  --background: transparent;
-
   .content {
     padding: 20px 12px;
 
@@ -175,22 +173,6 @@
             --color: #667eea;
             --border-color: #667eea;
           }
-        }
-      }
-
-      .no-subscriptions {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.6);
-
-        ion-icon {
-          font-size: 48px;
-          margin-bottom: 16px;
-          display: block;
-        }
-
-        p {
-          margin: 0;
-          font-style: italic;
         }
       }
     }

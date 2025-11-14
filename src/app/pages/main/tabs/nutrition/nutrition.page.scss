@@ -17,28 +17,7 @@ ion-header {
 }
 
 .container {
-    --background: transparent;
-
     .scrolling-content {
-        padding: 20px 12px;
-
-        .loading-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 60px 20px;
-          
-          ion-spinner {
-            margin-bottom: 16px;
-          }
-          
-          p {
-            color: #FFF;
-            margin: 0;
-          }
-        }
-        
         .nutrition-list {
           .nutrition-item {
             padding: 0;
@@ -87,39 +66,6 @@ ion-header {
                 --color: var(--ion-color-medium);
               }
             }
-          }
-        }
-
-        .no-nutrition {
-          text-align: center;
-          
-          .icon {
-              display: block;
-              margin: 0 auto 16px;
-              width: 100px;
-              height: 100px;
-              background-color: rgba(0, 0, 0, 0.3);
-              border-radius: 50%;
-              padding: 24px;
-
-              img {
-                  width: 100%;
-              }
-          }
-          
-          h3 {
-            color: #FFF;
-            margin-bottom: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-style: italic;
-            font-size: 20px;
-            text-align: center;
-          }
-          
-          p {
-            color: #FFF;
-            margin: 0;
           }
         }
     }

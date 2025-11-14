@@ -19,61 +19,7 @@ ion-header {
 }
 
 .container {
-    --background: linear-gradient(to bottom, var(--ion-color-primary), #000000);
-    min-width: 300px;
-    overflow: hidden;
-    height: 100%; /* Assicura che usi tutta l'altezza disponibile */
-
-    .loading-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 20px;
-        
-        ion-spinner {
-        margin-bottom: 16px;
-        }
-        
-        p {
-        color: #FFF;
-        margin: 0;
-        }
-    }
-
-    .no-exercise {
-        padding: 20px 12px;
-        text-align: center;
-        
-        .icon {
-            display: block;
-            margin: 0 auto 16px;
-            width: 100px;
-            height: 100px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            padding: 24px;
-
-            img {
-                width: 100%;
-            }
-        }
-        
-        h3 {
-            color: #FFF;
-            margin-bottom: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-style: italic;
-            font-size: 20px;
-            text-align: center;
-        }
-        
-        p {
-            color: #FFF;
-            margin: 0;
-        }
-    }
+    height: 100%;
 
     .exercise-content {
         position: relative;

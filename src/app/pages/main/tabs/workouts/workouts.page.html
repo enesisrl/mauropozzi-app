@@ -5,7 +5,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="container">
+<ion-content class="container bg-transparent">
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -19,7 +19,7 @@
     <div *ngIf="!initialLoad">
       <app-workout-list [workouts]="workoutItems" *ngIf="workoutItems.length > 0"></app-workout-list>
 
-      <div class="no-workouts" *ngIf="workoutItems.length === 0 && !isLoading">
+      <div class="no-content" *ngIf="workoutItems.length === 0 && !isLoading">
         <div class="icon">
           <img src="assets/images/icon-workout.svg" alt="Allenamento">
         </div>

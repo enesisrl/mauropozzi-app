@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="container">
+<ion-content class="container bg-transparent">
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -31,7 +31,7 @@
         </div>
       </ion-card>
 
-      <div class="no-nutrition" *ngIf="nutritionItems.length === 0 && !isLoading">
+      <div class="no-content" *ngIf="nutritionItems.length === 0 && !isLoading">
         <div class="icon">
           <img src="assets/images/icon-nutrition.svg" alt="Nutrizione">
         </div>
