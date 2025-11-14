@@ -1,12 +1,8 @@
 .container {
     .content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: space-between;
-        text-align: center;
         height: 100%;
-        padding: 70px 15px;
+        padding: 70px 12px;
         background-image: url(/assets/images/bg-login.png);
         background-repeat: no-repeat;
         background-position: center center;

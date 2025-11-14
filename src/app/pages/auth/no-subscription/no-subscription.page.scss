@@ -1,13 +1,6 @@
 .container {
   .content {
-    padding: 20px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
     height: 100%;
-
     
     .lock-icon {
         font-size: 80px;
@@ -29,45 +22,7 @@
         margin-bottom: 30px;
         line-height: 1.4;
     }
-    
-    .info-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        padding: 20px;
-        text-align: left;
-        max-width: 300px;
-        
-        h3 {
-        color: #FFF;
-        font-weight: 700;
-        margin-bottom: 15px;
-        text-align: center;
-        }
-        
-        ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        
-        li {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 8px;
-            position: relative;
-            padding-left: 20px;
-            
-            &:before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: #4CAF50;
-            font-weight: bold;
-            }
-        }
-        }
-    }
 
-    // Logout Section
     .logout-section {
       ion-button {
         --color: #ef4444;
