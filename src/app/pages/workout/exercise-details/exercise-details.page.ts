@@ -5,6 +5,7 @@ import { ModalController } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
 import { ImagePreloaderService } from '../../../services/image-preloader.service';
+import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../../environments/environment';
@@ -186,8 +187,6 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
         currentExerciseId = currentExercise.id;
       }
     }
-    
-    const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
     
     await WorkoutExerciseExplanationPage.openModal(
       this.modalController,

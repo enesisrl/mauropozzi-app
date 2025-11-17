@@ -29,10 +29,13 @@ export class AppComponent implements OnInit {
       autoHide: false
     });
 
+    // Inizializza app e precarica immagini
     try {
-      // Inizializza app e precarica immagini
       await this.imagePreloader.preloadEssentialImages();
-      
+    } catch (error) {
+    }
+
+    try {
       // Controlla se c'è un token salvato
       const token = this.auth.getToken();
       if (!token) {

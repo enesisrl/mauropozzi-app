@@ -8,6 +8,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
 
   if (!authService.isAuthenticated()) {
+    console.log('AuthGuard: utente non autenticato, redirect al login');
     router.navigate(['/login'], { replaceUrl: true });
     return false;
   }
@@ -20,6 +21,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
   
   // Se lo smart refresh fallisce per problemi di auth, redirect al login
   catch (error) {
+    console.log('AuthGuard: errore durante lo smart refresh, redirect al login');
     router.navigate(['/login'], { replaceUrl: true });
     return false;
   }
