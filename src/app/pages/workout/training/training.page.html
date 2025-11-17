@@ -14,36 +14,64 @@
     </div>
 
     <div *ngIf="!isLoading && exercise" class="training-content">
-        <div class="exercise-title">{{ exercise.descrizione }}</div>
+        <div class="widget">
+            <div *ngIf="step == 'exercise'" class="widget-exercise">
+                <img src="assets/images/logo-icon.svg" alt="Mauto Pozzi" />
+                <div class="widget-title">Esercizio in corso</div>
+                <ion-button class="button widget-next" expand="block" (click)="workoutNext()">Ho finito! Vai al recupero</ion-button>
+            </div>
+            <div *ngIf="step == 'exercise-time'" class="widget-timer">
+                <div class="widget-title">Esercizio in corso</div>
+                <div class="widget-timer">00:01:30</div>
+                <div class="widget-controls">
+                    <ion-button class="button widget-control" expand="block" >Ricomincia</ion-button>
+                    <ion-button class="button widget-control" expand="block" >Stop</ion-button>
+                </div>
+                <ion-button class="button widget-next" expand="block" (click)="workoutNext()">Ho finito! Vai al recupero</ion-button>
+            </div>
+            <div *ngIf="step == 'rest'" class="widget-rest-timer">
+                <div class="widget-title">Tempo di recupero</div>
+                <div class="widget-timer">00:01:30</div>
+                <div class="widget-controls">
+                    <ion-button class="button widget-control" expand="block" >Ricomincia</ion-button>
+                    <ion-button class="button widget-control" expand="block" >Stop</ion-button>
+                </div>
+                <ion-button class="button widget-next" expand="block" (click)="workoutNext()">Continua ad allenarti!</ion-button>
+            </div>
+        </div>
+
+        <div class="exercise">
+            <div class="exercise-title">{{ exercise.descrizione }}</div>
+            
+            <div class="exercise-meta-double">
+                <div *ngIf="exercise.tipo == 'reps'" class="detail">
+                    <span class="label">Serie e ripetizioni</span>
+                    <span class="value">{{ exercise.serie }}</span>
+                </div>
+                <div *ngIf="exercise.tipo == 'time'" class="detail">
+                    <span class="label">Serie a tempo</span>
+                    <span class="value">{{ exercise.serie }} x {{ exercise.durata }}</span>
+                </div>
+                <div class="detail">
+                    <span class="label">Kg</span>
+                    <span class="value">{{ exercise.kg }}</span>
+                </div>
+            </div>
+
+            <div class="exercise-meta-single">
+                <span class="label">Recupero</span>
+                <span class="value">{{ exercise.recupero }}</span>
+            </div>
+
+            <div *ngIf="exercise.note" class="exercise-meta-single">
+                <span class="label">Note</span>
+                <span class="value">{{ exercise.note }}</span>
+            </div>
+
+            <ion-button *ngIf="exercise.video || exercise.images?.length || exercise.testo" class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading || isOpeningModal">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
+            <ion-button class="button workout-stop" expand="block" (click)="workoutStop()" [disabled]="isLoading">Esci dall'allenamento</ion-button>
+        </div>
         
-        <div class="exercise-meta-double">
-            <div *ngIf="exercise.tipo == 'reps'" class="detail">
-                <span class="label">Serie e ripetizioni</span>
-                <span class="value">{{ exercise.serie }}</span>
-            </div>
-            <div *ngIf="exercise.tipo == 'time'" class="detail">
-                <span class="label">Serie a tempo</span>
-                <span class="value">{{ exercise.serie }} x {{ exercise.durata }}</span>
-            </div>
-            <div class="detail">
-                <span class="label">Kg</span>
-                <span class="value">{{ exercise.kg }}</span>
-            </div>
-        </div>
-
-        <div class="exercise-meta-single">
-            <span class="label">Recupero</span>
-            <span class="value">{{ exercise.recupero }}</span>
-        </div>
-
-        <div *ngIf="exercise.note" class="exercise-meta-single">
-            <span class="label">Note</span>
-            <span class="value">{{ exercise.note }}</span>
-        </div>
-
-        <ion-button *ngIf="exercise.video || exercise.images?.length || exercise.testo" class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading || isOpeningModal">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
-        <ion-button class="button workout-stop" expand="block" (click)="workoutStop()" [disabled]="isLoading">Esci dall'allenamento</ion-button>
-        
-        <img *ngIf="exercise.thumb" class="exercise-cover" [src]="exercise.thumb" [alt]="exercise.descrizione" />
+        <img *ngIf="exercise.thumb" class="background" [src]="exercise.thumb" [alt]="exercise.descrizione" />
     </div>
 </ion-content>

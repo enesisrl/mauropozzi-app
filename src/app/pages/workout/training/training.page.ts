@@ -34,6 +34,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   workoutId: string = '';
   exerciseId: string = '';
   exercise: WorkoutExercise | null = null;
+  step: 'exercise' | 'exercise-time' | 'rest' = 'exercise';
   
   isLoading = true;
   isOpeningModal = false;
@@ -125,6 +126,17 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     );
   }
   
+
+  workoutNext() {
+    if (this.step === 'exercise') {
+      this.step = 'exercise-time';
+    } else if (this.step === 'exercise-time') {
+      this.step = 'rest';
+    } else if (this.step === 'rest') {
+      this.step = 'exercise';
+    } 
+  }
+
   async workoutStop() {
     const alert = await this.alertController.create({
       header: "Esci dall'allenamento",
