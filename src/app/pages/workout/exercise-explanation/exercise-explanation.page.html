@@ -1,12 +1,8 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button (click)="goBack()" text="" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="container">
+  <ion-button class="back-button" fill="clear" size="large" (click)="goBack()">
+    <ion-icon name="chevron-back-outline" color="medium"></ion-icon>
+  </ion-button>
+  
   <div *ngIf="isLoading" class="loading-container">
       <ion-spinner name="crescent"></ion-spinner>
       <p>{{ environment.ln.generalLoading }}</p>

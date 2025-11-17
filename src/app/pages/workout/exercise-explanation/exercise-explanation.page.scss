@@ -1,32 +1,23 @@
-ion-header {
-  ion-toolbar {
-    --background: transparent;
-    --border-width: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 4000;
-    
-    ion-back-button {
-      --color: white;
-      --icon-color: white;
-      font-weight: 500;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      margin: 8px;
-      backdrop-filter: blur(10px);
-
-      ion-icon {
-        margin: 0;
-      }
-      
-      &:hover {
-        background: rgba(0, 0, 0, 0.5);
-      }
-    }
+.back-button {
+  position: fixed;
+  top: 10px;
+  left: 5px;
+  z-index: 4000;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  backdrop-filter: blur(10px);
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --padding-bottom: 0;
+  --padding-end: 0;
+  --padding-start: 0;
+  --padding-top: 0;
+  min-height: 40px !important;
+  
+  ion-icon {
+    font-size: 26px;
+    color: white;
   }
 }
 
