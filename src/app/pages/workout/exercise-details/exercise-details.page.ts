@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, GestureController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
 import { ImagePreloaderService } from '../../../services/image-preloader.service';
@@ -63,6 +64,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   private startTranslateX: number = 0;
   
   isLoading = true;
+  isOpeningModal = false;
   environment = environment;
   private subscriptions: Subscription[] = [];
 
@@ -71,7 +73,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     private router: Router,
     private workoutService: WorkoutService,
     private loadingController: LoadingController,
-    private imagePreloader: ImagePreloaderService
+    private imagePreloader: ImagePreloaderService,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -167,20 +170,53 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     });
   }
 
-  exerciseExplanation() {
+  async exerciseExplanation() {
     if (!this.workoutId) return;
     
-    // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
-    let currentExerciseId = this.exerciseId;
-    if (this.isSuperset && this.supersetExercises.length > 0) {
-      const currentExercise = this.supersetExercises[this.currentExerciseIndex];
-      if (currentExercise) {
-        currentExerciseId = currentExercise.id;
-      }
+    // Blocco immediato per click multipli
+    if (this.isOpeningModal) {
+      return;
     }
+    this.isOpeningModal = true;
     
-    // Naviga alla pagina di spiegazione dell'esercizio (senza query params)
-    this.router.navigate(['/workout-details', this.workoutId, currentExerciseId, 'explanation']);
+    try {
+      // Controllo aggiuntivo per modal esistenti
+      const existingModal = await this.modalController.getTop();
+      if (existingModal) {
+        this.isOpeningModal = false;
+        return;
+      }
+      
+      // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
+      let currentExerciseId = this.exerciseId;
+      if (this.isSuperset && this.supersetExercises.length > 0) {
+        const currentExercise = this.supersetExercises[this.currentExerciseIndex];
+        if (currentExercise) {
+          currentExerciseId = currentExercise.id;
+        }
+      }
+      
+      // Apre la spiegazione in un modal
+      const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
+      
+      const modal = await this.modalController.create({
+        component: WorkoutExerciseExplanationPage,
+        componentProps: {
+          workoutId: this.workoutId,
+          exerciseId: currentExerciseId
+        },
+        presentingElement: await this.modalController.getTop()
+      });
+      
+      await modal.present();
+      
+      // Reset flag quando il modal viene chiuso
+      modal.onDidDismiss().then(() => {
+        this.isOpeningModal = false;
+      });
+    } catch (error) {
+      this.isOpeningModal = false;
+    }
   }
   
   workoutStart() {

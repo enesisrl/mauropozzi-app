@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingController, AlertController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
 import { ImagePreloaderService } from '../../../services/image-preloader.service';
@@ -34,6 +35,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   exercise: WorkoutExercise | null = null;
   
   isLoading = true;
+  isOpeningModal = false;
   environment = environment;
   private subscriptions: Subscription[] = [];
 
@@ -43,7 +45,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     private workoutService: WorkoutService,
     private loadingController: LoadingController,
     private imagePreloader: ImagePreloaderService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -107,8 +110,41 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
 
 
-  exerciseExplanation() {
-    this.router.navigate(['/workout-details', this.workoutId, this.exerciseId, 'explanation']);
+  async exerciseExplanation() {
+    // Blocco immediato per click multipli
+    if (this.isOpeningModal) {
+      return;
+    }
+    this.isOpeningModal = true;
+    
+    try {
+      // Controllo aggiuntivo per modal esistenti
+      const existingModal = await this.modalController.getTop();
+      if (existingModal) {
+        this.isOpeningModal = false;
+        return;
+      }
+      
+      const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
+      
+      const modal = await this.modalController.create({
+        component: WorkoutExerciseExplanationPage,
+        componentProps: {
+          workoutId: this.workoutId,
+          exerciseId: this.exerciseId
+        },
+        presentingElement: await this.modalController.getTop()
+      });
+      
+      await modal.present();
+      
+      // Reset flag quando il modal viene chiuso
+      modal.onDidDismiss().then(() => {
+        this.isOpeningModal = false;
+      });
+    } catch (error) {
+      this.isOpeningModal = false;
+    }
   }
   
   async workoutStop() {

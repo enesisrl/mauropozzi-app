@@ -41,7 +41,7 @@
             <span class="value">{{ exercise.note }}</span>
         </div>
 
-        <ion-button *ngIf="exercise.video || exercise.images?.length || exercise.testo" class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
+        <ion-button *ngIf="exercise.video || exercise.images?.length || exercise.testo" class="button exercise-explanation" expand="block" (click)="exerciseExplanation()" [disabled]="isLoading || isOpeningModal">Spiegazione esercizio <ion-icon name="caret-forward-circle-outline"></ion-icon></ion-button>
         <ion-button class="button workout-stop" expand="block" (click)="workoutStop()" [disabled]="isLoading">Esci dall'allenamento</ion-button>
         
         <img *ngIf="exercise.thumb" class="exercise-cover" [src]="exercise.thumb" [alt]="exercise.descrizione" />
