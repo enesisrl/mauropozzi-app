@@ -115,36 +115,15 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     if (this.isOpeningModal) {
       return;
     }
-    this.isOpeningModal = true;
+
+    const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
     
-    try {
-      // Controllo aggiuntivo per modal esistenti
-      const existingModal = await this.modalController.getTop();
-      if (existingModal) {
-        this.isOpeningModal = false;
-        return;
-      }
-      
-      const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
-      
-      const modal = await this.modalController.create({
-        component: WorkoutExerciseExplanationPage,
-        componentProps: {
-          workoutId: this.workoutId,
-          exerciseId: this.exerciseId
-        },
-        presentingElement: await this.modalController.getTop()
-      });
-      
-      await modal.present();
-      
-      // Reset flag quando il modal viene chiuso
-      modal.onDidDismiss().then(() => {
-        this.isOpeningModal = false;
-      });
-    } catch (error) {
-      this.isOpeningModal = false;
-    }
+    await WorkoutExerciseExplanationPage.openModal(
+      this.modalController,
+      this.workoutId,
+      this.exerciseId,
+      (isOpening) => { this.isOpeningModal = isOpening; }
+    );
   }
   
   async workoutStop() {

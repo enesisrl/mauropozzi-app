@@ -2,17 +2,13 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideHttpClient } from '@angular/common/http';
-
-/* Icons */
 import { addIcons } from 'ionicons';
 import { 
   chevronBackOutline, 
   chevronForwardOutline, 
   caretForwardCircleOutline, 
   addOutline,
-  arrowBackOutline
 } from 'ionicons/icons';
-
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
@@ -21,8 +17,7 @@ addIcons({
   'chevron-back-outline': chevronBackOutline,
   'chevron-forward-outline': chevronForwardOutline,
   'caret-forward-circle-outline': caretForwardCircleOutline,
-  'add-outline': addOutline,
-  'arrow-back-outline': arrowBackOutline,
+  'add-outline': addOutline
 });
 
 bootstrapApplication(AppComponent, {

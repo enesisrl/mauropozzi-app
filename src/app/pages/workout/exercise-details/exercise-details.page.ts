@@ -177,46 +177,24 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     if (this.isOpeningModal) {
       return;
     }
-    this.isOpeningModal = true;
     
-    try {
-      // Controllo aggiuntivo per modal esistenti
-      const existingModal = await this.modalController.getTop();
-      if (existingModal) {
-        this.isOpeningModal = false;
-        return;
+    // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
+    let currentExerciseId = this.exerciseId;
+    if (this.isSuperset && this.supersetExercises.length > 0) {
+      const currentExercise = this.supersetExercises[this.currentExerciseIndex];
+      if (currentExercise) {
+        currentExerciseId = currentExercise.id;
       }
-      
-      // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
-      let currentExerciseId = this.exerciseId;
-      if (this.isSuperset && this.supersetExercises.length > 0) {
-        const currentExercise = this.supersetExercises[this.currentExerciseIndex];
-        if (currentExercise) {
-          currentExerciseId = currentExercise.id;
-        }
-      }
-      
-      // Apre la spiegazione in un modal
-      const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
-      
-      const modal = await this.modalController.create({
-        component: WorkoutExerciseExplanationPage,
-        componentProps: {
-          workoutId: this.workoutId,
-          exerciseId: currentExerciseId
-        },
-        presentingElement: await this.modalController.getTop()
-      });
-      
-      await modal.present();
-      
-      // Reset flag quando il modal viene chiuso
-      modal.onDidDismiss().then(() => {
-        this.isOpeningModal = false;
-      });
-    } catch (error) {
-      this.isOpeningModal = false;
     }
+    
+    const { WorkoutExerciseExplanationPage } = await import('../exercise-explanation/exercise-explanation.page');
+    
+    await WorkoutExerciseExplanationPage.openModal(
+      this.modalController,
+      this.workoutId,
+      currentExerciseId,
+      (isOpening) => { this.isOpeningModal = isOpening; }
+    );
   }
   
   workoutStart() {
@@ -438,13 +416,6 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     
     // Se non abbiamo superato la soglia o siamo ai bordi, torna alla posizione corrente
     this.snapToCurrentSlide();
-  }
-
-  /**
-   * Ottiene la posizione corrente del translateX in percentuale
-   */
-  private getCurrentTranslateX(): number {
-    return -this.currentExerciseIndex * 100;
   }
 
   /**
