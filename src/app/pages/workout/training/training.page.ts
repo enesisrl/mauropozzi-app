@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
 import { ImagePreloaderService } from '../../../services/image-preloader.service';
@@ -42,7 +42,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     private router: Router,
     private workoutService: WorkoutService,
     private loadingController: LoadingController,
-    private imagePreloader: ImagePreloaderService
+    private imagePreloader: ImagePreloaderService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -107,18 +108,30 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
 
 
   exerciseExplanation() {
-    if (!this.workoutId || !this.exerciseId) return;
     this.router.navigate(['/workout-details', this.workoutId, this.exerciseId, 'explanation']);
   }
   
-  workoutStop() {
-    if (!this.workoutId || !this.exerciseId) return;
-    this.router.navigate(['/workout-details', this.workoutId]);
+  async workoutStop() {
+    const alert = await this.alertController.create({
+      header: "Esci dall'allenamento",
+      message: 'Sei sicuro di voler interrompere l\'allenamento?',
+      buttons: [
+        {
+          text: 'Annulla',
+          role: 'cancel'
+        },
+        {
+          text: 'Conferma',
+          handler: () => {
+            this.goBack();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 
-  /**
-   * Naviga indietro
-   */
   goBack() {
     this.router.navigate(['/workout-details', this.workoutId]);
   }
