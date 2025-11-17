@@ -36,6 +36,12 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   exercise: WorkoutExercise | null = null;
   step: 'exercise' | 'exercise-time' | 'rest' = 'exercise';
   
+  // Timer properties
+  timerMinutes: number = 0;
+  timerSeconds: number = 0;
+  timerInterval?: number;
+  isTimerRunning: boolean = false;
+  
   isLoading = true;
   isOpeningModal = false;
   environment = environment;
@@ -64,6 +70,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.clearTimer();
   }
 
   /**
@@ -129,12 +136,28 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
 
   workoutNext() {
     if (this.step === 'exercise') {
+      // Passa da esercizio a timer (1:30)
       this.step = 'exercise-time';
+      this.startTimer(1, 30); // 1 minuto e 30 secondi
     } else if (this.step === 'exercise-time') {
+      // Passa a recupero
       this.step = 'rest';
+      this.startTimer(1, 30); // 1 minuto e 30 secondi di recupero
     } else if (this.step === 'rest') {
+      // Torna all'esercizio o vai al prossimo
       this.step = 'exercise';
-    } 
+      this.clearTimer();
+    }
+  }
+
+  timerRestart() {
+    if (this.step === 'exercise-time' || this.step === 'rest') {
+      this.startTimer(1, 30); // 1:30 per ora, poi integreremo la logica corretta
+    }
+  }
+  
+  timerStop() {
+    this.clearTimer();
   }
 
   async workoutStop() {
@@ -170,6 +193,57 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
 
     this.imagePreloader.preloadImage(this.exercise.thumb).then(() => {
     });
+  }
+
+  /**
+   * Avvia il timer con minuti e secondi specificati
+   */
+  startTimer(minutes: number, seconds: number): void {
+    this.clearTimer();
+    this.timerMinutes = minutes;
+    this.timerSeconds = seconds;
+    this.isTimerRunning = true;
+    
+    this.timerInterval = window.setInterval(() => {
+      if (this.timerSeconds > 0) {
+        this.timerSeconds--;
+      } else if (this.timerMinutes > 0) {
+        this.timerMinutes--;
+        this.timerSeconds = 59;
+      } else {
+        // Timer finito
+        this.clearTimer();
+        this.onTimerComplete();
+      }
+    }, 1000);
+  }
+
+  /**
+   * Ferma e pulisce il timer
+   */
+  clearTimer(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = undefined;
+    }
+    this.isTimerRunning = false;
+  }
+
+  /**
+   * Chiamata quando il timer arriva a zero
+   */
+  private onTimerComplete(): void {
+    // Per ora non facciamo nulla, poi aggiungeremo logica
+    console.log('Timer completato!');
+  }
+
+  /**
+   * Formatta il tempo per il display
+   */
+  getFormattedTime(): string {
+    const mins = this.timerMinutes.toString().padStart(2, '0');
+    const secs = this.timerSeconds.toString().padStart(2, '0');
+    return `${mins}:${secs}`;
   }
 
 }

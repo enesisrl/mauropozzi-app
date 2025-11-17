@@ -22,19 +22,19 @@
             </div>
             <div *ngIf="step == 'exercise-time'" class="widget-timer">
                 <div class="widget-title">Esercizio in corso</div>
-                <div class="widget-timer">00:01:30</div>
+                <div class="widget-timer">{{ getFormattedTime() }}</div>
                 <div class="widget-controls">
-                    <ion-button class="button widget-control" expand="block" >Ricomincia</ion-button>
-                    <ion-button class="button widget-control" expand="block" >Stop</ion-button>
+                    <ion-button class="button widget-control" expand="block" (click)="timerRestart()">Ricomincia</ion-button>
+                    <ion-button class="button widget-control" expand="block" (click)="timerStop()">Stop</ion-button>
                 </div>
                 <ion-button class="button widget-next" expand="block" (click)="workoutNext()">Ho finito! Vai al recupero</ion-button>
             </div>
             <div *ngIf="step == 'rest'" class="widget-rest-timer">
                 <div class="widget-title">Tempo di recupero</div>
-                <div class="widget-timer">00:01:30</div>
+                <div class="widget-timer">{{ getFormattedTime() }}</div>
                 <div class="widget-controls">
-                    <ion-button class="button widget-control" expand="block" >Ricomincia</ion-button>
-                    <ion-button class="button widget-control" expand="block" >Stop</ion-button>
+                    <ion-button class="button widget-control" expand="block" (click)="timerRestart()">Ricomincia</ion-button>
+                    <ion-button class="button widget-control" expand="block" (click)="timerStop()">Stop</ion-button>
                 </div>
                 <ion-button class="button widget-next" expand="block" (click)="workoutNext()">Continua ad allenarti!</ion-button>
             </div>
