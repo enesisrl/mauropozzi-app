@@ -43,26 +43,6 @@
     .exercise-info {
       padding: 50px 20px;
     }
-
-    .exercise-overlay {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
-      color: #FFF;
-      padding: 20px 20px;
-      text-align: left;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      opacity: 1;
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-
-      &.hidden {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-    }
     
     .exercise-title {
         position: relative;
@@ -79,6 +59,31 @@
         font-weight: 400;
         font-size: 15px;
         margin-top: 15px;
+    }
+
+    .exercise-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
+      color: #FFF;
+      padding: 20px 20px;
+      text-align: left;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+      .exercise-text {
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      &.hidden {
+        opacity: 0;
+        transform: translateY(30px);
+      }
     }
   }
 }
