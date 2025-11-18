@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular/standalone';
-import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
-import { ImagePreloaderService } from '../../../services/image-preloader.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -45,36 +43,32 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   isLoading = true;
   isOpeningModal = false;
   environment = environment;
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private loadingController: LoadingController,
-    private imagePreloader: ImagePreloaderService,
     private alertController: AlertController,
     private modalController: ModalController
   ) {}
 
   ngOnInit() {
     // Recupera i parametri dalla route
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       this.workoutId = params['workoutId'];
       this.exerciseId = params['exerciseId'];
       if (this.workoutId && this.exerciseId) {
-        this.loadTraining();
+        this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId);
+        this.isLoading = false;
       }
     });
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
     this.stopTimer();
   }
   
   
-
   /* UI
   ------------------------------------------------------------ */
   
@@ -188,52 +182,5 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     }
     this.isTimerRunning = false;
     this.isPaused = false;
-  }
-  
-  
-  /* Helpers
-  ------------------------------------------------------------ */
-
-  private async loadTraining() {
-    const cachedExercise = this.workoutService.getCachedExerciseById(this.workoutId, this.exerciseId);
-    
-    if (cachedExercise) {
-      this.exercise = cachedExercise;
-      this.isLoading = false;
-      
-      this.preloadExerciseImage();
-      return;
-    }
-
-    const loading = await this.loadingController.create({
-      message: environment.ln.generalLoading
-    });
-    await loading.present();
-
-    const subscription = this.workoutService.getWorkoutDetails(this.workoutId).subscribe({
-      next: (response) => {
-        if (response.success && response.item) {
-          // Ora cerca l'esercizio nel workout appena caricato
-          const exercise = this.workoutService.getCachedExerciseById(this.workoutId, this.exerciseId);
-          if (exercise) {
-            this.exercise = exercise;
-            this.preloadExerciseImage();
-          }
-        }
-      },
-      complete: () => {
-        this.isLoading = false;
-        loading.dismiss();
-      }
-    });
-
-    this.subscriptions.push(subscription);
-  }
-
-  private preloadExerciseImage(): void {
-    if (!this.exercise?.thumb) return;
-
-    this.imagePreloader.preloadImage(this.exercise.thumb).then(() => {
-    });
   }
 }

@@ -4,6 +4,7 @@ import { Observable, of, tap, BehaviorSubject, forkJoin } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Auth } from './auth';
 import { AppEvents } from './app-events.service';
+import { ImagePreloaderService } from './image-preloader.service';
 
 export interface WorkoutExercise {
   id: string;
@@ -86,7 +87,8 @@ export class WorkoutService {
   constructor(
     private http: HttpClient, 
     private auth: Auth,
-    private appEvents: AppEvents
+    private appEvents: AppEvents,
+    private imagePreloader: ImagePreloaderService
   ) {
     // Ascolta eventi di logout per pulire la cache
     this.appEvents.onLogout$.subscribe(() => {
@@ -229,6 +231,46 @@ export class WorkoutService {
           }
         }
       }
+    }
+
+    return null;
+  }
+
+  /**
+   * Carica esercizio con gestione automatica di cache, API e preload immagini
+   */
+  async loadExercise(workoutId: string, exerciseId: string, reset: boolean = false): Promise<WorkoutExercise | null> {
+    if (reset) {
+      this.clearWorkoutDetailsCache();
+    }
+
+    // Prima controlla se l'esercizio è già in cache
+    let exercise = this.getCachedExerciseById(workoutId, exerciseId);
+    
+    if (exercise) {
+      // Preload dell'immagine se presente
+      if (exercise.thumb) {
+        this.imagePreloader.preloadImage(exercise.thumb);
+      }
+      return exercise;
+    }
+
+    // Se non è in cache, carica il workout completo
+    try {
+      const workout = await this.getWorkoutDetails(workoutId).toPromise();
+      if (workout?.success && workout.item) {
+        // Ora dovrebbe essere in cache, riprova
+        exercise = this.getCachedExerciseById(workoutId, exerciseId);
+        if (exercise) {
+          // Preload dell'immagine se presente
+          if (exercise.thumb) {
+            this.imagePreloader.preloadImage(exercise.thumb);
+          }
+          return exercise;
+        }
+      }
+    } catch (error) {
+      console.error('Errore nel caricamento del workout:', error);
     }
 
     return null;

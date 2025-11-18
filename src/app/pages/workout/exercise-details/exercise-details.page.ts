@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, GestureController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
-import { ImagePreloaderService } from '../../../services/image-preloader.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,11 +44,12 @@ import {
 export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   
   workoutId: string = '';
-  exerciseId: string = '';
+  exerciseId: string = ''; // ID iniziale dall'URL
+  currentExerciseId: string = ''; // ID dell'esercizio attualmente visualizzato
   exercise: WorkoutExercise | null = null;
   
   // Superset management
-  supersetExercises: WorkoutExercise[] = [];
+  exercises: WorkoutExercise[] = []; // Lista esercizi del superset
   currentExerciseIndex: number = 0;
   isSuperset: boolean = false;
   
@@ -73,18 +72,16 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private loadingController: LoadingController,
-    private imagePreloader: ImagePreloaderService,
     private modalController: ModalController
   ) {}
 
   ngOnInit() {
     // Recupera i parametri dalla route
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       this.workoutId = params['workoutId'];
       this.exerciseId = params['exerciseId'];
       if (this.workoutId && this.exerciseId) {
-        this.loadExerciseDetails();
+        await this.loadExerciseData();
       }
     });
   }
@@ -92,84 +89,39 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
-
-  /**
-   * Carica i dettagli dell'esercizio dalla cache
-   */
-  async loadExerciseDetails(reset: boolean = false) {
-    if (reset) {
-      this.workoutService.clearWorkoutDetailsCache();
-    }
-
-    // Prima prova a caricare dalla cache
-    const cachedExercise = this.workoutService.getCachedExerciseById(this.workoutId, this.exerciseId);
-    
-    if (cachedExercise) {
-      // Trova l'esercizio nella cache
-      this.exercise = cachedExercise;
-      this.loadSupersetData();
-      this.isLoading = false;
-      
-      // Precarica l'immagine dell'esercizio
-      this.preloadExerciseImage();
-      
-      return;
-    }
-
-    // Se non è in cache, prova a caricare l'intero workout e poi l'esercizio
-    const loading = await this.loadingController.create({
-      message: environment.ln.generalLoading
-    });
-    await loading.present();
-
-    const subscription = this.workoutService.getWorkoutDetails(this.workoutId).subscribe({
-      next: (response) => {
-        if (response.success && response.item) {
-          // Ora cerca l'esercizio nel workout appena caricato
-          const exercise = this.workoutService.getCachedExerciseById(this.workoutId, this.exerciseId);
-          if (exercise) {
-            this.exercise = exercise;
-            this.loadSupersetData();
-            this.preloadExerciseImage();
-          }
-        }
-      },
-      complete: () => {
-        this.isLoading = false;
-        loading.dismiss();
-      }
-    });
-
-    this.subscriptions.push(subscription);
-  }
-
-  /**
-   * Ricarica i dati
-   */
+  
   async onRefresh(event: any) {
-    await this.loadExerciseDetails(true);
+    this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId, true);
+    this.isLoading = false;
     if (event?.target) {
       event.target.complete();
     }
   }
-
-  /**
-   * Naviga indietro
-   */
-  goBack() {
-    this.router.navigate(['/workout-details', this.workoutId]);
-  }
   
-
-  /**
-   * Precarica l'immagine dell'esercizio per migliorare le performance
-   */
-  private preloadExerciseImage(): void {
-    if (!this.exercise?.thumb) return;
-
-    this.imagePreloader.preloadImage(this.exercise.thumb).then(() => {
-    });
+  private async loadExerciseData(): Promise<void> {
+    // Carica l'esercizio iniziale
+    this.currentExerciseId = this.exerciseId;
+    this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId);
+    
+    if (this.exercise) {
+      // Carica il superset
+      this.exercises = this.workoutService.getSupersetExercises(this.workoutId, this.exerciseId);
+      this.isSuperset = this.exercises.length > 1;
+      
+      if (this.isSuperset) {
+        // Trova l'indice dell'esercizio corrente
+        this.currentExerciseIndex = this.exercises.findIndex(ex => ex.id === this.exerciseId);
+        if (this.currentExerciseIndex < 0) this.currentExerciseIndex = 0;
+        
+        setTimeout(() => this.snapToCurrentSlide(), 100);
+      }
+    }
+    
+    this.isLoading = false;
   }
+
+  /* UI
+  ------------------------------------------------------------ */
 
   async exerciseExplanation() {
     if (!this.workoutId) return;
@@ -181,8 +133,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     
     // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
     let currentExerciseId = this.exerciseId;
-    if (this.isSuperset && this.supersetExercises.length > 0) {
-      const currentExercise = this.supersetExercises[this.currentExerciseIndex];
+    if (this.isSuperset && this.exercises.length > 0) {
+      const currentExercise = this.exercises[this.currentExerciseIndex];
       if (currentExercise) {
         currentExerciseId = currentExercise.id;
       }
@@ -195,69 +147,58 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       (isOpening) => { this.isOpeningModal = isOpening; }
     );
   }
-  
+
   workoutStart() {
     this.router.navigate(['/workout-details', this.workoutId, this.exerciseId, 'training']);
   }
 
-  /**
-   * Carica i dati del superset
-   */
-  private loadSupersetData(): void {
-    if (!this.exerciseId || !this.workoutId) return;
-
-    // Ottiene tutti gli esercizi del gruppo (superset)
-    this.supersetExercises = this.workoutService.getSupersetExercises(this.workoutId, this.exerciseId);
-    
-    // Controlla se è un superset (più di 1 esercizio)
-    this.isSuperset = this.supersetExercises.length > 1;
-    
-    if (this.isSuperset && this.exercise) {
-      // Trova l'indice dell'esercizio corrente basandosi sull'exerciseId
-      this.currentExerciseIndex = this.supersetExercises.findIndex(ex => ex.id === this.exerciseId);
-      
-      // Se non trova l'esercizio nell'array, prova con l'esercizio principale
-      if (this.currentExerciseIndex === -1) {
-        this.currentExerciseIndex = this.supersetExercises.findIndex(ex => ex.id === this.exercise!.id);
-      }
-      
-      // Assicurati che l'indice sia valido
-      if (this.currentExerciseIndex < 0) {
-        this.currentExerciseIndex = 0;
-      }
-      
-      // Inizializza la posizione del carousel
-      setTimeout(() => {
-        this.snapToCurrentSlide();
-      }, 100);
-    }
+  goBack() {
+    this.router.navigate(['/workout-details', this.workoutId]);
   }
 
-  /**
-   * Naviga al prossimo esercizio del superset
-   */
+
+  /* Navigazione superset
+  ------------------------------------------------------------ */
+
   nextExercise(): void {
-    if (!this.isSuperset || this.supersetExercises.length <= 1) return;
+    if (!this.isSuperset || this.exercises.length <= 1) return;
     
-    this.currentExerciseIndex = (this.currentExerciseIndex + 1) % this.supersetExercises.length;
+    this.currentExerciseIndex = (this.currentExerciseIndex + 1) % this.exercises.length;
+    this.updateCurrentExercise();
     this.snapToCurrentSlide();
   }
 
-  /**
-   * Naviga al precedente esercizio del superset
-   */
   prevExercise(): void {
-    if (!this.isSuperset || this.supersetExercises.length <= 1) return;
+    if (!this.isSuperset || this.exercises.length <= 1) return;
     
     this.currentExerciseIndex = this.currentExerciseIndex > 0 
       ? this.currentExerciseIndex - 1 
-      : this.supersetExercises.length - 1;
+      : this.exercises.length - 1;
     this.snapToCurrentSlide();
   }
+  
+  onSlideChange(event: any): void {
+    if (!this.isSuperset) return;
+    
+    // Aggiorna l'indice corrente
+    this.currentExerciseIndex = event.detail.activeIndex || 0;
+    this.updateCurrentExercise();
+  }
+  
+  private async updateCurrentExercise(): Promise<void> {
+    if (this.exercises[this.currentExerciseIndex]) {
+      const newExerciseId = this.exercises[this.currentExerciseIndex].id;
+      if (newExerciseId !== this.currentExerciseId) {
+        this.currentExerciseId = newExerciseId;
+        this.exercise = await this.workoutService.loadExercise(this.workoutId, this.currentExerciseId);
+      }
+    }
+  }
+  
 
-  /**
-   * Gestisce il gesture di swipe per il carousel
-   */
+  /* Slider
+  ------------------------------------------------------------ */
+
   onSwipe(event: any): void {
     if (!this.isSuperset) return;
 
@@ -268,20 +209,14 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       this.nextExercise();
     }
   }
-
-  /**
-   * Touch start handler
-   */
+  
   onTouchStart(event: TouchEvent): void {
     if (!this.isSuperset) return;
     this.isDragging = true;
     this.touchStartX = event.touches[0].clientX;
     this.startTranslateX = -this.currentExerciseIndex * 100; // Usa la posizione corrente della slide
   }
-
-  /**
-   * Touch move handler - aggiorna la posizione in tempo reale
-   */
+  
   onTouchMove(event: TouchEvent): void {
     if (!this.isSuperset || !this.isDragging) return;
     
@@ -291,10 +226,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     
     this.updateSlidePosition(deltaX);
   }
-
-  /**
-   * Touch end handler  
-   */
+  
   onTouchEnd(event: TouchEvent): void {
     if (!this.isSuperset || !this.isDragging) return;
     
@@ -306,10 +238,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     this.touchStartX = 0;
     this.touchEndX = 0;
   }
-
-  /**
-   * Mouse down handler
-   */
+  
   onMouseDown(event: MouseEvent): void {
     if (!this.isSuperset) return;
     this.isMouseDown = true;
@@ -317,10 +246,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     this.mouseStartX = event.clientX;
     this.startTranslateX = -this.currentExerciseIndex * 100; // Usa la posizione corrente della slide
   }
-
-  /**
-   * Mouse move handler
-   */
+  
   onMouseMove(event: MouseEvent): void {
     if (!this.isSuperset || !this.isMouseDown || !this.isDragging) return;
     
@@ -329,10 +255,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     
     this.updateSlidePosition(deltaX);
   }
-
-  /**
-   * Mouse up handler
-   */
+  
   onMouseUp(event: MouseEvent): void {
     if (!this.isSuperset || !this.isMouseDown) return;
     
@@ -345,10 +268,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     this.mouseStartX = 0;
     this.mouseEndX = 0;
   }
-
-  /**
-   * Aggiorna la posizione della slide durante il drag
-   */
+  
   private updateSlidePosition(deltaX: number): void {
     const container = document.querySelector('.exercise-slides-container') as HTMLElement;
     if (!container) return;
@@ -363,7 +283,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     
     // Limita il movimento ai bordi con resistenza
     const maxTranslate = 0; // Prima slide
-    const minTranslate = -(this.supersetExercises.length - 1) * 100; // Ultima slide
+    const minTranslate = -(this.exercises.length - 1) * 100; // Ultima slide
     
     let finalTranslateX = this.currentTranslateX;
     
@@ -381,10 +301,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     container.style.transition = 'none';
     container.style.transform = `translateX(${finalTranslateX}%)`;
   }
-
-  /**
-   * Gestisce la fine del drag
-   */
+  
   private handleDragEnd(): void {
     const container = document.querySelector('.exercise-slides-container') as HTMLElement;
     if (!container) return;
@@ -406,7 +323,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
         // Swipe verso destra - precedente esercizio (solo se non è il primo)
         this.prevExercise();
         return;
-      } else if (deltaX < 0 && this.currentExerciseIndex < this.supersetExercises.length - 1) {
+      } else if (deltaX < 0 && this.currentExerciseIndex < this.exercises.length - 1) {
         // Swipe verso sinistra - prossimo esercizio (solo se non è l'ultimo)
         this.nextExercise();
         return;
@@ -416,10 +333,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     // Se non abbiamo superato la soglia o siamo ai bordi, torna alla posizione corrente
     this.snapToCurrentSlide();
   }
-
-  /**
-   * Snap alla slide corrente
-   */
+  
   private snapToCurrentSlide(): void {
     const container = document.querySelector('.exercise-slides-container') as HTMLElement;
     if (!container) return;

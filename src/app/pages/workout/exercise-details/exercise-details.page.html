@@ -35,7 +35,7 @@
                 <div class="superset-indicator">
                     <span class="current">{{ currentExerciseIndex + 1 }}</span>
                     <span class="separator">/</span>
-                    <span class="total">{{ supersetExercises.length }}</span>
+                    <span class="total">{{ exercises.length }}</span>
                 </div>
             </div>
             
@@ -109,7 +109,7 @@
                  class="exercise-slides-container"
                  [style.transform]="'translateX(' + (-currentExerciseIndex * 100) + '%)'">
                 
-                <div *ngFor="let exerciseItem of supersetExercises; let i = index" 
+                <div *ngFor="let exerciseItem of exercises; let i = index" 
                      class="exercise-slide"
                      [class.active]="i === currentExerciseIndex">
                     
