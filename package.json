@@ -2,7 +2,7 @@
   "name": "mauropozzi-app",
   "version": "0.0.1",
   "author": "Enesi srl",
-  "homepage": "https://www.enesi.it/",
+  "homepage": "https://www.mauropozzi.com/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
