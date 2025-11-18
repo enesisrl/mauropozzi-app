@@ -41,14 +41,10 @@ export class Auth {
   private readonly TOKEN_KEY = 'at';
   private readonly USER_KEY = 'ud';
   private readonly USER_LAST_REFRESH = 'udlr';
-  private readonly USER_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minuti
   
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  
   private userSubject = new BehaviorSubject<User | null>(null);
   public user$ = this.userSubject.asObservable();
-
 
   constructor(
     private http: HttpClient,
@@ -65,8 +61,8 @@ export class Auth {
     if (token && userData) {
       try {
         const user = JSON.parse(userData);
-        this.userSubject.next(user);
         this.isAuthenticatedSubject.next(true);
+        this.userSubject.next(user);
       } catch (error) {
         this.logout();
       }
@@ -111,7 +107,7 @@ export class Auth {
     const lastRefresh = localStorage.getItem(this.USER_LAST_REFRESH);
     const timeSinceLastRefresh = Date.now() - (lastRefresh ? parseInt(lastRefresh, 10) : 0);
 
-    if (timeSinceLastRefresh > this.USER_REFRESH_INTERVAL) {
+    if (timeSinceLastRefresh > environment.cache.userData) {
       try {
         const response = await firstValueFrom(this.loadProfile());
     
@@ -125,7 +121,7 @@ export class Auth {
       }
     }
   }
-  
+
   logout(): void {
     // Pulisce localStorage
     localStorage.removeItem(this.TOKEN_KEY);
@@ -136,8 +132,8 @@ export class Auth {
     this.appEvents.emitLogout();
     
     // Reset stati
-    this.userSubject.next(null);
     this.isAuthenticatedSubject.next(false);
+    this.userSubject.next(null);
     
     // Redirect al login
     this.router.navigate(['/login'], { replaceUrl: true });
@@ -169,8 +165,8 @@ export class Auth {
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     localStorage.setItem(this.USER_LAST_REFRESH, now.toString());
     
-    this.userSubject.next(user);
     this.isAuthenticatedSubject.next(true);
+    this.userSubject.next(user);
   }
   
   private updateUserData(userData: User): void {

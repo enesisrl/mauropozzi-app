@@ -11,6 +11,11 @@ export const environment = {
     }
   },
 
+  cache: {
+    userData: 5 * 60 * 1000,
+    workoutDetailsData: 5 * 60 * 1000,
+  },
+
   urls: {
     profile: 'https://www.mauropozzi.com/it/coaching/profile/',
     passwordRecovery: 'https://www.mauropozzi.com/it/coaching/password-recovery/'

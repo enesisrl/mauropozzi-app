@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Auth } from './auth';
@@ -27,8 +27,6 @@ export interface NutritionResponse {
 
 export class NutritionService {
   private cache = new Map<number, NutritionItem[]>();
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading$ = this.loadingSubject.asObservable();
 
   constructor(
     private http: HttpClient, 
@@ -54,8 +52,6 @@ export class NutritionService {
       });
     }
 
-    this.loadingSubject.next(true);
-
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', pageSize.toString());
@@ -67,7 +63,6 @@ export class NutritionService {
       params: params
     }).pipe(
       tap(response => {
-        this.loadingSubject.next(false);
         if (response.success && response.items) {
           this.cache.set(page, response.items);
         }
@@ -77,7 +72,6 @@ export class NutritionService {
 
   clearNutritionListCache(): void {
     this.cache.clear();
-    this.loadingSubject.next(false);
   }
 
 }

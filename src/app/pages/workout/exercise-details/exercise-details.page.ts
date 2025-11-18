@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
-import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
+import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,10 +46,10 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   workoutId: string = '';
   exerciseId: string = ''; // ID iniziale dall'URL
   currentExerciseId: string = ''; // ID dell'esercizio attualmente visualizzato
-  exercise: WorkoutExercise | null = null;
+  exercise: WorkoutExerciseDetails | null = null;
   
   // Superset management
-  exercises: WorkoutExercise[] = []; // Lista esercizi del superset
+  exercises: WorkoutExerciseDetails[] = []; // Lista esercizi del superset
   currentExerciseIndex: number = 0;
   isSuperset: boolean = false;
   
@@ -92,7 +92,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   
   async onRefresh(event: any) {
     this.isLoading = true;
-    this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId, true);
+    this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId, true);
     this.isLoading = false;
     if (event?.target) {
       event.target.complete();
@@ -104,7 +104,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     
     // Carica l'esercizio iniziale
     this.currentExerciseId = this.exerciseId;
-    this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId);
+    this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
     
     if (this.exercise) {
       // Carica il superset
@@ -193,7 +193,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       const newExerciseId = this.exercises[this.currentExerciseIndex].id;
       if (newExerciseId !== this.currentExerciseId) {
         this.currentExerciseId = newExerciseId;
-        this.exercise = await this.workoutService.loadExercise(this.workoutId, this.currentExerciseId);
+        this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.currentExerciseId);
       }
     }
   }

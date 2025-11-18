@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController, AlertController } from '@ionic/angular/standalone';
-import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
+import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   
   workoutId: string = '';
   exerciseId: string = '';
-  exercise: WorkoutExercise | null = null;
+  exercise: WorkoutExerciseDetails | null = null;
   step: 'exercise' | 'exercise-time' | 'rest' = 'exercise';
   
   // Timer properties
@@ -58,7 +58,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       this.exerciseId = params['exerciseId'];
       if (this.workoutId && this.exerciseId) {
         this.isLoading = true;
-        this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId);
+        this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
         this.isLoading = false;
       }
     });
