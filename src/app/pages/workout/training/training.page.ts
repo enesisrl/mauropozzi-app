@@ -37,7 +37,6 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   step: 'exercise' | 'exercise-time' | 'rest' = 'exercise';
   
   // Timer properties
-  timerMinutes: number = 0;
   timerSeconds: number = 0;
   timerInterval?: number;
   isTimerRunning: boolean = false;
@@ -71,7 +70,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    this.clearTimer();
+    this.stopTimer();
   }
   
   
@@ -83,15 +82,15 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     if (this.step === 'exercise') {
       // Passa da esercizio a timer (1:30)
       this.step = 'exercise-time';
-      this.startTimer(1, 30); // 1 minuto e 30 secondi
+      this.startTimer();
     } else if (this.step === 'exercise-time') {
       // Passa a recupero
       this.step = 'rest';
-      this.startTimer(1, 30); // 1 minuto e 30 secondi di recupero
+      this.startTimer();
     } else if (this.step === 'rest') {
       // Torna all'esercizio o vai al prossimo
       this.step = 'exercise';
-      this.clearTimer();
+      this.stopTimer();
     }
   }
 
@@ -139,15 +138,17 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   ------------------------------------------------------------ */
 
   getFormattedTime(): string {
-    const mins = this.timerMinutes.toString().padStart(2, '0');
-    const secs = this.timerSeconds.toString().padStart(2, '0');
+    const mins = Math.floor(this.timerSeconds / 60).toString().padStart(2, '0');
+    const secs = (this.timerSeconds % 60).toString().padStart(2, '0');
     return `${mins}:${secs}`;
   }
 
-  restartTimer() {
-    if (this.step === 'exercise-time' || this.step === 'rest') {
-      this.startTimer(1, 30); // 1:30 per ora, poi integreremo la logica corretta
-    }
+  startTimer(): void {
+    //@todok controllo se ho il tempo
+
+    this.stopTimer();
+    this.timerSeconds = 90; // @todok prendo il tempo dallo step
+    this.startTimerInterval();
   }
 
   pauseTimer(): void {
@@ -160,22 +161,27 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
 
   resumeTimer(): void {
-    if (this.isPaused && (this.timerMinutes > 0 || this.timerSeconds > 0)) {
-      // Riprende dal tempo corrente rimasto
+    if (this.isPaused && this.timerSeconds > 0) {
       this.startTimerInterval();
     } else {
-      this.restartTimer();
+      this.startTimer();
     }
   }
-  
-  private startTimer(minutes: number, seconds: number): void {
-    this.clearTimer();
-    this.timerMinutes = minutes;
-    this.timerSeconds = seconds;
-    this.startTimerInterval();
+
+  private startTimerInterval(): void {
+    this.isTimerRunning = true;
+    this.isPaused = false;
+    
+    this.timerInterval = window.setInterval(() => {
+      if (this.timerSeconds > 0) {
+        this.timerSeconds--;
+      } else {
+        this.stopTimer();
+      }
+    }, 1000);
   }
   
-  private clearTimer(): void {
+  private stopTimer(): void {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
       this.timerInterval = undefined;
@@ -184,39 +190,11 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     this.isPaused = false;
   }
   
-  private startTimerInterval(): void {
-    this.isTimerRunning = true;
-    this.isPaused = false;
-    
-    this.timerInterval = window.setInterval(() => {
-      if (this.timerSeconds > 0) {
-        this.timerSeconds--;
-      } else if (this.timerMinutes > 0) {
-        this.timerMinutes--;
-        this.timerSeconds = 59;
-      } else {
-        // Timer finito
-        this.clearTimer();
-        this.onTimerComplete();
-      }
-    }, 1000);
-  }
-  
-  private onTimerComplete(): void {
-    // Per ora non facciamo nulla, poi aggiungeremo logica
-    console.log('Timer completato!');
-  }
-
   
   /* Helpers
   ------------------------------------------------------------ */
 
-  async loadTraining(reset: boolean = false) {
-    if (reset) {
-      this.workoutService.clearWorkoutDetailsCache();
-    }
-
-    // Prima prova a caricare dalla cache
+  private async loadTraining() {
     const cachedExercise = this.workoutService.getCachedExerciseById(this.workoutId, this.exerciseId);
     
     if (cachedExercise) {
@@ -227,7 +205,6 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       return;
     }
 
-    // Se non è in cache, prova a caricare l'intero workout e poi l'esercizio
     const loading = await this.loadingController.create({
       message: environment.ln.generalLoading
     });
