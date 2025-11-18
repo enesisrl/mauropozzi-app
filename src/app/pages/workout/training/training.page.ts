@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { ModalController } from '@ionic/angular/standalone';
+import { ModalController, AlertController } from '@ionic/angular/standalone';
 import { WorkoutService, WorkoutExercise } from '../../../services/workout.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { CommonModule } from '@angular/common';
@@ -138,10 +137,10 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
 
   startTimer(): void {
-    //@todok controllo se ho il tempo
-
+    // TODO: Implementare controllo tempo step dal backend
     this.stopTimer();
-    this.timerSeconds = 90; // @todok prendo il tempo dallo step
+    // TODO: Recuperare tempo dal backend per ogni step
+    this.timerSeconds = 90;
     this.startTimerInterval();
   }
 

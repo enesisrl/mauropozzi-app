@@ -1,22 +1,22 @@
-import { addIcons } from 'ionicons';
-import { Auth } from '../../../services/auth';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { lockClosed } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { addIcons } from 'ionicons';
+import { lockClosed } from 'ionicons/icons';
 import { 
   IonContent, 
   IonButton, 
   IonIcon 
 } from '@ionic/angular/standalone';
+import { Auth } from '../../../services/auth';
 
 @Component({
   selector: 'app-no-subscription',
   templateUrl: './no-subscription.page.html',
   styleUrls: ['./no-subscription.page.scss'],
   imports: [
-    IonButton, 
-    IonContent, 
+    IonButton,
+    IonContent,
     IonIcon
   ]
 })

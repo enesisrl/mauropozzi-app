@@ -1,10 +1,10 @@
-import { AppEvents } from './app-events.service';
-import { Auth } from './auth';
-import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { Auth } from './auth';
+import { AppEvents } from './app-events.service';
 
 export interface NutritionItem {
     id: string;
@@ -56,15 +56,21 @@ export class NutritionService {
 
     this.loadingSubject.next(true);
 
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', pageSize.toString());
+
     const url = `${environment.api.baseUrl}${environment.api.endpoints.nutritionList}`;
 
-    return this.http.post<NutritionResponse>(url, { page: page, limit: pageSize }, { headers: this.auth.getAuthHeaders() }).pipe(
+    return this.http.post<NutritionResponse>(url, {}, {
+      headers: this.auth.getAuthHeaders(),
+      params: params
+    }).pipe(
       tap(response => {
-        // Salviamo in cache
+        this.loadingSubject.next(false);
         if (response.success && response.items) {
           this.cache.set(page, response.items);
         }
-        this.loadingSubject.next(false);
       })
     );
   }

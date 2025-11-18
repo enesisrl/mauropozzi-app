@@ -1,12 +1,6 @@
-
-import { Auth } from '../../../../services/auth';
-import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
-import { WorkoutService, WorkoutListItem } from '../../../../services/workout.service';
 import { 
   IonContent, 
   IonHeader,
@@ -17,6 +11,11 @@ import {
   IonInfiniteScrollContent,
   IonSpinner
 } from '@ionic/angular/standalone';
+import { Auth } from '../../../../services/auth';
+import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
+import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
+import { WorkoutService, WorkoutListItem } from '../../../../services/workout.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-workouts',
@@ -87,7 +86,10 @@ export class WorkoutsPage implements OnInit {
         }
       },
       error: (error) => {
+        this.isLoading = false;
+        this.initialLoad = false;
         this.hasMoreData = false;
+        console.error('Error loading workout data:', error);
       },
       complete: () => {
         this.isLoading = false;
@@ -96,27 +98,27 @@ export class WorkoutsPage implements OnInit {
     });
   }
   
-  onRefresh(event: any) {
+  onRefresh(event: CustomEvent) {
     this.loadWorkoutData(true);
     setTimeout(() => {
-      event.target.complete();
+      (event.target as any)?.complete();
     }, 1000);
   }
   
-  onInfiniteScroll(event: any) {
+  onInfiniteScroll(event: CustomEvent) {
     if (this.hasMoreData && !this.isLoading) {
       this.currentPage++;
       this.loadWorkoutData();
     }
     
     setTimeout(() => {
-      event.target.complete();
+      (event.target as any)?.complete();
     }, 1000);
   }
   
   /* Helpers
   ------------------------------------------------------------*/
-  
+
   trackById(index: number, item: WorkoutListItem): string {
     return item.id;
   }

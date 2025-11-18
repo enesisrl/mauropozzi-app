@@ -2,7 +2,7 @@ import { addIcons } from 'ionicons';
 import { Browser } from '@capacitor/browser';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { documentTextOutline, downloadOutline, personOutline, calendarOutline } from 'ionicons/icons';
+import { documentTextOutline, downloadOutline } from 'ionicons/icons';
 import { environment } from '../../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { NutritionService, NutritionItem } from '../../../../services/nutrition.service';
@@ -51,7 +51,7 @@ export class NutritionPage implements OnInit {
   environment = environment;
 
   constructor(private nutritionService: NutritionService) {
-    addIcons({ documentTextOutline, downloadOutline, personOutline, calendarOutline });
+    addIcons({ documentTextOutline, downloadOutline });
   }
 
   ngOnInit() {
@@ -88,7 +88,10 @@ export class NutritionPage implements OnInit {
         }
       },
       error: (error) => {
+        this.isLoading = false;
+        this.initialLoad = false;
         this.hasMoreData = false;
+        console.error('Error loading nutrition data:', error);
       },
       complete: () => {
         this.isLoading = false;
@@ -97,10 +100,10 @@ export class NutritionPage implements OnInit {
     });
   }
 
-  onRefresh(event: any) {
+  onRefresh(event: CustomEvent) {
     this.loadNutritionData(true);
     setTimeout(() => {
-      event.target.complete();
+      (event.target as any)?.complete();
     }, 1000);
   }
   
@@ -131,7 +134,7 @@ export class NutritionPage implements OnInit {
     return item.id;
   }
 
-  async openExternalLink(url: string) {
+  private async openExternalLink(url: string) {
     await Browser.open({ url: url });
   }
 

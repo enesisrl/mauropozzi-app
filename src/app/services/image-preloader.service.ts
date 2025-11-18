@@ -49,13 +49,7 @@ export class ImagePreloaderService {
       'assets/images/icon-profile.svg'
     ];
 
-    return this.preloadImages(essentialImages)
-      .then((images) => {
-        return images;
-      })
-      .catch((error) => {
-        throw error;
-      });
+    return this.preloadImages(essentialImages);
   }
 
 }

@@ -1,13 +1,14 @@
-import { Auth } from '../../../../services/auth';
-import { Browser } from '@capacitor/browser';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { Browser } from '@capacitor/browser';
 import { 
   IonContent, 
   IonButton 
 } from '@ionic/angular/standalone';
+import { Auth } from '../../../../services/auth';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -15,24 +16,31 @@ import {
   styleUrls: ['./profile.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule,
-    IonButton, 
+    IonButton,
     IonContent
   ]
 })
 
-export class ProfilePage implements OnInit {
+export class ProfilePage implements OnInit, OnDestroy {
   currentUser: any = null;
+  private userSubscription?: Subscription;
 
   constructor(
     private auth: Auth,
   ) { }
 
   ngOnInit() {
-    this.auth.user$.subscribe(user => {
+    this.userSubscription = this.auth.user$.subscribe(user => {
       this.currentUser = user;
     });
+  }
+
+  ngOnDestroy() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
   
   

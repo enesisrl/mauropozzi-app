@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of, tap, BehaviorSubject, forkJoin } from 'rxjs';
+import { Observable, of, tap, BehaviorSubject, forkJoin, firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Auth } from './auth';
 import { AppEvents } from './app-events.service';
@@ -151,7 +151,7 @@ export class WorkoutService {
       }
 
       // Se non è in cache, carica dall'API
-      const response = await this.getWorkoutDetails(workoutId).toPromise();
+      const response = await firstValueFrom(this.getWorkoutDetails(workoutId));
       if (response?.success && response.item) {
         // Preload delle immagini
         this.preloadWorkoutImages(response.item);
@@ -183,7 +183,7 @@ export class WorkoutService {
 
     // Se non è in cache, carica il workout completo
     try {
-      const workout = await this.getWorkoutDetails(workoutId).toPromise();
+      const workout = await firstValueFrom(this.getWorkoutDetails(workoutId));
       if (workout?.success && workout.item) {
         // Ora dovrebbe essere in cache, riprova
         exercise = this.getCachedExerciseById(workoutId, exerciseId);
@@ -252,6 +252,36 @@ export class WorkoutService {
         })
       );
   }
+  
+  private clearWorkoutDetailsCache(): void {
+    this.workoutCache.clear();
+    this.cacheTimestamps.clear();
+  }
+
+  private isWorkoutCached(workoutId: string): boolean {
+    if (!this.workoutCache.has(workoutId) || !this.cacheTimestamps.has(workoutId)) {
+      return false;
+    }
+
+    const cacheTime = this.cacheTimestamps.get(workoutId)!;
+    const now = Date.now();
+    
+    // Controlla se la cache è scaduta
+    if (now - cacheTime > this.cacheTimeout) {
+      this.workoutCache.delete(workoutId);
+      this.cacheTimestamps.delete(workoutId);
+      return false;
+    }
+
+    return true;
+  }
+  
+  private getCachedWorkout(workoutId: string): WorkoutDetail | null {
+    if (this.isWorkoutCached(workoutId)) {
+      return this.workoutCache.get(workoutId) || null;
+    }
+    return null;
+  }
 
   private preloadWorkoutImages(workout: WorkoutDetail): void {
     if (!workout?.esercizi) return;
@@ -277,36 +307,6 @@ export class WorkoutService {
     if (exerciseImages.length > 0) {
       this.imagePreloader.preloadImages(exerciseImages);
     }
-  }
-
-  private isWorkoutCached(workoutId: string): boolean {
-    if (!this.workoutCache.has(workoutId) || !this.cacheTimestamps.has(workoutId)) {
-      return false;
-    }
-
-    const cacheTime = this.cacheTimestamps.get(workoutId)!;
-    const now = Date.now();
-    
-    // Controlla se la cache è scaduta
-    if (now - cacheTime > this.cacheTimeout) {
-      this.workoutCache.delete(workoutId);
-      this.cacheTimestamps.delete(workoutId);
-      return false;
-    }
-
-    return true;
-  }
-  
-  private clearWorkoutDetailsCache(): void {
-    this.workoutCache.clear();
-    this.cacheTimestamps.clear();
-  }
-  
-  private getCachedWorkout(workoutId: string): WorkoutDetail | null {
-    if (this.isWorkoutCached(workoutId)) {
-      return this.workoutCache.get(workoutId) || null;
-    }
-    return null;
   }
   
   private getCachedExerciseById(workoutId: string, exerciseId: string): WorkoutExercise | null {
