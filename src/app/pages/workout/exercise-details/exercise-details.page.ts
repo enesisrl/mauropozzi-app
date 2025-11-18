@@ -91,6 +91,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   }
   
   async onRefresh(event: any) {
+    this.isLoading = true;
     this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId, true);
     this.isLoading = false;
     if (event?.target) {
@@ -99,6 +100,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   }
   
   private async loadExerciseData(): Promise<void> {
+    this.isLoading = true;
+    
     // Carica l'esercizio iniziale
     this.currentExerciseId = this.exerciseId;
     this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId);

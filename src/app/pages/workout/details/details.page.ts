@@ -59,6 +59,7 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
     this.route.params.subscribe(async params => {
       this.workoutId = params['id'];
       if (this.workoutId) {
+        this.isLoading = true;
         this.workout = await this.workoutService.loadWorkout(this.workoutId);
         this.isLoading = false;
       }
@@ -71,7 +72,9 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
   
   async onRefresh(event: any) {
     if (this.workoutId) {
+      this.isLoading = true;
       this.workout = await this.workoutService.loadWorkout(this.workoutId);
+      this.isLoading = false;
     }
     if (event?.target) {
       event.target.complete();
@@ -80,7 +83,7 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
   
   /* UI
   ------------------------------------------------------------*/
-  
+
   goBack() {
     this.router.navigate(['/main']);
   }

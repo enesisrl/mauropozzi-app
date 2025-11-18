@@ -57,6 +57,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       this.workoutId = params['workoutId'];
       this.exerciseId = params['exerciseId'];
       if (this.workoutId && this.exerciseId) {
+        this.isLoading = true;
         this.exercise = await this.workoutService.loadExercise(this.workoutId, this.exerciseId);
         this.isLoading = false;
       }
