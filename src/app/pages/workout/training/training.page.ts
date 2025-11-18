@@ -31,10 +31,19 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   workoutId: string = '';
   exerciseId: string = '';
   exercise: WorkoutExerciseDetails | null = null;
+  nextExercise: WorkoutExerciseDetails | null = null;
 
-  step: 'exercise' | 'rest' | null = null;
+  step: 'exercise' | 'rest' = 'exercise';
   hasTimer: boolean = false;
-  currentSeries: number = 0;
+  currentSeries: number = 1;
+
+  // Superset
+  exercises: WorkoutExerciseDetails[] = [];
+  isSuperset: boolean = false;
+  currentSupersetIndex: number = 0;
+  hasNextSupersetExercise(): boolean {
+    return this.isSuperset && this.currentSupersetIndex + 1 < this.exercises.length;
+  }
   
   // Timer properties
   timerSeconds: number = 0;
@@ -62,6 +71,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       if (this.workoutId && this.exerciseId) {
         this.isLoading = true;
         this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
+        this.nextExercise = this.workoutService.getNextExercise(this.workoutId, this.exerciseId);
+        this.loadSuperset();
         this.isLoading = false;
         this.workoutNext();
       }
@@ -76,37 +87,75 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   /* UI
   ------------------------------------------------------------ */
 
-  workoutNext() {
+  workoutNextSeries() {
+    this.step = 'exercise';
+    this.currentSeries++;
+
+    if(this.isSuperset) {
+      this.currentSupersetIndex = 0;
+      this.exercise = this.exercises[0];
+      this.exerciseId = this.exercise.id;
+    }
+
+    this.workoutNext();
+  }
+
+  workoutNextSuperset() {
+    this.step = 'exercise';
+    if(this.isSuperset) {
+      this.currentSupersetIndex++;
+      this.exercise = this.exercises[this.currentSupersetIndex];
+      this.exerciseId = this.exercise.id;
+    }
+    this.workoutNext();
+  }
+
+  workoutNextExercise() {
     if(!this.exercise) {
-      // @todok
       return;
     }
 
-    // Primo esercizio
-    if(this.step == null) {
-      this.step = 'exercise';
-    } 
-    
-    // Tempo di recupero
-    else if(this.step == 'exercise') {
-      this.step = 'rest';
-    } 
-    
-    // Esercizio successivo
-    else if(this.step == 'rest') {
-      this.step = 'exercise';
-      // @todok calcolare serie disponibili
-      // @todok se non sono presenti serie attiva tasto prossima sere
-      // @todok mostrare conteggio serie front
-      // @todok navigazione del super set
-      if(this.currentSeries < 4) {
-        this.currentSeries++;
-      } else {
-        // @todok carico esercizio successivo
-      }
+    this.step = 'exercise';
+    this.currentSeries = 1;
+
+    if(this.nextExercise){
+      this.exercise = this.nextExercise;
+      this.nextExercise = this.workoutService.getNextExercise(this.workoutId, this.exercise.id);
+      this.loadSuperset();
+      this.workoutNext();
+    }
+  }
+
+  workoutNextRest() {
+    this.step = 'rest';
+    this.workoutNext();
+  }
+
+  workoutEnd() {
+    // @todok allenamento completato
+  }
+
+  private loadSuperset() {
+    if(!this.exercise) {
+      return;
     }
 
-    console.log(this.exercise, this.step, this.currentSeries);
+    this.exercises = this.workoutService.getSupersetExercises(this.workoutId, this.exerciseId);
+    this.isSuperset = this.exercises.length > 1;
+    console.log('Superset exercises:', this.exercises);
+    
+    if (this.isSuperset) {
+      this.currentSupersetIndex = this.exercises.findIndex(ex => ex.id === this.exerciseId);
+      if (this.currentSupersetIndex < 0) this.currentSupersetIndex = 0;
+    } else {
+      this.currentSupersetIndex = 0;
+    }
+  }
+
+  private workoutNext() {
+    if(!this.exercise) {
+      return;
+    }
 
     this.stopTimer();
 

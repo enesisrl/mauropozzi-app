@@ -14,24 +14,37 @@
     </div>
 
     <div *ngIf="!isLoading && exercise" class="training-content">
-        <div *ngIf="!hasTimer" class="widget">
-            <img src="assets/images/logo-icon.svg" alt="Mauto Pozzi" />
-            <div *ngIf="step == 'exercise'" class="widget-title">Esercizio in corso</div>
-            <div *ngIf="step == 'rest'" class="widget-title">Recupero in corso</div>
-            <ion-button class="button widget-next" expand="block" (click)="workoutNext()">Ho finito! Vai al recupero</ion-button>
-        </div>
+        <div class="widget">
+            <img *ngIf="!hasTimer" src="assets/images/logo-icon.svg" alt="Mauto Pozzi" />
 
-        <div *ngIf="hasTimer" class="widget">
             <div *ngIf="step == 'exercise'" class="widget-title">Esercizio in corso</div>
-            <div *ngIf="step == 'rest'" class="widget-title-success">Tempo di recupero</div>
-            <div class="widget-timer">{{ getFormattedTime() }}</div>
-            <div class="widget-controls">
+            <div *ngIf="!hasTimer && step == 'rest'" class="widget-title">Recupero in corso</div>
+            <div *ngIf="hasTimer && step == 'rest'" class="widget-title-success">Tempo di recupero</div>
+            
+            <div class="widget-badges">
+                <div class="badge series">Serie {{currentSeries}}</div>
+                <div *ngIf="step == 'exercise' && isSuperset" class="badge superset">
+                    <span class="superset-label">SUPERSET</span>
+                    <div class="superset-indicator">
+                        <span class="current">{{ currentSupersetIndex + 1 }}</span>
+                        <span class="separator">/</span>
+                        <span class="total">{{ exercises.length }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="hasTimer" class="widget-timer">{{ getFormattedTime() }}</div>
+            <div *ngIf="hasTimer" class="widget-controls">
                 <ion-button class="button widget-control" expand="block" (click)="startTimer()">Ricomincia <ion-icon name="refresh-outline"></ion-icon></ion-button>
                 <ion-button *ngIf="isTimerRunning" class="button widget-control" expand="block" (click)="pauseTimer()">Pausa <ion-icon name="pause"></ion-icon></ion-button>
                 <ion-button *ngIf="!isTimerRunning && isPaused" class="button widget-control" expand="block" (click)="resumeTimer()" [disabled]="!isPaused">Avvia <ion-icon name="play"></ion-icon></ion-button>
             </div>
-            <ion-button *ngIf="step == 'exercise'" class="button widget-next" expand="block" (click)="workoutNext()">Ho finito! Vai al recupero</ion-button>
-            <ion-button *ngIf="step == 'rest'" class="button widget-next" expand="block" (click)="workoutNext()">Vai al prossimo esercizio!</ion-button>
+
+            <ion-button *ngIf="step == 'exercise' && hasNextSupersetExercise()" class="button widget-next" expand="block" (click)="workoutNextSuperset()">Prossimo esercizio!</ion-button>
+            <ion-button *ngIf="step == 'exercise' && !hasNextSupersetExercise()" class="button widget-next" expand="block" (click)="workoutNextRest()">Ho finito! Vai al recupero</ion-button>
+            <ion-button *ngIf="step == 'rest'" class="button widget-next" expand="block" (click)="workoutNextSeries()">Prossima serie!</ion-button>
+            <ion-button *ngIf="step == 'rest' && nextExercise" class="button widget-next" expand="block" (click)="workoutNextExercise()">Prossimo esercizio!</ion-button>
+            <ion-button *ngIf="step == 'rest' && !nextExercise" class="button widget-next" expand="block" (click)="workoutEnd()">Ho finito!</ion-button>
         </div>
 
         <div class="exercise">

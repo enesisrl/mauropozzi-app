@@ -36,10 +36,7 @@ ion-header {
             z-index: 10;
 
             .superset-badge {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                // background: rgba(237, 186, 34, 0.95);
+                display: inline-block;
                 background-color: #edba22;
                 border-radius: 8px;
                 padding: 6px 12px;
@@ -51,8 +48,8 @@ ion-header {
                 text-transform: uppercase;
                 
                 .superset-indicator {
-                    display: flex;
-                    align-items: center;
+                    display: inline-block;
+                    margin-left: 5px;
                     
                     .current {
                         font-weight: 900;

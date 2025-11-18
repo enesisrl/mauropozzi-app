@@ -50,7 +50,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   
   // Superset management
   exercises: WorkoutExerciseDetails[] = []; // Lista esercizi del superset
-  currentExerciseIndex: number = 0;
+  currentSupersetIndex: number = 0;
   isSuperset: boolean = false;
   
   // Touch/swipe handling
@@ -113,8 +113,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       
       if (this.isSuperset) {
         // Trova l'indice dell'esercizio corrente
-        this.currentExerciseIndex = this.exercises.findIndex(ex => ex.id === this.exerciseId);
-        if (this.currentExerciseIndex < 0) this.currentExerciseIndex = 0;
+        this.currentSupersetIndex = this.exercises.findIndex(ex => ex.id === this.exerciseId);
+        if (this.currentSupersetIndex < 0) this.currentSupersetIndex = 0;
         
         setTimeout(() => this.snapToCurrentSlide(), 100);
       }
@@ -137,7 +137,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     // Se è un superset, usa l'ID dell'esercizio corrente nel carousel
     let currentExerciseId = this.exerciseId;
     if (this.isSuperset && this.exercises.length > 0) {
-      const currentExercise = this.exercises[this.currentExerciseIndex];
+      const currentExercise = this.exercises[this.currentSupersetIndex];
       if (currentExercise) {
         currentExerciseId = currentExercise.id;
       }
@@ -166,7 +166,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   nextExercise(): void {
     if (!this.isSuperset || this.exercises.length <= 1) return;
     
-    this.currentExerciseIndex = (this.currentExerciseIndex + 1) % this.exercises.length;
+    this.currentSupersetIndex = (this.currentSupersetIndex + 1) % this.exercises.length;
     this.updateCurrentExercise();
     this.snapToCurrentSlide();
   }
@@ -174,8 +174,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   prevExercise(): void {
     if (!this.isSuperset || this.exercises.length <= 1) return;
     
-    this.currentExerciseIndex = this.currentExerciseIndex > 0 
-      ? this.currentExerciseIndex - 1 
+    this.currentSupersetIndex = this.currentSupersetIndex > 0 
+      ? this.currentSupersetIndex - 1 
       : this.exercises.length - 1;
     this.snapToCurrentSlide();
   }
@@ -184,13 +184,13 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     if (!this.isSuperset) return;
     
     // Aggiorna l'indice corrente
-    this.currentExerciseIndex = event.detail.activeIndex || 0;
+    this.currentSupersetIndex = event.detail.activeIndex || 0;
     this.updateCurrentExercise();
   }
   
   private async updateCurrentExercise(): Promise<void> {
-    if (this.exercises[this.currentExerciseIndex]) {
-      const newExerciseId = this.exercises[this.currentExerciseIndex].id;
+    if (this.exercises[this.currentSupersetIndex]) {
+      const newExerciseId = this.exercises[this.currentSupersetIndex].id;
       if (newExerciseId !== this.currentExerciseId) {
         this.currentExerciseId = newExerciseId;
         this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.currentExerciseId);
@@ -217,7 +217,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     if (!this.isSuperset) return;
     this.isDragging = true;
     this.touchStartX = event.touches[0].clientX;
-    this.startTranslateX = -this.currentExerciseIndex * 100; // Usa la posizione corrente della slide
+    this.startTranslateX = -this.currentSupersetIndex * 100; // Usa la posizione corrente della slide
   }
   
   onTouchMove(event: TouchEvent): void {
@@ -247,7 +247,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     this.isMouseDown = true;
     this.isDragging = true;
     this.mouseStartX = event.clientX;
-    this.startTranslateX = -this.currentExerciseIndex * 100; // Usa la posizione corrente della slide
+    this.startTranslateX = -this.currentSupersetIndex * 100; // Usa la posizione corrente della slide
   }
   
   onMouseMove(event: MouseEvent): void {
@@ -281,7 +281,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     const deltaPercent = (deltaX / containerWidth) * 100;
     
     // Calcola la nuova posizione
-    const baseTranslate = -this.currentExerciseIndex * 100;
+    const baseTranslate = -this.currentSupersetIndex * 100;
     this.currentTranslateX = baseTranslate + deltaPercent;
     
     // Limita il movimento ai bordi con resistenza
@@ -322,11 +322,11 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
 
     // Controlla se abbiamo superato la soglia per cambiare slide
     if (Math.abs(deltaX) > swipeThresholdPx) {
-      if (deltaX > 0 && this.currentExerciseIndex > 0) {
+      if (deltaX > 0 && this.currentSupersetIndex > 0) {
         // Swipe verso destra - precedente esercizio (solo se non è il primo)
         this.prevExercise();
         return;
-      } else if (deltaX < 0 && this.currentExerciseIndex < this.exercises.length - 1) {
+      } else if (deltaX < 0 && this.currentSupersetIndex < this.exercises.length - 1) {
         // Swipe verso sinistra - prossimo esercizio (solo se non è l'ultimo)
         this.nextExercise();
         return;
@@ -341,7 +341,7 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     const container = document.querySelector('.exercise-slides-container') as HTMLElement;
     if (!container) return;
 
-    const targetX = -this.currentExerciseIndex * 100;
+    const targetX = -this.currentSupersetIndex * 100;
     container.style.transition = 'transform 0.3s ease-in-out';
     container.style.transform = `translateX(${targetX}%)`;
     this.currentTranslateX = targetX;

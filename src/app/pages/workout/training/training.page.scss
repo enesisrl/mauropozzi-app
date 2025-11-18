@@ -32,6 +32,87 @@
                 color: #4CDB1D;
                 text-transform: uppercase;
             }
+            
+            .widget-badges {
+                margin-top: 8px;
+
+                .badge {
+                    display: inline-block;
+                    border-radius: 8px;
+                    padding: 6px 12px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 700;
+                    font-style: italic;
+                    font-size: 14px;
+                    text-transform: uppercase;
+
+                    & + .badge {
+                        margin-left: 8px;
+                    }
+                    
+                    &.series {
+                        color: #fff;
+                        background-color: var(--ion-color-primary);
+                    }
+
+                    &.superset {
+                        color: #1b1b1b;
+                        background-color: #edba22;
+
+                        .superset-indicator {
+                            display: inline-block;
+                            margin-left: 5px;
+                            
+                            .current {
+                                font-weight: 900;
+                            }
+                            
+                            .separator {
+                                margin: 0 2px;
+                            }
+                            
+                            .total {
+                                font-weight: 400;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            .superset-badge {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                // background: rgba(237, 186, 34, 0.95);
+                background-color: #edba22;
+                border-radius: 8px;
+                padding: 6px 12px;
+                color: #1b1b1b;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 700;
+                font-style: italic;
+                font-size: 14px;
+                text-transform: uppercase;
+                
+                .superset-indicator {
+                    display: flex;
+                    align-items: center;
+                    
+                    .current {
+                        font-weight: 900;
+                    }
+                    
+                    .separator {
+                        margin: 0 2px;
+                    }
+                    
+                    .total {
+                        font-weight: 400;
+                    }
+                }
+            }
+
             .widget-timer {
                 font-family: 'Roboto', sans-serif;
                 font-weight: 700;
@@ -40,6 +121,10 @@
             }
             .widget-controls {
                 display: flex;
+
+                &.button + .button {
+                    margin-left: 8px;
+                }
             }
 
             .button  {
@@ -68,9 +153,6 @@
                     font-size: 14px;
                     min-height: 35px;
                     height: 35px;
-                    &.widget-control + .widget-control {
-                        margin-left: 8px;
-                    }
                 }
 
                 &.widget-next {

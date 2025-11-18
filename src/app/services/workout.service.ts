@@ -316,6 +316,45 @@ export class WorkoutService {
     return null;
   }
 
+  
+  public getNextExercise(workoutId: string, currentExerciseId: string): WorkoutExerciseDetails | null {
+    // Verifica cache
+    if (!this.isWorkoutDetailsCached(workoutId)) {
+      return null;
+    }
+
+    const workout = this.workoutDetailsCache.get(workoutId);
+    if (!workout || !workout.esercizi) {
+      return null;
+    }
+
+    // Cerca l'esercizio corrente e identifica il giorno
+    for (const giorno of workout.esercizi) {
+      if (!giorno.gruppi) continue;
+
+      let currentExerciseFound = false;
+      let allExercisesInDay: WorkoutExerciseDetails[] = [];
+      
+      // Raccogli tutti gli esercizi del giorno in ordine
+      for (const gruppo of giorno.gruppi) {
+        if (gruppo.esercizi) {
+          allExercisesInDay.push(...gruppo.esercizi);
+        }
+      }
+
+      // Trova l'indice dell'esercizio corrente
+      const currentIndex = allExercisesInDay.findIndex(ex => ex.id === currentExerciseId);
+      
+      if (currentIndex !== -1) {
+        // Restituisci il prossimo esercizio se esiste
+        const nextIndex = currentIndex + 1;
+        return nextIndex < allExercisesInDay.length ? allExercisesInDay[nextIndex] : null;
+      }
+    }
+
+    return null;
+  }
+
 
   /* Helpers
   ------------------------------------------------------------*/
