@@ -1,10 +1,10 @@
+import { AppEvents } from './app-events.service';
+import { Auth } from './auth';
+import { environment } from '../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { Auth } from './auth';
-import { AppEvents } from './app-events.service';
 
 export interface NutritionItem {
     id: string;
@@ -24,6 +24,7 @@ export interface NutritionResponse {
 @Injectable({
   providedIn: 'root'
 })
+
 export class NutritionService {
   private cache = new Map<number, NutritionItem[]>();
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -36,13 +37,10 @@ export class NutritionService {
   ) {
     // Ascolta eventi di logout per pulire la cache
     this.appEvents.onLogout$.subscribe(() => {
-      this.clearCache();
+      this.clearNutritionListCache();
     });
   }
-
-  /**
-   * Carica le schede nutrizionali con paginazione
-   */
+  
   getNutritionList(page: number = 1, pageSize: number = 10): Observable<NutritionResponse> {
     // Controllo cache
     if (this.cache.has(page)) {
@@ -71,43 +69,9 @@ export class NutritionService {
     );
   }
 
-  loadPages(upToPage: number, pageSize: number = 10): Observable<NutritionItem[]> {
-    const allItems: NutritionItem[] = [];
-    const requests: Observable<NutritionResponse>[] = [];
-
-    for (let i = 1; i <= upToPage; i++) {
-      requests.push(this.getNutritionList(i, pageSize));
-    }
-
-    return new Observable(observer => {
-      let completed = 0;
-      
-      requests.forEach((request, index) => {
-        request.subscribe({
-          next: (response) => {
-            if (response.success && response.items) {
-              // Inserisci gli elementi nella posizione corretta
-              const startIndex = index * pageSize;
-              response.items.forEach((item, itemIndex) => {
-                allItems[startIndex + itemIndex] = item;
-              });
-            }
-          },
-          complete: () => {
-            completed++;
-            if (completed === requests.length) {
-              // Filtra gli elementi undefined e restituisci il risultato
-              observer.next(allItems.filter(item => item !== undefined));
-              observer.complete();
-            }
-          }
-        });
-      });
-    });
-  }
-
-  clearCache(): void {
+  clearNutritionListCache(): void {
     this.cache.clear();
     this.loadingSubject.next(false);
   }
+
 }

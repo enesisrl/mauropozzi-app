@@ -8,10 +8,7 @@ export class ImagePreloaderService {
   private preloadedImages: Map<string, HTMLImageElement> = new Map();
 
   constructor() {}
-
-  /**
-   * Precarica una singola immagine
-   */
+  
   preloadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       // Se già precaricata, restituisci quella in cache
@@ -34,18 +31,12 @@ export class ImagePreloaderService {
       img.src = src;
     });
   }
-
-  /**
-   * Precarica multiple immagini
-   */
+  
   preloadImages(srcs: string[]): Promise<HTMLImageElement[]> {
     const promises = srcs.map(src => this.preloadImage(src));
     return Promise.all(promises);
   }
-
-  /**
-   * Precarica le immagini essenziali dell'app
-   */
+  
   preloadEssentialImages(): Promise<HTMLImageElement[]> {
     const essentialImages = [
       'assets/images/icon-pdf.svg',
@@ -67,31 +58,4 @@ export class ImagePreloaderService {
       });
   }
 
-  /**
-   * Precarica le immagini degli esercizi (quando disponibili)
-   */
-  preloadExerciseImages(exerciseUrls: string[]): Promise<HTMLImageElement[]> {
-    return this.preloadImages(exerciseUrls);
-  }
-
-  /**
-   * Verifica se un'immagine è già stata precaricata
-   */
-  isPreloaded(src: string): boolean {
-    return this.preloadedImages.has(src);
-  }
-
-  /**
-   * Ottiene un'immagine precaricata
-   */
-  getPreloadedImage(src: string): HTMLImageElement | null {
-    return this.preloadedImages.get(src) || null;
-  }
-
-  /**
-   * Pulisce la cache delle immagini
-   */
-  clearCache(): void {
-    this.preloadedImages.clear();
-  }
 }

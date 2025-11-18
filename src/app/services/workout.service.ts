@@ -95,12 +95,12 @@ export class WorkoutService {
       this.clearCache();
     });
   }
-
   
-  /**
-   * Lista
-   */
 
+  /* Load Data
+  ------------------------------------------------------------*/
+
+  // Lista schede
   getWorkoutList(page: number = 1, pageSize: number = 10): Observable<WorkoutListResponse> {
     // Controllo cache
     if (this.workoutListCache.has(page)) {
@@ -134,111 +134,37 @@ export class WorkoutService {
       })
     );
   }
-  
-  loadWorkoutPages(upToPage: number, pageSize: number = 10): Observable<WorkoutListResponse[]> {
-    const requests: Observable<WorkoutListResponse>[] = [];
-    
-    for (let i = 1; i <= upToPage; i++) {
-      requests.push(this.getWorkoutList(i, pageSize));
-    }
 
-    return forkJoin(requests);
-  }
-  
   clearWorkoutListCache(): void {
     this.workoutListCache.clear();
   }
 
-
-  /**
-   * Dettaglio scheda
-   */
-
-  getWorkoutDetails(workoutId: string): Observable<WorkoutResponse> {
-    // Controlla se i dati sono in cache e ancora validi
-    if (this.isWorkoutCached(workoutId)) {
-      const cachedWorkout = this.workoutCache.get(workoutId);
-      return of({
-        success: true,
-        item: cachedWorkout
-      });
-    }
-
-    const url = `${environment.api.baseUrl}${environment.api.endpoints.workoutDetails}`;
-
-    return this.http.post<WorkoutResponse>(url, { id: workoutId }, {headers: this.auth.getAuthHeaders()})
-      .pipe(
-        tap(response => {
-          // Salva in cache se la risposta è success
-          if (response.success && response.item) {
-            this.cacheWorkout(workoutId, response.item);
-          }
-        })
-      );
-  }
-  
-  clearWorkoutDetailsCache(): void {
-    this.workoutCache.clear();
-    this.cacheTimestamps.clear();
-  }
-  
-  private isWorkoutCached(workoutId: string): boolean {
-    if (!this.workoutCache.has(workoutId) || !this.cacheTimestamps.has(workoutId)) {
-      return false;
-    }
-
-    const cacheTime = this.cacheTimestamps.get(workoutId)!;
-    const now = Date.now();
-    
-    // Controlla se la cache è scaduta
-    if (now - cacheTime > this.cacheTimeout) {
-      this.workoutCache.delete(workoutId);
-      this.cacheTimestamps.delete(workoutId);
-      return false;
-    }
-
-    return true;
-  }
-  
-  private cacheWorkout(workoutId: string, workout: WorkoutDetail): void {
-    this.workoutCache.set(workoutId, workout);
-    this.cacheTimestamps.set(workoutId, Date.now());
-  }
-  
-  getCachedWorkout(workoutId: string): WorkoutDetail | null {
-    if (this.isWorkoutCached(workoutId)) {
-      return this.workoutCache.get(workoutId) || null;
-    }
-    return null;
-  }
-  
-  getCachedExerciseById(workoutId: string, exerciseId: string): WorkoutExercise | null {
-    const workout = this.getCachedWorkout(workoutId);
-    if (!workout || !workout.esercizi) {
-      return null;
-    }
-
-    // Cerca l'esercizio nell'array multidimensionale
-    for (const giorno of workout.esercizi) {
-      if (giorno.gruppi) {
-        for (const gruppo of giorno.gruppi) {
-          if (gruppo.esercizi) {
-            for (const esercizio of gruppo.esercizi) {
-              if (esercizio.id === exerciseId) {
-                return esercizio;
-              }
-            }
-          }
-        }
+  // Dettaglio scheda
+  async loadWorkout(workoutId: string): Promise<WorkoutDetail | null> {
+    try {
+      // Cerca prima in cache
+      const cachedWorkout = this.getCachedWorkout(workoutId);
+      if (cachedWorkout) {
+        // Preload delle immagini se non già fatto
+        this.preloadWorkoutImages(cachedWorkout);
+        return cachedWorkout;
       }
+
+      // Se non è in cache, carica dall'API
+      const response = await this.getWorkoutDetails(workoutId).toPromise();
+      if (response?.success && response.item) {
+        // Preload delle immagini
+        this.preloadWorkoutImages(response.item);
+        return response.item;
+      }
+    } catch (error) {
+      console.error('Errore nel caricamento del workout:', error);
     }
 
     return null;
   }
-
-  /**
-   * Carica esercizio con gestione automatica di cache, API e preload immagini
-   */
+  
+  // Dettaglio esercizio
   async loadExercise(workoutId: string, exerciseId: string, reset: boolean = false): Promise<WorkoutExercise | null> {
     if (reset) {
       this.clearWorkoutDetailsCache();
@@ -275,7 +201,7 @@ export class WorkoutService {
 
     return null;
   }
-  
+
   getSupersetExercises(workoutId: string, exerciseId: string): WorkoutExercise[] {
     const workout = this.getCachedWorkout(workoutId);
     if (!workout || !workout.esercizi) {
@@ -300,11 +226,114 @@ export class WorkoutService {
   }
 
 
-  /**
-   * Cache
-   */
+  /* Helpers
+  ------------------------------------------------------------*/
 
-  clearCache(): void {
+  private getWorkoutDetails(workoutId: string): Observable<WorkoutResponse> {
+    // Controlla se i dati sono in cache e ancora validi
+    if (this.isWorkoutCached(workoutId)) {
+      const cachedWorkout = this.workoutCache.get(workoutId);
+      return of({
+        success: true,
+        item: cachedWorkout
+      });
+    }
+
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.workoutDetails}`;
+
+    return this.http.post<WorkoutResponse>(url, { id: workoutId }, {headers: this.auth.getAuthHeaders()})
+      .pipe(
+        tap(response => {
+          // Salva in cache se la risposta è success
+          if (response.success && response.item) {
+            this.workoutCache.set(workoutId, response.item);
+            this.cacheTimestamps.set(workoutId, Date.now());
+          }
+        })
+      );
+  }
+
+  private preloadWorkoutImages(workout: WorkoutDetail): void {
+    if (!workout?.esercizi) return;
+
+    const exerciseImages: string[] = [];
+    
+    // Raccoglie tutte le immagini degli esercizi
+    workout.esercizi.forEach((giorno) => {
+      if (giorno.gruppi) {
+        giorno.gruppi.forEach(gruppo => {
+          if (gruppo.esercizi) {
+            gruppo.esercizi.forEach((esercizio) => {
+              if (esercizio.thumb) {
+                exerciseImages.push(esercizio.thumb);
+              }
+            });
+          }
+        });
+      }
+    });
+
+    // Precarica le immagini in batch
+    if (exerciseImages.length > 0) {
+      this.imagePreloader.preloadImages(exerciseImages);
+    }
+  }
+
+  private isWorkoutCached(workoutId: string): boolean {
+    if (!this.workoutCache.has(workoutId) || !this.cacheTimestamps.has(workoutId)) {
+      return false;
+    }
+
+    const cacheTime = this.cacheTimestamps.get(workoutId)!;
+    const now = Date.now();
+    
+    // Controlla se la cache è scaduta
+    if (now - cacheTime > this.cacheTimeout) {
+      this.workoutCache.delete(workoutId);
+      this.cacheTimestamps.delete(workoutId);
+      return false;
+    }
+
+    return true;
+  }
+  
+  private clearWorkoutDetailsCache(): void {
+    this.workoutCache.clear();
+    this.cacheTimestamps.clear();
+  }
+  
+  private getCachedWorkout(workoutId: string): WorkoutDetail | null {
+    if (this.isWorkoutCached(workoutId)) {
+      return this.workoutCache.get(workoutId) || null;
+    }
+    return null;
+  }
+  
+  private getCachedExerciseById(workoutId: string, exerciseId: string): WorkoutExercise | null {
+    const workout = this.getCachedWorkout(workoutId);
+    if (!workout || !workout.esercizi) {
+      return null;
+    }
+
+    // Cerca l'esercizio nell'array multidimensionale
+    for (const giorno of workout.esercizi) {
+      if (giorno.gruppi) {
+        for (const gruppo of giorno.gruppi) {
+          if (gruppo.esercizi) {
+            for (const esercizio of gruppo.esercizi) {
+              if (esercizio.id === exerciseId) {
+                return esercizio;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private clearCache(): void {
     this.clearWorkoutListCache();
     this.clearWorkoutDetailsCache();
   }

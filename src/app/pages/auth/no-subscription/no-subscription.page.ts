@@ -1,17 +1,26 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { lockClosed } from 'ionicons/icons';
 import { Auth } from '../../../services/auth';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { lockClosed } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { 
+  IonContent, 
+  IonButton, 
+  IonIcon 
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-no-subscription',
   templateUrl: './no-subscription.page.html',
   styleUrls: ['./no-subscription.page.scss'],
-  imports: [IonContent, IonButton, IonIcon]
+  imports: [
+    IonButton, 
+    IonContent, 
+    IonIcon
+  ]
 })
+
 export class NoSubscriptionPage implements OnInit, OnDestroy {
   private userSubscription?: Subscription;
 
@@ -37,6 +46,10 @@ export class NoSubscriptionPage implements OnInit, OnDestroy {
       this.userSubscription.unsubscribe();
     }
   }
+
+  
+  /* UI
+  ------------------------------------------------------------*/
 
   logout() {
     this.auth.logout();

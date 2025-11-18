@@ -1,3 +1,10 @@
+import { Auth } from '../../../services/auth';
+import { Browser } from '@capacitor/browser';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { 
   AlertController,
   IonButton,
@@ -6,13 +13,6 @@ import {
   IonSpinner,
   LoadingController
 } from '@ionic/angular/standalone';
-import { Auth } from '../../../services/auth';
-import { Browser } from '@capacitor/browser';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +28,7 @@ import { Router } from '@angular/router';
     IonSpinner
   ]
 })
+
 export class LoginPage {
   email: string = '';
   password: string = '';
@@ -71,7 +72,19 @@ export class LoginPage {
       }
     });
   }
+
   
+  /* UI
+  ------------------------------------------------------------*/
+
+  openPasswordRecovery() {
+    this.openExternalLink(environment.urls.passwordRecovery);
+  }
+
+  
+  /* Helpers
+  ------------------------------------------------------------*/
+
   private async showAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header,
@@ -85,7 +98,4 @@ export class LoginPage {
     await Browser.open({ url: url });
   }
 
-  openPasswordRecovery() {
-    this.openExternalLink(environment.urls.passwordRecovery);
-  }
 }

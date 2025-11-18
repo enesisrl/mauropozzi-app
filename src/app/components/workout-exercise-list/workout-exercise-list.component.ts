@@ -5,6 +5,7 @@ import {
   IonCard,
   IonIcon
 } from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-workout-exercise-list',
   templateUrl: './workout-exercise-list.component.html',
@@ -16,12 +17,16 @@ import {
     IonIcon
   ]
 })
+
 export class WorkoutExerciseListComponent {
-  
   @Input() workoutId: string = '';
   @Input() groups: any[] = [];
 
   constructor(private router: Router) {}
+
+  
+  /* UI
+  ------------------------------------------------------------*/
 
   onExerciseClick(group: any) {
     if(group.esercizi[0].id) { 

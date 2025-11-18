@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { 
   IonRippleEffect,
 } from '@ionic/angular/standalone';
+
 interface CalendarDay {
   date: Date;
   dayName: string;
@@ -20,11 +21,11 @@ interface CalendarDay {
   standalone: true,
   imports: [
     CommonModule,
-    IonRippleEffect,
+    IonRippleEffect
   ]
 })
-export class CalendarWidgetComponent implements OnInit {
 
+export class CalendarWidgetComponent implements OnInit {
   calendarDays: CalendarDay[] = [];
   currentUser: any = null;
   
@@ -41,6 +42,21 @@ export class CalendarWidgetComponent implements OnInit {
       this.generateCalendarDays();
     });
   }
+
+  /* UI
+  ------------------------------------------------------------*/
+
+  onDayClick(day: CalendarDay) {
+    this.router.navigate(['/main/calendar']);
+  }
+
+  openCalendar() {
+    this.router.navigate(['/main/calendar']);
+  }
+
+
+  /* Helpers
+  ------------------------------------------------------------*/
 
   private generateCalendarDays() {
     const today = new Date();
@@ -67,15 +83,5 @@ export class CalendarWidgetComponent implements OnInit {
     }
     
     this.calendarDays = days;
-  }
-
-  // Azioni
-
-  onDayClick(day: CalendarDay) {
-    this.router.navigate(['/main/calendar']);
-  }
-
-  openCalendar() {
-    this.router.navigate(['/main/calendar']);
   }
 }

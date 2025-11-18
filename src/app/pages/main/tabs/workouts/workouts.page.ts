@@ -1,12 +1,12 @@
 
 import { Auth } from '../../../../services/auth';
-import { Component, OnInit } from '@angular/core';
+import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
-import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
 import { WorkoutService, WorkoutListItem } from '../../../../services/workout.service';
-import { environment } from '../../../../../environments/environment';
 import { 
   IonContent, 
   IonHeader,
@@ -24,22 +24,22 @@ import {
   styleUrls: ['./workouts.page.scss'],
   standalone: true,
   imports: [
+    CalendarWidgetComponent,
     CommonModule,
     FormsModule,
     IonContent,
     IonHeader,
-    IonToolbar,
-    IonRefresher,
-    IonRefresherContent,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
+    IonRefresher,
+    IonRefresherContent,
     IonSpinner,
-    WorkoutListComponent,
-    CalendarWidgetComponent
+    IonToolbar,
+    WorkoutListComponent
   ]
 })
-export class WorkoutsPage implements OnInit {
 
+export class WorkoutsPage implements OnInit {
   workoutItems: WorkoutListItem[] = [];
   isLoading: boolean = false;
   initialLoad: boolean = true;
@@ -113,6 +113,9 @@ export class WorkoutsPage implements OnInit {
       event.target.complete();
     }, 1000);
   }
+  
+  /* Helpers
+  ------------------------------------------------------------*/
   
   trackById(index: number, item: WorkoutListItem): string {
     return item.id;

@@ -1,6 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { Browser } from '@capacitor/browser';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { documentTextOutline, downloadOutline, personOutline, calendarOutline } from 'ionicons/icons';
+import { environment } from '../../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { NutritionService, NutritionItem } from '../../../../services/nutrition.service';
 import { 
   IonContent, 
   IonSpinner,
@@ -13,11 +18,6 @@ import {
   IonHeader,
   IonToolbar,
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { documentTextOutline, downloadOutline, personOutline, calendarOutline } from 'ionicons/icons';
-import { NutritionService, NutritionItem } from '../../../../services/nutrition.service';
-import { environment } from '../../../../../environments/environment';
-import { Browser } from '@capacitor/browser';
 
 @Component({
   selector: 'app-nutrition',
@@ -27,17 +27,18 @@ import { Browser } from '@capacitor/browser';
   imports: [
     CommonModule,
     FormsModule,
+    IonCard,
     IonContent,
-    IonSpinner,
+    IonHeader,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
-    IonCard,
     IonRefresher,
     IonRefresherContent,
-    IonHeader,
-    IonToolbar,
+    IonSpinner,
+    IonToolbar
   ]
 })
+
 export class NutritionPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll!: IonInfiniteScroll;
 
@@ -62,7 +63,7 @@ export class NutritionPage implements OnInit {
       this.nutritionItems = [];
       this.currentPage = 1;
       this.hasMoreData = true;
-      this.nutritionService.clearCache();
+      this.nutritionService.clearNutritionListCache();
     }
 
     if (this.isLoading || !this.hasMoreData) {
@@ -114,19 +115,24 @@ export class NutritionPage implements OnInit {
     }, 1000);
   }
   
+  
+  /* UI
+  ------------------------------------------------------------*/
+
+  openNutritionFile(item: NutritionItem) {
+    this.openExternalLink(item.file_scheda);
+  }
+
+  
+  /* Helpers
+  ------------------------------------------------------------*/
+
   trackById(index: number, item: NutritionItem): string {
     return item.id;
   }
-  
 
   async openExternalLink(url: string) {
     await Browser.open({ url: url });
   }
 
-  /**
-   * Apre il file della scheda nutrizionale
-   */
-  openNutritionFile(item: NutritionItem) {
-    this.openExternalLink(item.file_scheda);
-  }
 }

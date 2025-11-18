@@ -18,19 +18,24 @@ import {
     IonIcon
   ]
 })
+
 export class WorkoutListComponent {
-  
   @Input() workouts: WorkoutListItem[] = [];
   
   constructor(private router: Router) {}
+
+
+  /* UI
+  ------------------------------------------------------------*/
 
   onWorkoutClick(workout: WorkoutListItem) {
     this.router.navigate(['/workout-details', workout.id]);
   }
 
-  /**
-   * TrackBy function per ottimizzare il rendering
-   */
+
+  /* Helpers
+  ------------------------------------------------------------*/
+
   trackById(index: number, item: WorkoutListItem): string {
     return item.id;
   }

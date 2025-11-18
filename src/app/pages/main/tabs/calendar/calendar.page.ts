@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonContent } from '@ionic/angular/standalone';
 
@@ -8,7 +8,11 @@ import { IonContent } from '@ionic/angular/standalone';
   templateUrl: './calendar.page.html',
   styleUrls: ['./calendar.page.scss'],
   standalone: true,
-  imports: [IonContent, CommonModule, FormsModule]
+  imports: [
+    CommonModule, 
+    FormsModule,
+    IonContent
+  ]
 })
 export class CalendarPage implements OnInit {
 

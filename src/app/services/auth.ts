@@ -74,7 +74,8 @@ export class Auth {
   }
 
 
-  // Azioni
+  /* Azioni
+  ------------------------------------------------------------*/
 
   login(email: string, password: string): Observable<LoginResponse> {
     const loginData: LoginRequest = { email, password };
@@ -124,6 +125,7 @@ export class Auth {
       }
     }
   }
+  
   logout(): void {
     // Pulisce localStorage
     localStorage.removeItem(this.TOKEN_KEY);
@@ -142,7 +144,8 @@ export class Auth {
   }
 
 
-  // Stati
+  /* Stati
+  ------------------------------------------------------------*/
 
   isAuthenticated(): boolean {
     return this.isAuthenticatedSubject.value;
@@ -157,7 +160,8 @@ export class Auth {
   }
 
 
-  // User Data
+  /* User Data
+  ------------------------------------------------------------*/
 
   private saveUserData(token: string, user: User): void {
     const now = Date.now();
@@ -179,7 +183,9 @@ export class Auth {
   }
 
 
-  // Helpers
+  /* Helpers
+  ------------------------------------------------------------*/
+
   public getAuthHeaders(): HttpHeaders {
     const token = this.getToken();
     return new HttpHeaders({

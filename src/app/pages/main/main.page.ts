@@ -1,3 +1,9 @@
+import { Auth } from '../../services/auth';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import { Component, LOCALE_ID } from '@angular/core';
+import { Router } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
+import localeIt from '@angular/common/locales/it';
 import { 
   IonHeader,
   IonLabel,
@@ -5,12 +11,6 @@ import {
   IonTabButton, 
   IonTabs
 } from '@ionic/angular/standalone';
-import { Auth } from '../../services/auth';
-import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
-import { Component, LOCALE_ID } from '@angular/core';
-import { Router } from '@angular/router';
-import { RouterOutlet } from '@angular/router';
-import localeIt from '@angular/common/locales/it';
 
 registerLocaleData(localeIt);
 
@@ -33,6 +33,7 @@ registerLocaleData(localeIt);
     { provide: LOCALE_ID, useValue: 'it-IT' }
   ]
 })
+
 export class MainPage {
   currentUser: any = null;
   today = new Date();
@@ -47,6 +48,10 @@ export class MainPage {
       this.currentUser = user;
     });
   }
+
+  
+  /* UI
+  ------------------------------------------------------------*/
 
   openProfile() {
     this.router.navigate(['/main/profile']);
