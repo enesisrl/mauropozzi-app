@@ -61,7 +61,7 @@ export class WorkoutsPage implements OnInit {
       this.workoutItems = [];
       this.currentPage = 1;
       this.hasMoreData = true;
-      this.workoutService.clearWorkoutListCache();
+      this.workoutService.clearCache();
     }
 
     if (this.isLoading || !this.hasMoreData) {

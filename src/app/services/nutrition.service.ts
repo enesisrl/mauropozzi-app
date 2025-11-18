@@ -35,7 +35,7 @@ export class NutritionService {
   ) {
     // Ascolta eventi di logout per pulire la cache
     this.appEvents.onLogout$.subscribe(() => {
-      this.clearNutritionListCache();
+      this.clearCache();
     });
   }
   
@@ -70,7 +70,7 @@ export class NutritionService {
     );
   }
 
-  clearNutritionListCache(): void {
+  clearCache(): void {
     this.cache.clear();
   }
 

@@ -63,7 +63,7 @@ export class NutritionPage implements OnInit {
       this.nutritionItems = [];
       this.currentPage = 1;
       this.hasMoreData = true;
-      this.nutritionService.clearNutritionListCache();
+      this.nutritionService.clearCache();
     }
 
     if (this.isLoading || !this.hasMoreData) {

@@ -90,8 +90,7 @@ export class WorkoutService {
   ) {
     // Ascolta eventi di logout per pulire la cache
     this.appEvents.onLogout$.subscribe(() => {
-      this.clearWorkoutListCache();
-      this.clearWorkoutDetailsCache();
+      this.clearCache();
     });
   }
   
@@ -128,10 +127,6 @@ export class WorkoutService {
         }
       })
     );
-  }
-
-  clearWorkoutListCache(): void {
-    this.workoutListCache.clear();
   }
 
 
@@ -222,18 +217,14 @@ export class WorkoutService {
     return true;
   }
   
-  private clearWorkoutDetailsCache(): void {
-    this.workoutDetailsCache.clear();
-    this.workoutDetailsCacheTimestamps.clear();
-  }
-  
 
   /* Esercizio 
   ------------------------------------------------------------*/
 
   async loadWorkoutExerciseDetails(workoutId: string, exerciseId: string, reset: boolean = false): Promise<WorkoutExerciseDetails | null> {
     if (reset) {
-      this.clearWorkoutDetailsCache();
+      this.workoutDetailsCache.clear();
+      this.workoutDetailsCacheTimestamps.clear();
     }
 
     // Prima controlla se l'esercizio è già in cache
@@ -323,5 +314,14 @@ export class WorkoutService {
     }
 
     return null;
+  }
+
+
+  /* Helpers
+  ------------------------------------------------------------*/
+  public clearCache(): void {
+    this.workoutListCache.clear();
+    this.workoutDetailsCache.clear();
+    this.workoutDetailsCacheTimestamps.clear();
   }
 }

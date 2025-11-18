@@ -31,7 +31,10 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   workoutId: string = '';
   exerciseId: string = '';
   exercise: WorkoutExerciseDetails | null = null;
-  step: 'exercise' | 'exercise-time' | 'rest' = 'exercise';
+
+  step: 'exercise' | 'rest' | null = null;
+  hasTimer: boolean = false;
+  currentSeries: number = 0;
   
   // Timer properties
   timerSeconds: number = 0;
@@ -60,6 +63,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
         this.isLoading = true;
         this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
         this.isLoading = false;
+        this.workoutNext();
       }
     });
   }
@@ -71,20 +75,46 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   
   /* UI
   ------------------------------------------------------------ */
-  
+
   workoutNext() {
-    if (this.step === 'exercise') {
-      // Passa da esercizio a timer (1:30)
-      this.step = 'exercise-time';
-      this.startTimer();
-    } else if (this.step === 'exercise-time') {
-      // Passa a recupero
-      this.step = 'rest';
-      this.startTimer();
-    } else if (this.step === 'rest') {
-      // Torna all'esercizio o vai al prossimo
+    if(!this.exercise) {
+      // @todok
+      return;
+    }
+
+    // Primo esercizio
+    if(this.step == null) {
       this.step = 'exercise';
-      this.stopTimer();
+    } 
+    
+    // Tempo di recupero
+    else if(this.step == 'exercise') {
+      this.step = 'rest';
+    } 
+    
+    // Esercizio successivo
+    else if(this.step == 'rest') {
+      this.step = 'exercise';
+      // @todok calcolare serie disponibili
+      // @todok se non sono presenti serie attiva tasto prossima sere
+      // @todok mostrare conteggio serie front
+      // @todok navigazione del super set
+      if(this.currentSeries < 4) {
+        this.currentSeries++;
+      } else {
+        // @todok carico esercizio successivo
+      }
+    }
+
+    console.log(this.exercise, this.step, this.currentSeries);
+
+    this.stopTimer();
+
+    if(
+      this.step == 'exercise' && this.exercise.tipo == 'time' && this.exercise.durata_s > 0 ||
+      this.step == 'rest' && this.exercise.recupero_s > 0
+    ) {
+        this.startTimer();
     }
   }
 
@@ -138,10 +168,19 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
 
   startTimer(): void {
-    // TODO: Implementare controllo tempo step dal backend
+    if(!this.exercise) {
+      return;
+    }
+
     this.stopTimer();
-    // TODO: Recuperare tempo dal backend per ogni step
-    this.timerSeconds = 90;
+    
+    this.hasTimer = true;
+    if(this.step == 'exercise'){
+      this.timerSeconds = this.exercise.durata_s;
+    } else if(this.step == 'rest'){
+      this.timerSeconds = this.exercise.recupero_s;
+    }
+
     this.startTimerInterval();
   }
 
@@ -170,7 +209,9 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       if (this.timerSeconds > 0) {
         this.timerSeconds--;
       } else {
-        this.stopTimer();
+        // this.stopTimer();
+        this.isTimerRunning = false;
+        this.isPaused = false;
       }
     }, 1000);
   }
@@ -180,6 +221,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       clearInterval(this.timerInterval);
       this.timerInterval = undefined;
     }
+    this.hasTimer = false;
+    this.timerSeconds = 0;
     this.isTimerRunning = false;
     this.isPaused = false;
   }
