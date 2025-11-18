@@ -27,6 +27,11 @@
                 font-size: 36px;
                 color: #FFF;
             }
+            .widget-title-success {
+                font-size: 14px;
+                color: #4CDB1D;
+                text-transform: uppercase;
+            }
             .widget-timer {
                 font-family: 'Roboto', sans-serif;
                 font-weight: 700;
@@ -83,24 +88,6 @@
 
                 ion-icon {
                     margin-left: 8px;
-                }
-            }
-
-
-
-            .widget-exercise {
-                
-            }
-
-            .widget-timer {
-                
-            }
-
-            .widget-rest-timer {
-                .widget-title {
-                    font-size: 14px;
-                    color: #4CDB1D;
-                    text-transform: uppercase;
                 }
             }
         }

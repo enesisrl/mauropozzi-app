@@ -8,6 +8,9 @@ import {
   chevronForwardOutline, 
   caretForwardCircleOutline, 
   addOutline,
+  refreshOutline,
+  pause,
+  play
 } from 'ionicons/icons';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -17,7 +20,10 @@ addIcons({
   'chevron-back-outline': chevronBackOutline,
   'chevron-forward-outline': chevronForwardOutline,
   'caret-forward-circle-outline': caretForwardCircleOutline,
-  'add-outline': addOutline
+  'add-outline': addOutline,
+  'refresh-outline': refreshOutline,
+  'pause': pause,
+  'play': play
 });
 
 bootstrapApplication(AppComponent, {

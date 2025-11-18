@@ -41,6 +41,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   timerSeconds: number = 0;
   timerInterval?: number;
   isTimerRunning: boolean = false;
+  isPaused: boolean = false;
   
   isLoading = true;
   isOpeningModal = false;
@@ -72,10 +73,144 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.clearTimer();
   }
+  
+  
 
-  /**
-   * Carica i dettagli dell'esercizio dalla cache
-   */
+  /* UI
+  ------------------------------------------------------------ */
+  
+  workoutNext() {
+    if (this.step === 'exercise') {
+      // Passa da esercizio a timer (1:30)
+      this.step = 'exercise-time';
+      this.startTimer(1, 30); // 1 minuto e 30 secondi
+    } else if (this.step === 'exercise-time') {
+      // Passa a recupero
+      this.step = 'rest';
+      this.startTimer(1, 30); // 1 minuto e 30 secondi di recupero
+    } else if (this.step === 'rest') {
+      // Torna all'esercizio o vai al prossimo
+      this.step = 'exercise';
+      this.clearTimer();
+    }
+  }
+
+  async exerciseExplanation() {
+    // Blocco immediato per click multipli
+    if (this.isOpeningModal) {
+      return;
+    }
+
+    await WorkoutExerciseExplanationPage.openModal(
+      this.modalController,
+      this.workoutId,
+      this.exerciseId,
+      (isOpening) => { this.isOpeningModal = isOpening; }
+    );
+  }
+
+  async workoutStop() {
+    const alert = await this.alertController.create({
+      header: "Esci dall'allenamento",
+      message: 'Sei sicuro di voler interrompere l\'allenamento?',
+      buttons: [
+        {
+          text: 'Annulla',
+          role: 'cancel'
+        },
+        {
+          text: 'Conferma',
+          handler: () => {
+            this.goBack();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  goBack() {
+    this.router.navigate(['/workout-details', this.workoutId]);
+  }
+
+
+  /* Timer 
+  ------------------------------------------------------------ */
+
+  getFormattedTime(): string {
+    const mins = this.timerMinutes.toString().padStart(2, '0');
+    const secs = this.timerSeconds.toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  }
+
+  restartTimer() {
+    if (this.step === 'exercise-time' || this.step === 'rest') {
+      this.startTimer(1, 30); // 1:30 per ora, poi integreremo la logica corretta
+    }
+  }
+
+  pauseTimer(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = undefined;
+    }
+    this.isTimerRunning = false;
+    this.isPaused = true;
+  }
+
+  resumeTimer(): void {
+    if (this.isPaused && (this.timerMinutes > 0 || this.timerSeconds > 0)) {
+      // Riprende dal tempo corrente rimasto
+      this.startTimerInterval();
+    } else {
+      this.restartTimer();
+    }
+  }
+  
+  private startTimer(minutes: number, seconds: number): void {
+    this.clearTimer();
+    this.timerMinutes = minutes;
+    this.timerSeconds = seconds;
+    this.startTimerInterval();
+  }
+  
+  private clearTimer(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = undefined;
+    }
+    this.isTimerRunning = false;
+    this.isPaused = false;
+  }
+  
+  private startTimerInterval(): void {
+    this.isTimerRunning = true;
+    this.isPaused = false;
+    
+    this.timerInterval = window.setInterval(() => {
+      if (this.timerSeconds > 0) {
+        this.timerSeconds--;
+      } else if (this.timerMinutes > 0) {
+        this.timerMinutes--;
+        this.timerSeconds = 59;
+      } else {
+        // Timer finito
+        this.clearTimer();
+        this.onTimerComplete();
+      }
+    }, 1000);
+  }
+  
+  private onTimerComplete(): void {
+    // Per ora non facciamo nulla, poi aggiungeremo logica
+    console.log('Timer completato!');
+  }
+
+  
+  /* Helpers
+  ------------------------------------------------------------ */
+
   async loadTraining(reset: boolean = false) {
     if (reset) {
       this.workoutService.clearWorkoutDetailsCache();
@@ -118,132 +253,10 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     this.subscriptions.push(subscription);
   }
 
-
-  async exerciseExplanation() {
-    // Blocco immediato per click multipli
-    if (this.isOpeningModal) {
-      return;
-    }
-
-    await WorkoutExerciseExplanationPage.openModal(
-      this.modalController,
-      this.workoutId,
-      this.exerciseId,
-      (isOpening) => { this.isOpeningModal = isOpening; }
-    );
-  }
-  
-
-  workoutNext() {
-    if (this.step === 'exercise') {
-      // Passa da esercizio a timer (1:30)
-      this.step = 'exercise-time';
-      this.startTimer(1, 30); // 1 minuto e 30 secondi
-    } else if (this.step === 'exercise-time') {
-      // Passa a recupero
-      this.step = 'rest';
-      this.startTimer(1, 30); // 1 minuto e 30 secondi di recupero
-    } else if (this.step === 'rest') {
-      // Torna all'esercizio o vai al prossimo
-      this.step = 'exercise';
-      this.clearTimer();
-    }
-  }
-
-  timerRestart() {
-    if (this.step === 'exercise-time' || this.step === 'rest') {
-      this.startTimer(1, 30); // 1:30 per ora, poi integreremo la logica corretta
-    }
-  }
-  
-  timerStop() {
-    this.clearTimer();
-  }
-
-  async workoutStop() {
-    const alert = await this.alertController.create({
-      header: "Esci dall'allenamento",
-      message: 'Sei sicuro di voler interrompere l\'allenamento?',
-      buttons: [
-        {
-          text: 'Annulla',
-          role: 'cancel'
-        },
-        {
-          text: 'Conferma',
-          handler: () => {
-            this.goBack();
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  goBack() {
-    this.router.navigate(['/workout-details', this.workoutId]);
-  }
-
-  /**
-   * Precarica l'immagine dell'esercizio per migliorare le performance
-   */
   private preloadExerciseImage(): void {
     if (!this.exercise?.thumb) return;
 
     this.imagePreloader.preloadImage(this.exercise.thumb).then(() => {
     });
   }
-
-  /**
-   * Avvia il timer con minuti e secondi specificati
-   */
-  startTimer(minutes: number, seconds: number): void {
-    this.clearTimer();
-    this.timerMinutes = minutes;
-    this.timerSeconds = seconds;
-    this.isTimerRunning = true;
-    
-    this.timerInterval = window.setInterval(() => {
-      if (this.timerSeconds > 0) {
-        this.timerSeconds--;
-      } else if (this.timerMinutes > 0) {
-        this.timerMinutes--;
-        this.timerSeconds = 59;
-      } else {
-        // Timer finito
-        this.clearTimer();
-        this.onTimerComplete();
-      }
-    }, 1000);
-  }
-
-  /**
-   * Ferma e pulisce il timer
-   */
-  clearTimer(): void {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = undefined;
-    }
-    this.isTimerRunning = false;
-  }
-
-  /**
-   * Chiamata quando il timer arriva a zero
-   */
-  private onTimerComplete(): void {
-    // Per ora non facciamo nulla, poi aggiungeremo logica
-    console.log('Timer completato!');
-  }
-
-  /**
-   * Formatta il tempo per il display
-   */
-  getFormattedTime(): string {
-    const mins = this.timerMinutes.toString().padStart(2, '0');
-    const secs = this.timerSeconds.toString().padStart(2, '0');
-    return `${mins}:${secs}`;
-  }
-
 }
