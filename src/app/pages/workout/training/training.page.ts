@@ -41,6 +41,9 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   isSuperset: boolean = false;
   supersetExercises: WorkoutExerciseDetails[] = [];
   currentSupersetIndex: number = 0;
+
+  // Log progresso
+  private progressStartTime: Date | null = null;
   
   // Timer properties
   timerSeconds: number = 0;
@@ -94,6 +97,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     } 
     
     else {
+      this.storeProgress();
+
       this.step = 'end';
       this.exercise = null;
       this.exerciseId = '';
@@ -104,6 +109,15 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     }
 
     return this.workoutTimer();
+  }
+  
+  private storeProgress() {
+    this.workoutService.storeWorkoutExcerciseProgress(
+      this.workoutId,
+      this.supersetExercises.map(element => element.id),
+      this.progressStartTime ? this.progressStartTime.toISOString() : '',
+      new Date().toISOString()
+    );
   }
 
   workoutNextSeries() {
@@ -188,8 +202,13 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       return;
     }
 
-    if(this.isSuperset && this.currentSupersetIndex >= this.supersetExercises.length) {
+    if(this.supersetExercises.findIndex(ex => ex.id === exercise.id) < 0) {
+      if(this.exercise) {
+        this.storeProgress();
+      }
+
       this.currentSeries = 1;
+      this.progressStartTime = new Date();
     }
     
     this.exercise = exercise;
@@ -199,10 +218,6 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     this.supersetExercises = this.workoutService.getSupersetExercises(this.workoutId, this.exerciseId);
     this.isSuperset = this.supersetExercises.length > 1;
     this.currentSupersetIndex = this.isSuperset ? this.supersetExercises.findIndex(ex => ex.id === this.exerciseId) : 0;
-
-    if(!this.isSuperset){
-      this.currentSeries = 1;
-    }
   }
 
   private workoutTimer() {

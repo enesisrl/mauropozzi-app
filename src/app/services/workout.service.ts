@@ -316,7 +316,6 @@ export class WorkoutService {
     return null;
   }
 
-  
   public getNextExercise(workoutId: string, currentExerciseId: string): WorkoutExerciseDetails | null {
     // Verifica cache
     if (!this.isWorkoutDetailsCached(workoutId)) {
@@ -353,6 +352,31 @@ export class WorkoutService {
     }
 
     return null;
+  }
+
+  storeWorkoutExcerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: string, end_time: string, weight_kg: number | null = null): Observable<WorkoutListResponse> {
+    const params = new HttpParams()
+      .set('id', workoutId.toString())
+      .set('ide', exerciseId.toString())
+      .set('ts', start_time.toString())
+      .set('te', end_time.toString());
+
+    if(weight_kg !== null) {
+      params.set('kg', weight_kg.toString());
+    }
+
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExcerciseProgress}`;
+    
+    return this.http.post<WorkoutListResponse>(url, {}, {
+      headers: this.auth.getAuthHeaders(),
+      params: params
+    }).pipe(
+      tap(response => {
+        if (response.success && response.items) {
+          console.log(response);
+        }
+      })
+    );
   }
 
 
