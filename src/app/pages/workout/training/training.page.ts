@@ -33,17 +33,14 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   exercise: WorkoutExerciseDetails | null = null;
   nextExercise: WorkoutExerciseDetails | null = null;
 
-  step: 'exercise' | 'rest' = 'exercise';
+  step: 'exercise' | 'rest' | 'end' = 'exercise';
   hasTimer: boolean = false;
   currentSeries: number = 1;
 
   // Superset
-  exercises: WorkoutExerciseDetails[] = [];
   isSuperset: boolean = false;
+  supersetExercises: WorkoutExerciseDetails[] = [];
   currentSupersetIndex: number = 0;
-  hasNextSupersetExercise(): boolean {
-    return this.isSuperset && this.currentSupersetIndex + 1 < this.exercises.length;
-  }
   
   // Timer properties
   timerSeconds: number = 0;
@@ -70,11 +67,10 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       this.exerciseId = params['exerciseId'];
       if (this.workoutId && this.exerciseId) {
         this.isLoading = true;
-        this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
-        this.nextExercise = this.workoutService.getNextExercise(this.workoutId, this.exerciseId);
-        this.loadSuperset();
+        const exerciseDetails = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
+        this.setExercise(exerciseDetails);
         this.isLoading = false;
-        this.workoutNext();
+        this.workoutTimer();
       }
     });
   }
@@ -87,84 +83,38 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   /* UI
   ------------------------------------------------------------ */
 
+  workoutNextStep() {
+    if(this.step == 'exercise' && this.exercise && this.exercise.recupero_s > 0) {
+        this.step = 'rest';
+    }
+
+    else if(this.nextExercise) {
+        this.step = 'exercise';
+        this.setExercise(this.nextExercise);
+    } 
+    
+    else {
+      this.step = 'end';
+      this.exercise = null;
+      this.exerciseId = '';
+      this.currentSeries = 1;
+      this.supersetExercises = [];
+      this.isSuperset = false;
+      this.currentSupersetIndex = 0;
+    }
+
+    return this.workoutTimer();
+  }
+
   workoutNextSeries() {
     this.step = 'exercise';
     this.currentSeries++;
 
     if(this.isSuperset) {
-      this.currentSupersetIndex = 0;
-      this.exercise = this.exercises[0];
-      this.exerciseId = this.exercise.id;
+      this.setExercise(this.supersetExercises[0]);
     }
 
-    this.workoutNext();
-  }
-
-  workoutNextSuperset() {
-    this.step = 'exercise';
-    if(this.isSuperset) {
-      this.currentSupersetIndex++;
-      this.exercise = this.exercises[this.currentSupersetIndex];
-      this.exerciseId = this.exercise.id;
-    }
-    this.workoutNext();
-  }
-
-  workoutNextExercise() {
-    if(!this.exercise) {
-      return;
-    }
-
-    this.step = 'exercise';
-    this.currentSeries = 1;
-
-    if(this.nextExercise){
-      this.exercise = this.nextExercise;
-      this.nextExercise = this.workoutService.getNextExercise(this.workoutId, this.exercise.id);
-      this.loadSuperset();
-      this.workoutNext();
-    }
-  }
-
-  workoutNextRest() {
-    this.step = 'rest';
-    this.workoutNext();
-  }
-
-  workoutEnd() {
-    // @todok allenamento completato
-  }
-
-  private loadSuperset() {
-    if(!this.exercise) {
-      return;
-    }
-
-    this.exercises = this.workoutService.getSupersetExercises(this.workoutId, this.exerciseId);
-    this.isSuperset = this.exercises.length > 1;
-    console.log('Superset exercises:', this.exercises);
-    
-    if (this.isSuperset) {
-      this.currentSupersetIndex = this.exercises.findIndex(ex => ex.id === this.exerciseId);
-      if (this.currentSupersetIndex < 0) this.currentSupersetIndex = 0;
-    } else {
-      this.currentSupersetIndex = 0;
-    }
-  }
-
-  private workoutNext() {
-    if(!this.exercise) {
-      return;
-    }
-
-    this.stopTimer();
-
-    if(
-      this.step == 'exercise' && this.exercise.tipo == 'time' && this.exercise.durata_s > 0 ||
-      this.step == 'rest' && this.exercise.recupero_s > 0
-    ) {
-        this.startTimer();
-    }
+    this.workoutTimer();
   }
 
   async exerciseExplanation() {
@@ -205,7 +155,70 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   goBack() {
     this.router.navigate(['/workout-details', this.workoutId]);
   }
+  
 
+  /* Logic
+  ------------------------------------------------------------ */
+
+  hasNextExercise() : boolean {
+    // Prossimo esercizio se sono in esercizio senza recupero 
+    // o sono in recupero e c'è un esercizio successivo
+    return !this.hasNextSupersetExercise() && (this.step == 'exercise' && !(this.exercise?.recupero_s ?? 0) || this.step == 'rest') && this.nextExercise != null;
+  }
+  hasNextRest() : boolean {
+    // Prossimo recupero se sono in esercizio e c'è un recupero
+    return this.step == 'exercise' && (this.exercise?.recupero_s ?? 0) > 0;
+  }
+  hasNextSupersetExercise(): boolean {
+    // Esiste un altro esercizio nel superset
+    return this.isSuperset && this.currentSupersetIndex + 1 < this.supersetExercises.length;
+  }
+  hasNextSeries(): boolean {
+    // Prossima serie se sono in esercizio senza recupero o in recupero
+    // o se sono in superset e ho finito tutti gli esercizi del superset
+    return (this.exercise && !(this.exercise?.recupero_s ?? 0) || this.step == 'rest') && (!this.isSuperset || this.isSuperset && this.currentSupersetIndex + 1 >= this.supersetExercises.length)
+  }
+  hasEnding(): boolean {
+    // Allenamento finito se sono in recupero e non c'è un esercizio successivo
+    return (this.step == 'exercise' && !(this.exercise?.recupero_s ?? 0) || this.step == 'rest') && !this.nextExercise;
+  }
+
+  private setExercise(exercise: WorkoutExerciseDetails | null) {
+    if(!exercise) {
+      return;
+    }
+
+    if(this.isSuperset && this.currentSupersetIndex >= this.supersetExercises.length) {
+      this.currentSeries = 1;
+    }
+    
+    this.exercise = exercise;
+    this.exerciseId = this.exercise.id;
+    this.nextExercise = this.workoutService.getNextExercise(this.workoutId, this.exercise.id);
+
+    this.supersetExercises = this.workoutService.getSupersetExercises(this.workoutId, this.exerciseId);
+    this.isSuperset = this.supersetExercises.length > 1;
+    this.currentSupersetIndex = this.isSuperset ? this.supersetExercises.findIndex(ex => ex.id === this.exerciseId) : 0;
+
+    if(!this.isSuperset){
+      this.currentSeries = 1;
+    }
+  }
+
+  private workoutTimer() {
+    if(!this.exercise) {
+      return;
+    }
+
+    this.stopTimer();
+
+    if(
+      this.step == 'exercise' && this.exercise.tipo == 'time' && this.exercise.durata_s > 0 ||
+      this.step == 'rest' && this.exercise.recupero_s > 0
+    ) {
+        this.startTimer();
+    }
+  }
 
   /* Timer 
   ------------------------------------------------------------ */
@@ -258,7 +271,6 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       if (this.timerSeconds > 0) {
         this.timerSeconds--;
       } else {
-        // this.stopTimer();
         this.isTimerRunning = false;
         this.isPaused = false;
       }

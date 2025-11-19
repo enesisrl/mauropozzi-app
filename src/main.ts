@@ -4,26 +4,36 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { provideHttpClient } from '@angular/common/http';
 import { addIcons } from 'ionicons';
 import { 
+  addOutline,
+  arrowForwardOutline,
+  caretForwardCircleOutline, 
   chevronBackOutline, 
   chevronForwardOutline, 
-  caretForwardCircleOutline, 
-  addOutline,
-  refreshOutline,
+  exitOutline,
+  hourglassOutline,
   pause,
-  play
+  play,
+  refreshOutline,
+  reloadOutline,
+  returnDownForwardOutline,
 } from 'ionicons/icons';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
 /* Add icons to the library */
 addIcons({
+  'add-outline': addOutline,
+  'arrow-forward-outline': arrowForwardOutline,
+  'caret-forward-circle-outline': caretForwardCircleOutline,
   'chevron-back-outline': chevronBackOutline,
   'chevron-forward-outline': chevronForwardOutline,
-  'caret-forward-circle-outline': caretForwardCircleOutline,
-  'add-outline': addOutline,
-  'refresh-outline': refreshOutline,
+  'exit-outline': exitOutline,
+  'hourglass-outline': hourglassOutline,
   'pause': pause,
-  'play': play
+  'play': play,
+  'refresh-outline': refreshOutline,
+  'reload-outline': reloadOutline,
+  'return-down-forward-outline': returnDownForwardOutline,
 });
 
 bootstrapApplication(AppComponent, {
