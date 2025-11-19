@@ -63,7 +63,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   private currentTranslateX: number = 0;
   private startTranslateX: number = 0;
   
-  isLoading = true;
+  initialLoad = true;
+  isLoading = false;
   isOpeningModal = false;
   environment = environment;
   private subscriptions: Subscription[] = [];
@@ -94,9 +95,10 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
     this.isLoading = true;
     this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId, true);
     this.isLoading = false;
-    if (event?.target) {
-      event.target.complete();
-    }
+    
+    setTimeout(() => {
+      (event.target as any)?.complete();
+    }, 1000);
   }
   
   private async loadExerciseData(): Promise<void> {
@@ -119,7 +121,8 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
         setTimeout(() => this.snapToCurrentSlide(), 100);
       }
     }
-    
+
+    this.initialLoad = false;
     this.isLoading = false;
   }
 

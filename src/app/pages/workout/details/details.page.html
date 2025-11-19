@@ -8,16 +8,20 @@
 </ion-header>
 
 <ion-content class="container bg-gradient">
-  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-
-    <div *ngIf="isLoading" class="loading-container">
+    <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="chevron-down-outline"
+          pullingText="Trascina per aggiornare"
+          refreshingSpinner="crescent">
+        </ion-refresher-content>
+    </ion-refresher>
+    
+    <div *ngIf="initialLoad && isLoading" class="loading-container">
         <ion-spinner name="crescent"></ion-spinner>
         <p>{{ environment.ln.generalLoading }}</p>
     </div>
 
-    <div *ngIf="!isLoading && !workout" class="no-content">
+    <div *ngIf="!initialLoad && !workout" class="no-content">
         <div class="icon">
         <img src="assets/images/icon-workout.svg" alt="Allenamento">
         </div>
@@ -26,7 +30,7 @@
         <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
     </div>
 
-    <div *ngIf="!isLoading && workout">
+    <div *ngIf="!initialLoad && workout">
         <div class="workout-info">
             <div class="workout-title">{{ workout.descrizione }}</div>
             

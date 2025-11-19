@@ -18,6 +18,14 @@ ion-header {
   }
 }
 
+ion-refresher {
+  z-index: 999 !important;
+}
+
+ion-refresher-content {
+  z-index: 999 !important;
+}
+
 .container {
     .workout-info {
         position: relative;

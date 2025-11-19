@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Browser } from '@capacitor/browser';
+import { LoadingController } from '@ionic/angular/standalone';
 import { 
   IonContent, 
   IonButton 
@@ -29,6 +30,7 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   constructor(
     private auth: Auth,
+    private loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -63,8 +65,19 @@ export class ProfilePage implements OnInit, OnDestroy {
     });
   }
 
-  logout() {
-    this.auth.logout();
+  async logout() {
+    const loading = await this.loadingController.create({
+      message: environment.ln.generalLoading,
+      spinner: 'crescent'
+    });
+    
+    await loading.present();
+    
+    try {
+      await this.auth.logout();
+    } finally {
+      await loading.dismiss();
+    }
   }
   
   

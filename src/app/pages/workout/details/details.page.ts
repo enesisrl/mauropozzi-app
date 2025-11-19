@@ -44,7 +44,8 @@ import {
 export class WorkoutDetailsPage implements OnInit, OnDestroy {
   workoutId: string = '';
   workout: WorkoutDetail | null = null;
-  isLoading = true;
+  initialLoad = true;
+  isLoading = false;
   environment = environment;
   private subscriptions: Subscription[] = [];
 
@@ -61,6 +62,7 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
       if (this.workoutId) {
         this.isLoading = true;
         this.workout = await this.workoutService.loadWorkoutDetails(this.workoutId);
+        this.initialLoad = false;
         this.isLoading = false;
       }
     });
@@ -71,14 +73,17 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
   }
   
   async onRefresh(event: any) {
-    if (this.workoutId) {
-      this.isLoading = true;
-      this.workout = await this.workoutService.loadWorkoutDetails(this.workoutId);
-      this.isLoading = false;
+    if (!this.workoutId) {
+      return;
     }
-    if (event?.target) {
-      event.target.complete();
-    }
+
+    this.isLoading = true;
+    this.workout = await this.workoutService.loadWorkoutDetails(this.workoutId);
+    this.isLoading = false;
+    
+    setTimeout(() => {
+      (event.target as any)?.complete();
+    }, 1000);
   }
   
   /* UI

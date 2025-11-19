@@ -6,9 +6,13 @@
 </ion-header>
 
 <ion-content class="container bg-transparent">
-  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+    <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="chevron-down-outline"
+          pullingText="Trascina per aggiornare"
+          refreshingSpinner="crescent">
+        </ion-refresher-content>
+    </ion-refresher>
   
   <div class="scrolling-content">
     <div *ngIf="initialLoad && isLoading" class="loading-container">

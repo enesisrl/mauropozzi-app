@@ -9,15 +9,19 @@
 
 <ion-content class="container bg-gradient" fullscreen>
     <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
-        <ion-refresher-content></ion-refresher-content>
+        <ion-refresher-content
+          pullingIcon="chevron-down-outline"
+          pullingText="Trascina per aggiornare"
+          refreshingSpinner="crescent">
+        </ion-refresher-content>
     </ion-refresher>
 
-    <div *ngIf="isLoading" class="loading-container">
+    <div *ngIf="initialLoad && isLoading" class="loading-container">
         <ion-spinner name="crescent"></ion-spinner>
         <p>{{ environment.ln.generalLoading }}</p>
     </div>
 
-    <div *ngIf="!isLoading && !exercise" class="no-content">
+    <div *ngIf="!initialLoad && !exercise" class="no-content">
         <div class="icon">
         <img src="assets/images/icon-workout.svg" alt="Allenamento">
         </div>
@@ -26,7 +30,7 @@
         <ion-button expand="block" fill="clear" color="danger" (click)="goBack()">Torna indietro</ion-button>
     </div>
 
-    <div *ngIf="!isLoading && exercise" class="exercise-content">
+    <div *ngIf="!initialLoad && exercise" class="exercise-content">
         
         <!-- Indicatore superset -->
         <div *ngIf="isSuperset" class="superset-header">

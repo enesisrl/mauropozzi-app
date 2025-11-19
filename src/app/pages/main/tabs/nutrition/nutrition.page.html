@@ -6,7 +6,11 @@
 
 <ion-content class="container bg-transparent">
   <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
+      <ion-refresher-content
+        pullingIcon="chevron-down-outline"
+        pullingText="Trascina per aggiornare"
+        refreshingSpinner="crescent">
+      </ion-refresher-content>
   </ion-refresher>
   
   <div class="scrolling-content">
@@ -15,7 +19,7 @@
       <p>{{ environment.ln.generalLoading }}</p>
     </div>
 
-    <div class="nutrition-list" *ngIf="!initialLoad">
+    <div *ngIf="!initialLoad" class="nutrition-list">
       <ion-card 
         *ngFor="let item of nutritionItems; trackBy: trackById" 
         class="nutrition-item"
