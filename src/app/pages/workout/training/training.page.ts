@@ -112,12 +112,21 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
   
   private storeProgress() {
-    this.workoutService.storeWorkoutExcerciseProgress(
+    if (!this.progressStartTime) {
+      return;
+    }
+
+    this.workoutService.storeWorkoutExerciseProgress(
       this.workoutId,
       this.supersetExercises.map(element => element.id),
-      this.progressStartTime ? this.progressStartTime.toISOString() : '',
-      new Date().toISOString()
-    );
+      this.progressStartTime,
+      new Date(),
+      this.currentSeries
+    ).subscribe({
+      next: (response) => {
+        console.log('Progress stored successfully:', response);
+      }
+    });
   }
 
   workoutNextSeries() {

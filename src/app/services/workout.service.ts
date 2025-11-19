@@ -354,29 +354,35 @@ export class WorkoutService {
     return null;
   }
 
-  storeWorkoutExcerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: string, end_time: string, weight_kg: number | null = null): Observable<WorkoutListResponse> {
-    const params = new HttpParams()
-      .set('id', workoutId.toString())
-      .set('ide', exerciseId.toString())
-      .set('ts', start_time.toString())
-      .set('te', end_time.toString());
+  storeWorkoutExerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: Date, end_time: Date, series: number, weight_kg: number | null = null): Observable<any> {
+    const body: any = {
+      id: workoutId,
+      ide: exerciseId,
+      ts: this.formatDate(start_time),
+      te: this.formatDate(end_time),
+      s: series
+    };
 
-    if(weight_kg !== null) {
-      params.set('kg', weight_kg.toString());
+    if (weight_kg !== null) {
+      body.kg = weight_kg.toString();
     }
 
-    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExcerciseProgress}`;
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExerciseProgress}`;
     
-    return this.http.post<WorkoutListResponse>(url, {}, {
-      headers: this.auth.getAuthHeaders(),
-      params: params
-    }).pipe(
-      tap(response => {
-        if (response.success && response.items) {
-          console.log(response);
-        }
-      })
-    );
+    return this.http.post<any>(url, body, {
+      headers: this.auth.getAuthHeaders()
+    });
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
 

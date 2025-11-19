@@ -8,7 +8,7 @@ export const environment = {
       nutritionList: '/nutrition-list/',
       workoutList: '/workout-list/',
       workoutDetails: '/workout-details/',
-      storeWorkoutExcerciseProgress: '/store-workout-exercise-progress/',
+      storeWorkoutExerciseProgress: '/store-workout-exercise-progress/',
     }
   },
 
