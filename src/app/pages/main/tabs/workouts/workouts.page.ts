@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
+import { WorkoutService, WorkoutListItem } from '../../../../services/workout.service';
 import { 
   IonContent, 
   IonHeader,
@@ -11,11 +15,6 @@ import {
   IonInfiniteScrollContent,
   IonSpinner
 } from '@ionic/angular/standalone';
-import { Auth } from '../../../../services/auth';
-import { CalendarWidgetComponent } from '../../../../components/calendar-widget/calendar-widget.component';
-import { WorkoutListComponent } from '../../../../components/workout-list/workout-list.component';
-import { WorkoutService, WorkoutListItem } from '../../../../services/workout.service';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-workouts',
@@ -48,7 +47,6 @@ export class WorkoutsPage implements OnInit {
   environment = environment;
   
   constructor(
-    private auth: Auth,
     private workoutService: WorkoutService
   ) { }
 

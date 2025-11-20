@@ -35,10 +35,10 @@ export class LoginPage {
   isLoading: boolean = false;
 
   constructor(
+    private alertController: AlertController,
     private auth: Auth,
-    private router: Router,
     private loadingController: LoadingController,
-    private alertController: AlertController
+    private router: Router,
   ) {}
 
   async login() {

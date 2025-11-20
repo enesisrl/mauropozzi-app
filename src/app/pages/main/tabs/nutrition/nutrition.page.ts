@@ -1,8 +1,6 @@
-import { addIcons } from 'ionicons';
 import { Browser } from '@capacitor/browser';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { documentTextOutline, downloadOutline } from 'ionicons/icons';
 import { environment } from '../../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { NutritionService, NutritionItem } from '../../../../services/nutrition.service';
@@ -50,9 +48,9 @@ export class NutritionPage implements OnInit {
   pageSize: number = 10;
   environment = environment;
 
-  constructor(private nutritionService: NutritionService) {
-    addIcons({ documentTextOutline, downloadOutline });
-  }
+  constructor(
+    private nutritionService: NutritionService
+  ) {}
 
   ngOnInit() {
     this.loadNutritionData();

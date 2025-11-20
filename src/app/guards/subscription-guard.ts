@@ -1,7 +1,7 @@
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { Auth } from '../services/auth';
+import { inject } from '@angular/core';
 import { map, take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 export const subscriptionGuard = () => {
   const auth = inject(Auth);

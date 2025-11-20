@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ImagePreloaderService {
   
   private preloadedImages: Map<string, HTMLImageElement> = new Map();

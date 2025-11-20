@@ -29,9 +29,9 @@ export class NutritionService {
   private cache = new Map<number, NutritionItem[]>();
 
   constructor(
-    private http: HttpClient, 
+    private appEvents: AppEvents,
     private auth: Auth,
-    private appEvents: AppEvents
+    private http: HttpClient, 
   ) {
     // Ascolta eventi di logout per pulire la cache
     this.appEvents.onLogout$.subscribe(() => {

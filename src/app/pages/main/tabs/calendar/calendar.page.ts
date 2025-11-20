@@ -14,6 +14,7 @@ import { IonContent } from '@ionic/angular/standalone';
     IonContent
   ]
 })
+
 export class CalendarPage implements OnInit {
 
   constructor() { }

@@ -10,12 +10,13 @@ import { SplashScreen } from '@capacitor/splash-screen';
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet],
 })
+
 export class AppComponent implements OnInit {
   
   constructor(
     private auth: Auth,
+    private imagePreloader: ImagePreloaderService,
     private router: Router,
-    private imagePreloader: ImagePreloaderService
   ) {}
 
   ngOnInit() {

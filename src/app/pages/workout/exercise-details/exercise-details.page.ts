@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
 import { ModalController } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
-import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { environment } from '../../../../environments/environment';
+import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
 import { 
   IonContent, 
   IonHeader,
@@ -20,6 +20,7 @@ import {
   IonSpinner,
   IonIcon
 } from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-workout-exercise-details',
   templateUrl: './exercise-details.page.html',
@@ -41,6 +42,7 @@ import {
     IonIcon
   ]
 })
+
 export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   
   workoutId: string = '';
@@ -70,10 +72,10 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
+    private modalController: ModalController,
     private route: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private modalController: ModalController
   ) {}
 
   ngOnInit() {

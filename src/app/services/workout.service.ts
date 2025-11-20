@@ -83,9 +83,9 @@ export class WorkoutService {
   private workoutDetailsCacheTimestamps = new Map<string, number>();
 
   constructor(
-    private http: HttpClient, 
-    private auth: Auth,
     private appEvents: AppEvents,
+    private auth: Auth,
+    private http: HttpClient, 
     private imagePreloader: ImagePreloaderService
   ) {
     // Ascolta eventi di logout per pulire la cache

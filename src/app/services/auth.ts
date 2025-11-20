@@ -37,6 +37,7 @@ export interface ProfileResponse {
 @Injectable({
   providedIn: 'root'
 })
+
 export class Auth {
   private readonly TOKEN_KEY = 'at';
   private readonly USER_KEY = 'ud';
@@ -47,9 +48,9 @@ export class Auth {
   public user$ = this.userSubject.asObservable();
 
   constructor(
+    private appEvents: AppEvents,
     private http: HttpClient,
     private router: Router,
-    private appEvents: AppEvents
   ) {
     this.checkExistingAuth();
   }

@@ -42,7 +42,7 @@
 
     <div class="exercise-overlay" [class.hidden]="!showOverlay">
       <div class="exercise-title">{{ exercise.descrizione }}</div>
-      <div *ngIf="exercise.images.length > 0 || exercise.testo" class="exercise-text" >Scorri in basso per i dettagli</div>
+      <div *ngIf="hasScrolling()" class="exercise-text" >Scorri in basso per i dettagli</div>
     </div>
   </div>
 </ion-content>

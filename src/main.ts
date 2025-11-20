@@ -1,8 +1,10 @@
+import { addIcons } from 'ionicons';
+import { AppComponent } from './app/app.component';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { provideHttpClient } from '@angular/common/http';
-import { addIcons } from 'ionicons';
+import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
+import { routes } from './app/app.routes';
 import { 
   addOutline,
   arrowForwardOutline,
@@ -12,14 +14,13 @@ import {
   chevronForwardOutline, 
   exitOutline,
   hourglassOutline,
+  lockClosed,
   pause,
   play,
   refreshOutline,
   reloadOutline,
   returnDownForwardOutline,
 } from 'ionicons/icons';
-import { routes } from './app/app.routes';
-import { AppComponent } from './app/app.component';
 
 /* Add icons to the library */
 addIcons({
@@ -31,6 +32,7 @@ addIcons({
   'chevron-forward-outline': chevronForwardOutline,
   'exit-outline': exitOutline,
   'hourglass-outline': hourglassOutline,
+  'lock-closed': lockClosed,
   'pause': pause,
   'play': play,
   'refresh-outline': refreshOutline,

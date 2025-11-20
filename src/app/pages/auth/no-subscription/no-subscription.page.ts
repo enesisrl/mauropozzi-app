@@ -1,14 +1,12 @@
+import { Auth } from '../../../services/auth';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { addIcons } from 'ionicons';
-import { lockClosed } from 'ionicons/icons';
 import { 
   IonContent, 
   IonButton, 
   IonIcon 
 } from '@ionic/angular/standalone';
-import { Auth } from '../../../services/auth';
 
 @Component({
   selector: 'app-no-subscription',
@@ -28,7 +26,6 @@ export class NoSubscriptionPage implements OnInit, OnDestroy {
     private auth: Auth,
     private router: Router
   ) {
-    addIcons({ lockClosed });
   }
 
   ngOnInit() {

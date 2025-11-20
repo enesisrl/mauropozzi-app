@@ -1,17 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalController, AlertController } from '@ionic/angular/standalone';
-import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
-import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
+import { Auth } from '../../../services/auth';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { ModalController, AlertController } from '@ionic/angular/standalone';
+import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
+import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
 import { 
   IonContent, 
   IonButton,
   IonSpinner,
   IonIcon
 } from '@ionic/angular/standalone';
+
 @Component({
   selector: 'app-workout-training',
   templateUrl: './training.page.html',
@@ -26,6 +28,7 @@ import {
     IonIcon
   ]
 })
+
 export class WorkoutTrainingPage implements OnInit, OnDestroy {
   
   workoutId: string = '';
@@ -56,11 +59,12 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   environment = environment;
 
   constructor(
+    private alertController: AlertController,
+    private auth: Auth,
+    private modalController: ModalController,
     private route: ActivatedRoute,
     private router: Router,
     private workoutService: WorkoutService,
-    private alertController: AlertController,
-    private modalController: ModalController
   ) {}
 
   ngOnInit() {

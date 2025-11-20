@@ -1,15 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Auth } from '../../../../services/auth';
 import { Browser } from '@capacitor/browser';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { environment } from '../../../../../environments/environment';
+import { FormsModule } from '@angular/forms';
 import { LoadingController } from '@ionic/angular/standalone';
+import { Subscription } from 'rxjs';
 import { 
   IonContent, 
   IonButton 
 } from '@ionic/angular/standalone';
-import { Auth } from '../../../../services/auth';
-import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
