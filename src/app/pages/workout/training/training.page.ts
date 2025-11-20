@@ -180,6 +180,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
 
   goBack() {
+    this.auth.loadProfile().subscribe();
     this.router.navigate(['/workout-details', this.workoutId]);
   }
   
