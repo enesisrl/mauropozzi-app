@@ -125,7 +125,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       this.supersetExercises.map(element => element.id),
       this.progressStartTime,
       new Date(),
-      this.currentSeries
+      this.currentSeries,
+      // weight_kg @todok
     ).subscribe();
   }
 

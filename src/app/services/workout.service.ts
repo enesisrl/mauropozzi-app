@@ -304,10 +304,10 @@ export class WorkoutService {
   public storeWorkoutExerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: Date, end_time: Date, series: number, weight_kg: number | null = null): Observable<any> {
     const body: any = {
       id: workoutId,
-      ide: exerciseId,
+      ix: exerciseId,
       ts: this.formatDate(start_time),
       te: this.formatDate(end_time),
-      s: series
+      sr: series
     };
 
     if (weight_kg !== null) {
