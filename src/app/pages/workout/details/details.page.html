@@ -60,10 +60,10 @@
             </div>
         </div>
 
-        <div *ngFor="let day of workout.esercizi || []" class="workout-day">
+        <div *ngFor="let day of workout.sedute || []" class="workout-day">
             <div class="workout-day-head">
                 <div class="title">{{ day.descrizione }}</div>
-                <!-- <div class="subtitle">Ultimo workout lun 11 giugno</div> -->
+                <div *ngIf="day.info" class="subtitle">{{ day.info }}</div>
             </div>
             <app-workout-exercise-list [workoutId]="workout.id" [groups]="day.gruppi || []"></app-workout-exercise-list>
         </div>

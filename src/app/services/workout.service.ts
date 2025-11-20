@@ -32,12 +32,13 @@ export interface WorkoutDetail {
   data_inizio?: string;
   data_scadenza?: string;
   note?: string;
-  esercizi: WorkoutDay[];
+  sedute: WorkoutDay[];
 }
 
 export interface WorkoutDay {
   seduta: number;
   descrizione: string;
+  info?: string;
   gruppi: WorkoutGroup[];
 }
 
@@ -150,12 +151,12 @@ export class WorkoutService {
   }
   
   private preloadWorkoutDetailsImages(workout: WorkoutDetail): void {
-    if (!workout?.esercizi) return;
+    if (!workout?.sedute) return;
 
     const exerciseImages: string[] = [];
     
     // Raccoglie tutte le immagini degli esercizi
-    workout.esercizi.forEach((giorno) => {
+    workout.sedute.forEach((giorno) => {
       if (giorno.gruppi) {
         giorno.gruppi.forEach(gruppo => {
           if (gruppo.esercizi) {
@@ -266,12 +267,12 @@ export class WorkoutService {
     }
     
     const workout = this.workoutDetailsCache.get(workoutId);
-    if (!workout || !workout.esercizi) {
+    if (!workout || !workout.sedute) {
       return [];
     }
 
     // Trova il gruppo che contiene l'esercizio
-    for (const giorno of workout.esercizi) {
+    for (const giorno of workout.sedute) {
       if (giorno.gruppi) {
         for (const gruppo of giorno.gruppi) {
           if (gruppo.esercizi) {
@@ -294,12 +295,12 @@ export class WorkoutService {
     }
     
     const workout = this.workoutDetailsCache.get(workoutId);
-    if (!workout || !workout.esercizi) {
+    if (!workout || !workout.sedute) {
       return null;
     }
 
     // Cerca l'esercizio nell'array multidimensionale
-    for (const giorno of workout.esercizi) {
+    for (const giorno of workout.sedute) {
       if (giorno.gruppi) {
         for (const gruppo of giorno.gruppi) {
           if (gruppo.esercizi) {
@@ -323,12 +324,12 @@ export class WorkoutService {
     }
 
     const workout = this.workoutDetailsCache.get(workoutId);
-    if (!workout || !workout.esercizi) {
+    if (!workout || !workout.sedute) {
       return null;
     }
 
     // Cerca l'esercizio corrente e identifica il giorno
-    for (const giorno of workout.esercizi) {
+    for (const giorno of workout.sedute) {
       if (!giorno.gruppi) continue;
 
       let currentExerciseFound = false;
