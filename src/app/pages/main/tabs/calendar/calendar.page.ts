@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { WorkoutService } from '../../../../services/workout.service';
+import { WorkoutCalendarService } from '../../../../services/workout-calendar.service';
 import { environment } from '../../../../../environments/environment';
 import { 
   AlertController,
@@ -54,7 +54,7 @@ export class CalendarPage implements OnInit {
 
   constructor(
     private alertController: AlertController,
-    private workoutService: WorkoutService,
+    private workoutCalendarService: WorkoutCalendarService,
   ) { }
 
   ngOnInit() {
@@ -99,7 +99,7 @@ export class CalendarPage implements OnInit {
   }
 
   protected async showWorkoutDetails(day: CalendarDay): Promise<void> {
-    const workouts = this.workoutService.getWorkoutsForDate(day.date);
+    const workouts = this.workoutCalendarService.getWorkoutsForDate(day.date);
     
     let message = '';
     if (workouts.length > 0) {
@@ -121,14 +121,21 @@ export class CalendarPage implements OnInit {
   ------------------------------------------------------------ */
   
   private async loadCalendarData(): Promise<void> {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth() + 1; // JavaScript month is 0-based, PHP expects 1-based
+    
+    // Se ho già i dati, mostro subito il calendario senza loading
+    if (this.workoutCalendarService.isMonthDataAvailable(year, month)) {
+      this.generateCalendar();
+      return;
+    }
+    
+    // Se non ho i dati, mostro loading e faccio la chiamata
     this.isLoading = true;
     
     try {
-      const year = this.currentDate.getFullYear();
-      const month = this.currentDate.getMonth() + 1; // JavaScript month is 0-based, PHP expects 1-based
-      
       // Carica dati workout (includerà mese precedente e successivo)
-      await this.workoutService.getWorkoutCalendar(year, month);
+      await this.workoutCalendarService.getWorkoutCalendar(year, month);
       
       // Genera calendario con dati workout aggiornati
       this.generateCalendar();
@@ -191,7 +198,7 @@ export class CalendarPage implements OnInit {
     const isToday = date.toDateString() === today.toDateString();
     
     // Usa il metodo del service che prende una Date
-    const hasWorkout = this.workoutService.hasWorkoutOnDate(date);
+    const hasWorkout = this.workoutCalendarService.hasWorkoutOnDate(date);
     
     return {
       date: date,

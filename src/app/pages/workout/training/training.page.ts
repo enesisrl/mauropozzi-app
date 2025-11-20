@@ -5,6 +5,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { ModalController, AlertController } from '@ionic/angular/standalone';
+import { WorkoutCalendarService } from '../../../services/workout-calendar.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
 import { WorkoutService, WorkoutExerciseDetails } from '../../../services/workout.service';
 import { 
@@ -64,6 +65,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     private modalController: ModalController,
     private route: ActivatedRoute,
     private router: Router,
+    private workoutCalendarService: WorkoutCalendarService,
     private workoutService: WorkoutService,
   ) {}
 
@@ -120,7 +122,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       return;
     }
 
-    this.workoutService.storeWorkoutExerciseProgress(
+    this.workoutCalendarService.storeWorkoutExerciseProgress(
       this.workoutId,
       this.supersetExercises.map(element => element.id),
       this.progressStartTime,
