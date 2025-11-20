@@ -82,6 +82,9 @@ export class WorkoutService {
   // Dettaglio
   private workoutDetailsCache = new Map<string, WorkoutDetail>();
   private workoutDetailsCacheTimestamps = new Map<string, number>();
+  
+  // Calendario
+  private workoutCalendarCache = new Map<string, { [date: string]: { descrizione: string; seduta: number }[] }>();
 
   constructor(
     private appEvents: AppEvents,
@@ -92,6 +95,7 @@ export class WorkoutService {
     // Ascolta eventi di logout per pulire la cache
     this.appEvents.onLogout$.subscribe(() => {
       this.clearCache();
+      this.workoutCalendarCache.clear();
     });
   }
   
@@ -139,6 +143,7 @@ export class WorkoutService {
       if (reset) {
         this.workoutDetailsCache.clear();
         this.workoutDetailsCacheTimestamps.clear();
+        this.workoutCalendarCache.clear();
       }
 
       const response = await firstValueFrom(this.getWorkoutDetails(workoutId));
@@ -300,26 +305,6 @@ export class WorkoutService {
 
     return null;
   }
-
-  public storeWorkoutExerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: Date, end_time: Date, series: number, weight_kg: number | null = null): Observable<any> {
-    const body: any = {
-      id: workoutId,
-      ix: exerciseId,
-      ts: this.formatDate(start_time),
-      te: this.formatDate(end_time),
-      sr: series
-    };
-
-    if (weight_kg !== null) {
-      body.kg = weight_kg.toString();
-    }
-
-    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExerciseProgress}`;
-    
-    return this.http.post<any>(url, body, {
-      headers: this.auth.getAuthHeaders()
-    });
-  }
   
   private getCachedExerciseById(workoutId: string, exerciseId: string): WorkoutExerciseDetails | null {
     if (!this.isWorkoutDetailsCached(workoutId)) {
@@ -349,6 +334,79 @@ export class WorkoutService {
     return null;
   }
 
+  /* Calendario
+  ------------------------------------------------------------*/
+
+  async getWorkoutCalendar(year: number, month: number): Promise<{ [date: string]: { descrizione: string; seduta: number }[] }> {
+    const cacheKey = `${year}-${month}`;
+    
+    // Controllo cache
+    if (this.workoutCalendarCache.has(cacheKey)) {
+      return this.workoutCalendarCache.get(cacheKey) || {};
+    }
+    
+    try {
+      const body: any = {
+        year: year.toString(),
+        month: month.toString()
+      };
+
+      const url = `${environment.api.baseUrl}${environment.api.endpoints.workoutCalendar}`;
+    
+      const response = await firstValueFrom(
+        this.http.post<{ success: boolean; dates: { [date: string]: { descrizione: string; seduta: number }[] } }>(url, body, {
+          headers: this.auth.getAuthHeaders(),
+        })
+      );
+      
+      if (response?.success && response.dates) {
+        this.workoutCalendarCache.set(cacheKey, response.dates);
+        return response.dates;
+      }
+    } catch (error) {
+      console.error('Error loading workout calendar:', error);
+    }
+    
+    return {};
+  }
+  
+  hasWorkoutOnDate(date: Date): boolean {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // I mesi in JavaScript sono indicizzati da 0
+    const cacheKey = `${year}-${month}`;
+    const dateStr = date.toISOString().split('T')[0]; // Formato: YYYY-MM-DD
+    const calendarData = this.workoutCalendarCache.get(cacheKey);
+    return calendarData ? !!calendarData[dateStr] : false;
+  }
+  
+  getWorkoutsForDate(date: Date): { descrizione: string; seduta: number }[] {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const dateStr = date.toISOString().split('T')[0];
+    const cacheKey = `${year}-${month}`;
+    const calendarData = this.workoutCalendarCache.get(cacheKey);
+    return calendarData?.[dateStr] || [];
+  }
+
+  public storeWorkoutExerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: Date, end_time: Date, series: number, weight_kg: number | null = null): Observable<any> {
+    const body: any = {
+      id: workoutId,
+      ix: exerciseId,
+      ts: this.formatDate(start_time),
+      te: this.formatDate(end_time),
+      sr: series
+    };
+
+    if (weight_kg !== null) {
+      body.kg = weight_kg.toString();
+    }
+
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExerciseProgress}`;
+    
+    return this.http.post<any>(url, body, {
+      headers: this.auth.getAuthHeaders()
+    });
+  }
 
   /* Helpers
   ------------------------------------------------------------*/

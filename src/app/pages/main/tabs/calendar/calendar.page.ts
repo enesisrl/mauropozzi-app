@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { WorkoutService } from '../../../../services/workout.service';
+import { environment } from '../../../../../environments/environment';
 import { 
   AlertController,
   IonButton,
   IonContent, 
   IonHeader,
   IonIcon,
-  IonRippleEffect,
+  IonSpinner,
   IonToolbar,
 } from '@ionic/angular/standalone';
 
@@ -31,7 +33,7 @@ interface CalendarDay {
     IonContent,
     IonHeader,
     IonIcon,
-    IonRippleEffect,
+    IonSpinner,
     IonToolbar,
   ]
 })
@@ -40,7 +42,9 @@ export class CalendarPage implements OnInit {
   
   currentDate: Date = new Date();
   calendarDays: CalendarDay[] = [];
+  isLoading: boolean = false;
   private isNavigating: boolean = false;
+  environment = environment;
   
   monthNames: string[] = [
     'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
@@ -49,11 +53,12 @@ export class CalendarPage implements OnInit {
   dayNames: string[] = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
 
   constructor(
-    private alertController: AlertController
+    private alertController: AlertController,
+    private workoutService: WorkoutService,
   ) { }
 
   ngOnInit() {
-    this.generateCalendar();
+    this.loadCalendarData();
   }
   
   
@@ -66,7 +71,7 @@ export class CalendarPage implements OnInit {
     this.isNavigating = true;
     
     this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
-    this.generateCalendar();
+    this.loadCalendarData();
     
     setTimeout(() => {
       this.isNavigating = false;
@@ -78,7 +83,7 @@ export class CalendarPage implements OnInit {
     this.isNavigating = true;
     
     this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
-    this.generateCalendar();
+    this.loadCalendarData();
     
     setTimeout(() => {
       this.isNavigating = false;
@@ -94,12 +99,46 @@ export class CalendarPage implements OnInit {
   }
 
   protected async showWorkoutDetails(day: CalendarDay): Promise<void> {
+    const workouts = this.workoutService.getWorkoutsForDate(day.date);
+    
+    let message = '';
+    if (workouts.length > 0) {
+      message = workouts.map(w => `${w.descrizione} (Seduta ${w.seduta})`).join('\n');
+    } else {
+      message = 'Nessun dettaglio disponibile per questo allenamento.';
+    }
+    
     const alert = await this.alertController.create({
       header: 'Allenamento del ' + day.dayNumber + ' ' + this.monthNames[this.currentDate.getMonth()],
-      message: 'Ecco i dettagli del tuo allenamento per questo giorno.',
+      message: message,
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  
+  /* Data Loading
+  ------------------------------------------------------------ */
+  
+  private async loadCalendarData(): Promise<void> {
+    this.isLoading = true;
+    
+    try {
+      const year = this.currentDate.getFullYear();
+      const month = this.currentDate.getMonth() + 1; // JavaScript month is 0-based, PHP expects 1-based
+      
+      // Carica dati workout (includerà mese precedente e successivo)
+      await this.workoutService.getWorkoutCalendar(year, month);
+      
+      // Genera calendario con dati workout aggiornati
+      this.generateCalendar();
+    } catch (error) {
+      console.error('Error loading calendar data:', error);
+      // Genera calendario comunque, senza dati workout
+      this.generateCalendar();
+    } finally {
+      this.isLoading = false;
+    }
   }
 
 
@@ -151,20 +190,17 @@ export class CalendarPage implements OnInit {
     const today = new Date();
     const isToday = date.toDateString() === today.toDateString();
     
+    // Usa il metodo del service che prende una Date
+    const hasWorkout = this.workoutService.hasWorkoutOnDate(date);
+    
     return {
       date: date,
       dayNumber: date.getDate(),
-      dayName: this.dayNames[(date.getDay() + 6) % 7],
+      dayName: this.dayNames[(date.getDay() + 6) % 7], // Converti domenica=0 a indice 6, lunedì=1 a indice 0
       isToday: isToday,
-      hasWorkout: this.checkHasWorkout(date), // TODO: Implementare logica workout
+      hasWorkout: hasWorkout,
       isCurrentMonth: isCurrentMonth,
       isWeekend: date.getDay() === 0 || date.getDay() === 6 // Sabato e domenica rimangono weekend
     };
-  }
-
-  private checkHasWorkout(date: Date): boolean {
-    // TODO: Implementare controllo workout per questa data
-    // Per ora ritorniamo false per tutti
-    return false;
   }
 }
