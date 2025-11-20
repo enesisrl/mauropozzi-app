@@ -2,6 +2,7 @@ import { Auth } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { WorkoutCalendarService } from '../../services/workout-calendar.service';
 import { 
   IonRippleEffect,
 } from '@ionic/angular/standalone';
@@ -33,13 +34,19 @@ export class CalendarWidgetComponent implements OnInit {
   
   constructor(
     private auth: Auth,
-    private router: Router
+    private router: Router,
+    private workoutCalendarService: WorkoutCalendarService,
   ) { }
 
   ngOnInit() {
-    this.auth.user$.subscribe(user => {
+    this.auth.user$.subscribe(async user => {
       this.currentUser = user;
-      this.generateCalendarDays();
+      if (user) {
+        // Carica i dati del calendario per il mese corrente
+        const today = new Date();
+        await this.workoutCalendarService.getWorkoutCalendar(today.getFullYear(), today.getMonth() + 1);
+        this.generateCalendarDays();
+      }
     });
   }
 
@@ -47,7 +54,9 @@ export class CalendarWidgetComponent implements OnInit {
   ------------------------------------------------------------*/
 
   onDayClick(day: CalendarDay) {
-    this.router.navigate(['/main/calendar']);
+    if (day.hasWorkout) {
+      this.workoutCalendarService.showDayAlert(day.date);
+    }
   }
 
   openCalendar() {
@@ -68,10 +77,8 @@ export class CalendarWidgetComponent implements OnInit {
       
       const dayNames = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
 
-      let hasWorkout = false;
-      if(this.currentUser && this.currentUser.latestWorkoutDates) {
-        hasWorkout = this.currentUser.latestWorkoutDates.includes(date.toISOString().split('T')[0]);
-      }
+      // Usa il servizio per verificare se ci sono workout
+      const hasWorkout = this.workoutCalendarService.hasWorkoutOnDate(date);
       
       days.push({
         date: date,

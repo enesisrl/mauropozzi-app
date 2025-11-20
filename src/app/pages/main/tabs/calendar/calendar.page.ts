@@ -53,7 +53,6 @@ export class CalendarPage implements OnInit {
   dayNames: string[] = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
 
   constructor(
-    private alertController: AlertController,
     private workoutCalendarService: WorkoutCalendarService,
   ) { }
 
@@ -64,7 +63,6 @@ export class CalendarPage implements OnInit {
   
   /* UI
   ------------------------------------------------------------ */
-
 
   previousMonth(): void {
     if (this.isNavigating) return;
@@ -91,29 +89,9 @@ export class CalendarPage implements OnInit {
   }
 
   onDayClick(day: CalendarDay): void {
-    console.log('Day clicked:', day);
-    // TODO: Implementare azione click giorno
-    if(day.hasWorkout) {
-      this.showWorkoutDetails(day);
+    if (day.hasWorkout) {
+      this.workoutCalendarService.showDayAlert(day.date);
     }
-  }
-
-  protected async showWorkoutDetails(day: CalendarDay): Promise<void> {
-    const workouts = this.workoutCalendarService.getWorkoutsForDate(day.date);
-    
-    let message = '';
-    if (workouts.length > 0) {
-      message = workouts.map(w => `${w.descrizione} (Seduta ${w.seduta})`).join('\n');
-    } else {
-      message = 'Nessun dettaglio disponibile per questo allenamento.';
-    }
-    
-    const alert = await this.alertController.create({
-      header: 'Allenamento del ' + day.dayNumber + ' ' + this.monthNames[this.currentDate.getMonth()],
-      message: message,
-      buttons: ['OK']
-    });
-    await alert.present();
   }
 
   
@@ -124,24 +102,26 @@ export class CalendarPage implements OnInit {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth() + 1; // JavaScript month is 0-based, PHP expects 1-based
     
-    // Se ho già i dati, mostro subito il calendario senza loading
+    // 1. RENDERING: Se ho loadedMonthsCache, renderizzo SUBITO (istantaneo)
     if (this.workoutCalendarService.isMonthDataAvailable(year, month)) {
       this.generateCalendar();
+      // Chiamo il service in background per eventuali aggiornamenti, ma non aspetto
+      this.workoutCalendarService.getWorkoutCalendar(year, month);
       return;
     }
     
-    // Se non ho i dati, mostro loading e faccio la chiamata
+    // 2. LOADING: Se non ho loadedMonthsCache, mostro loader
     this.isLoading = true;
     
     try {
-      // Carica dati workout (includerà mese precedente e successivo)
+      // Faccio chiamata e aspetto (potrebbe fare o non fare HTTP call internamente)
       await this.workoutCalendarService.getWorkoutCalendar(year, month);
       
-      // Genera calendario con dati workout aggiornati
+      // Genera calendario con dati aggiornati
       this.generateCalendar();
     } catch (error) {
       console.error('Error loading calendar data:', error);
-      // Genera calendario comunque, senza dati workout
+      // Genera calendario comunque, anche se vuoto
       this.generateCalendar();
     } finally {
       this.isLoading = false;
