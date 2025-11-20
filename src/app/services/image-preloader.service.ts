@@ -40,14 +40,18 @@ export class ImagePreloaderService {
   
   preloadEssentialImages(): Promise<HTMLImageElement[]> {
     const essentialImages = [
-      'assets/images/icon-pdf.svg',
-      'assets/images/icon-nutrition.svg',
-      'assets/images/icon-workout.svg',
+      'assets/images/bg-logIn.png',
+      'assets/images/bg-workout-details.png',
+      'assets/images/icon-account.svg',
       'assets/images/icon-calendar-black.svg',
       'assets/images/icon-checked.svg',
+      'assets/images/icon-nutrition.svg',
+      'assets/images/icon-pdf.svg',
       'assets/images/icon-unchecked.svg',
-      'assets/images/icon-home.svg',
-      'assets/images/icon-profile.svg'
+      'assets/images/icon-workout.svg',
+      'assets/images/logo-icon.svg',
+      'assets/images/logo-vertical.svg',
+      // 'assets/images/icon-home.svg',
     ];
 
     return this.preloadImages(essentialImages);
