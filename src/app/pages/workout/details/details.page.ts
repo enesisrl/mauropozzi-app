@@ -73,17 +73,15 @@ export class WorkoutDetailsPage implements OnInit, OnDestroy {
   }
   
   async onRefresh(event: any) {
-    if (!this.workoutId) {
-      return;
+    if (this.workoutId) {
+      this.isLoading = true;
+      this.workout = await this.workoutService.loadWorkoutDetails(this.workoutId, true);
+      this.isLoading = false;
     }
-
-    this.isLoading = true;
-    this.workout = await this.workoutService.loadWorkoutDetails(this.workoutId);
-    this.isLoading = false;
     
     setTimeout(() => {
       (event.target as any)?.complete();
-    }, 1000);
+    }, 500);
   }
   
   /* UI

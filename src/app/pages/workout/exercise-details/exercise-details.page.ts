@@ -94,21 +94,19 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
   }
   
   async onRefresh(event: any) {
-    this.isLoading = true;
-    this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId, true);
-    this.isLoading = false;
+    this.loadExerciseData(true);
     
     setTimeout(() => {
       (event.target as any)?.complete();
-    }, 1000);
+    }, 500);
   }
   
-  private async loadExerciseData(): Promise<void> {
+  private async loadExerciseData(reset: boolean = false): Promise<void> {
     this.isLoading = true;
     
     // Carica l'esercizio iniziale
     this.currentExerciseId = this.exerciseId;
-    this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId);
+    this.exercise = await this.workoutService.loadWorkoutExerciseDetails(this.workoutId, this.exerciseId, reset);
     
     if (this.exercise) {
       // Carica il superset
@@ -116,7 +114,6 @@ export class WorkoutExerciseDetailsPage implements OnInit, OnDestroy {
       this.isSuperset = this.exercises.length > 1;
       
       if (this.isSuperset) {
-        // Trova l'indice dell'esercizio corrente
         this.currentSupersetIndex = this.exercises.findIndex(ex => ex.id === this.exerciseId);
         if (this.currentSupersetIndex < 0) this.currentSupersetIndex = 0;
         

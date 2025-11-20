@@ -99,7 +99,7 @@ export class WorkoutService {
   /* Lista
   ------------------------------------------------------------*/
 
-  getWorkoutList(page: number = 1, pageSize: number = 10): Observable<WorkoutListResponse> {
+  public getWorkoutList(page: number = 1, pageSize: number = 10): Observable<WorkoutListResponse> {
     // Controllo cache
     if (this.workoutListCache.has(page)) {
       return new Observable(observer => {
@@ -134,18 +134,19 @@ export class WorkoutService {
   /* Dettaglio
   ------------------------------------------------------------*/
 
-  async loadWorkoutDetails(workoutId: string): Promise<WorkoutDetail | null> {
+  public async loadWorkoutDetails(workoutId: string, reset: boolean = false): Promise<WorkoutDetail | null> {
     try {
-      // getWorkoutDetails già controlla la cache prima dell'API
+      if (reset) {
+        this.workoutDetailsCache.clear();
+        this.workoutDetailsCacheTimestamps.clear();
+      }
+
       const response = await firstValueFrom(this.getWorkoutDetails(workoutId));
       if (response?.success && response.item) {
-        // Preload delle immagini
         this.preloadWorkoutDetailsImages(response.item);
         return response.item;
       }
-    } catch (error) {
-      console.error('Errore nel caricamento del workout:', error);
-    }
+    } catch (error) {}
 
     return null;
   }
@@ -177,7 +178,6 @@ export class WorkoutService {
   }
   
   private getWorkoutDetails(workoutId: string): Observable<WorkoutResponse> {
-    // Controlla se i dati sono in cache e ancora validi
     if (this.isWorkoutDetailsCached(workoutId)) {
       const cachedWorkout = this.workoutDetailsCache.get(workoutId);
       return of({
@@ -222,46 +222,27 @@ export class WorkoutService {
   /* Esercizio 
   ------------------------------------------------------------*/
 
-  async loadWorkoutExerciseDetails(workoutId: string, exerciseId: string, reset: boolean = false): Promise<WorkoutExerciseDetails | null> {
+  public async loadWorkoutExerciseDetails(workoutId: string, exerciseId: string, reset: boolean = false): Promise<WorkoutExerciseDetails | null> {
     if (reset) {
       this.workoutDetailsCache.clear();
       this.workoutDetailsCacheTimestamps.clear();
-    }
+    } 
 
-    // Prima controlla se l'esercizio è già in cache
-    let exercise = this.getCachedExerciseById(workoutId, exerciseId);
-    
-    if (exercise) {
-      // Preload dell'immagine se presente
-      if (exercise.thumb) {
-        this.imagePreloader.preloadImage(exercise.thumb);
-      }
-      return exercise;
-    }
-
-    // Se non è in cache, carica il workout completo
-    try {
-      const workout = await firstValueFrom(this.getWorkoutDetails(workoutId));
-      if (workout?.success && workout.item) {
-        // Ora dovrebbe essere in cache, riprova
-        exercise = this.getCachedExerciseById(workoutId, exerciseId);
-        if (exercise) {
-          // Preload dell'immagine se presente
-          if (exercise.thumb) {
-            this.imagePreloader.preloadImage(exercise.thumb);
-          }
-          return exercise;
+    const response = await firstValueFrom(this.getWorkoutDetails(workoutId));
+    if (response?.success && response.item) {
+      let exercise = this.getCachedExerciseById(workoutId, exerciseId);
+      if (exercise) {
+        if (exercise.thumb) {
+          this.imagePreloader.preloadImage(exercise.thumb);
         }
+        return exercise;
       }
-    } catch (error) {
-      console.error('Errore nel caricamento del workout:', error);
     }
 
     return null;
   }
 
-  getSupersetExercises(workoutId: string, exerciseId: string): WorkoutExerciseDetails[] {
-    // Controllo diretto cache invece di getCachedWorkout
+  public getSupersetExercises(workoutId: string, exerciseId: string): WorkoutExerciseDetails[] {
     if (!this.isWorkoutDetailsCached(workoutId)) {
       return [];
     }
@@ -287,9 +268,60 @@ export class WorkoutService {
 
     return [];
   }
+
+  public getNextExercise(workoutId: string, currentExerciseId: string): WorkoutExerciseDetails | null {
+    if (!this.isWorkoutDetailsCached(workoutId)) {
+      return null;
+    }
+
+    const workout = this.workoutDetailsCache.get(workoutId);
+    if (!workout || !workout.sedute) {
+      return null;
+    }
+
+    for (const giorno of workout.sedute) {
+      if (!giorno.gruppi) continue;
+
+      let allExercisesInDay: WorkoutExerciseDetails[] = [];
+      
+      for (const gruppo of giorno.gruppi) {
+        if (gruppo.esercizi) {
+          allExercisesInDay.push(...gruppo.esercizi);
+        }
+      }
+
+      const currentIndex = allExercisesInDay.findIndex(ex => ex.id === currentExerciseId);
+      
+      if (currentIndex !== -1) {
+        const nextIndex = currentIndex + 1;
+        return nextIndex < allExercisesInDay.length ? allExercisesInDay[nextIndex] : null;
+      }
+    }
+
+    return null;
+  }
+
+  public storeWorkoutExerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: Date, end_time: Date, series: number, weight_kg: number | null = null): Observable<any> {
+    const body: any = {
+      id: workoutId,
+      ide: exerciseId,
+      ts: this.formatDate(start_time),
+      te: this.formatDate(end_time),
+      s: series
+    };
+
+    if (weight_kg !== null) {
+      body.kg = weight_kg.toString();
+    }
+
+    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExerciseProgress}`;
+    
+    return this.http.post<any>(url, body, {
+      headers: this.auth.getAuthHeaders()
+    });
+  }
   
   private getCachedExerciseById(workoutId: string, exerciseId: string): WorkoutExerciseDetails | null {
-    // Controllo diretto cache invece di getCachedWorkout
     if (!this.isWorkoutDetailsCached(workoutId)) {
       return null;
     }
@@ -317,63 +349,9 @@ export class WorkoutService {
     return null;
   }
 
-  public getNextExercise(workoutId: string, currentExerciseId: string): WorkoutExerciseDetails | null {
-    // Verifica cache
-    if (!this.isWorkoutDetailsCached(workoutId)) {
-      return null;
-    }
 
-    const workout = this.workoutDetailsCache.get(workoutId);
-    if (!workout || !workout.sedute) {
-      return null;
-    }
-
-    // Cerca l'esercizio corrente e identifica il giorno
-    for (const giorno of workout.sedute) {
-      if (!giorno.gruppi) continue;
-
-      let currentExerciseFound = false;
-      let allExercisesInDay: WorkoutExerciseDetails[] = [];
-      
-      // Raccogli tutti gli esercizi del giorno in ordine
-      for (const gruppo of giorno.gruppi) {
-        if (gruppo.esercizi) {
-          allExercisesInDay.push(...gruppo.esercizi);
-        }
-      }
-
-      // Trova l'indice dell'esercizio corrente
-      const currentIndex = allExercisesInDay.findIndex(ex => ex.id === currentExerciseId);
-      
-      if (currentIndex !== -1) {
-        // Restituisci il prossimo esercizio se esiste
-        const nextIndex = currentIndex + 1;
-        return nextIndex < allExercisesInDay.length ? allExercisesInDay[nextIndex] : null;
-      }
-    }
-
-    return null;
-  }
-
-  storeWorkoutExerciseProgress(workoutId: string, exerciseId: Array<string>, start_time: Date, end_time: Date, series: number, weight_kg: number | null = null): Observable<any> {
-    const body: any = {
-      id: workoutId,
-      ide: exerciseId,
-      ts: this.formatDate(start_time),
-      te: this.formatDate(end_time),
-      s: series
-    };
-
-    if (weight_kg !== null) {
-      body.kg = weight_kg.toString();
-    }
-
-    const url = `${environment.api.baseUrl}${environment.api.endpoints.storeWorkoutExerciseProgress}`;
-    
-    return this.http.post<any>(url, body, {
-      headers: this.auth.getAuthHeaders()
-    });
-  }
+  /* Helpers
+  ------------------------------------------------------------*/
 
   private formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -386,9 +364,6 @@ export class WorkoutService {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
-
-  /* Helpers
-  ------------------------------------------------------------*/
   public clearCache(): void {
     this.workoutListCache.clear();
     this.workoutDetailsCache.clear();

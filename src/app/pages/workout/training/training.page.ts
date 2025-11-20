@@ -126,11 +126,7 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       this.progressStartTime,
       new Date(),
       this.currentSeries
-    ).subscribe({
-      next: (response) => {
-        console.log('Progress stored successfully:', response);
-      }
-    });
+    ).subscribe();
   }
 
   workoutNextSeries() {

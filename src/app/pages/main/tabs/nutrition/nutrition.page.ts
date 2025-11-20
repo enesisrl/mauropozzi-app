@@ -89,7 +89,6 @@ export class NutritionPage implements OnInit {
         this.isLoading = false;
         this.initialLoad = false;
         this.hasMoreData = false;
-        console.error('Error loading nutrition data:', error);
       },
       complete: () => {
         this.isLoading = false;
@@ -102,7 +101,7 @@ export class NutritionPage implements OnInit {
     this.loadNutritionData(true);
     setTimeout(() => {
       (event.target as any)?.complete();
-    }, 1000);
+    }, 500);
   }
   
   onInfiniteScroll(event: InfiniteScrollCustomEvent) {

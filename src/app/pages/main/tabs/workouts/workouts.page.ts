@@ -87,7 +87,6 @@ export class WorkoutsPage implements OnInit {
         this.isLoading = false;
         this.initialLoad = false;
         this.hasMoreData = false;
-        console.error('Error loading workout data:', error);
       },
       complete: () => {
         this.isLoading = false;
@@ -100,7 +99,7 @@ export class WorkoutsPage implements OnInit {
     this.loadWorkoutData(true);
     setTimeout(() => {
       (event.target as any)?.complete();
-    }, 1000);
+    }, 500);
   }
   
   onInfiniteScroll(event: CustomEvent) {
@@ -111,7 +110,7 @@ export class WorkoutsPage implements OnInit {
     
     setTimeout(() => {
       (event.target as any)?.complete();
-    }, 1000);
+    }, 500);
   }
   
   /* Helpers
