@@ -1,0 +1,165 @@
+.details-block {
+    position: relative;
+    padding: 12px;
+    z-index: 2;
+    
+
+    .details-cover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .details-title {
+        position: relative;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 700;
+        font-size: 27px;
+        color: #FFF;
+        text-transform: uppercase;
+        margin-top: 36px;
+        z-index: 2;
+    }
+
+    .details-text {
+        position: relative;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 400;
+        font-size: 15px;
+        margin: 15px 0 0;
+        z-index: 2;
+    }
+
+    .details-meta-double {
+        position: relative;
+        margin: 15px 0 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        z-index: 2;
+
+        .item {
+            flex: 1 1 auto;
+            
+            .label {
+                display: block;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 700;
+                font-size: 12px;
+                color: #B8B8B8;
+                text-transform: uppercase;
+            }
+
+            .value {
+                display: block;
+                font-family: 'Roboto', sans-serif;
+                font-weight: 700;
+                font-size: 17px;
+                margin-top: 2px;
+                color: #FFF;
+            }
+
+            &.kg {
+                flex: 0 0 auto;
+                min-width: 60px;
+                .label {
+                    text-transform: initial;
+                }
+                .value {
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .details-meta-single {
+        position: relative;
+        margin: 4px 0 0;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 8px;
+        padding: 8px;
+        z-index: 2;
+
+        .label {
+            display: inline-block;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            color: #B8B8B8;
+            text-transform: uppercase;
+        }
+
+        .value {
+            display: inline-block;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 17px;
+            margin-left: 5px;
+            color: #FFF;
+        }
+    }
+
+    .button  {
+        position: relative;
+        --background: var(--ion-color-primary);
+        --background-hover: var(--ion-color-primary-shade);
+        --background-activated: var(--ion-color-primary-shade);
+        --background-focused: var(--ion-color-primary-shade);
+        --border-radius: 8px;
+        --color: #FFF;
+        --padding-top: 15px;
+        --padding-bottom: 14px;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1;
+        margin: 8px 0 0;
+        text-align: center;
+        letter-spacing: 0;
+        width: 100%;
+        --box-shadow: none;
+        text-transform: uppercase;
+        min-height: 50px;
+        height: 50px;
+        z-index: 2;
+
+        &.workout-start {
+            --color: #000;
+            --background: #4CDB1D;
+            --background-hover: var(--ion-color-primary-shade);
+            --background-activated: var(--ion-color-primary-shade);
+            --background-focused: var(--ion-color-primary-shade);
+        }
+
+        &.workout-stop {
+            --color: #000;
+            --background: #F79E0F;
+            --background-hover: var(--ion-color-primary-shade);
+            --background-activated: var(--ion-color-primary-shade);
+            --background-focused: var(--ion-color-primary-shade);
+        }
+
+        ion-icon {
+            margin-left: 8px;
+        }
+    }
+
+}

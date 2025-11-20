@@ -1,46 +1,46 @@
-<div class="workout-exercise-list">
+<div class="list-block">
     <ion-card 
         *ngFor="let group of groups"
-        class="exercise-item" 
+        class="list-item" 
         button="true"
         (click)="onExerciseClick(group)"
       >
         <div 
         *ngFor="let exercise of group.esercizi"
-        class="exercise-inner">
-          <img *ngIf="exercise.thumb" class="exercise-cover" [src]="exercise.thumb" [alt]="exercise.descrizione" />
-          <div *ngIf="!exercise.thumb" class="exercise-no-cover">
+        class="list-inner">
+          <img *ngIf="exercise.thumb" class="list-cover" [src]="exercise.thumb" [alt]="exercise.descrizione" />
+          <div *ngIf="!exercise.thumb" class="list-no-cover">
             <img src="assets/images/icon-workout.svg" alt="Workout">
           </div>
 
-          <div class="exercise-info">
-            <div class="exercise-title">{{ exercise.descrizione }}</div>
+          <div class="list-info">
+            <div class="list-title">{{ exercise.descrizione }}</div>
 
-            <div *ngIf="exercise.tipo == 'reps'" class="exercise-detail">
+            <div *ngIf="exercise.tipo == 'reps'" class="list-detail">
               <span class="label">Serie e ripetizioni</span>
               <span class="value">{{ exercise.serie }}</span>
             </div>
 
-            <div *ngIf="exercise.tipo == 'time'" class="exercise-detail">
+            <div *ngIf="exercise.tipo == 'time'" class="list-detail">
               <span class="label">Serie a tempo</span>
               <span class="value">{{ exercise.serie }} x {{ exercise.durata }}</span>
             </div>
 
-            <div class="exercise-detail">
+            <div *ngIf="exercise.recupero_s > 0" class="list-detail">
               <span class="label">Recupero</span>
               <span class="value">{{ exercise.recupero }}</span>
             </div>
 
-            <div *ngIf="exercise.note" class="exercise-detail">
+            <div *ngIf="exercise.note" class="list-detail">
               <span class="label">Note</span>
               <span class="value">{{ exercise.note }}</span>
             </div>
           </div>
         </div>
 
-        <div *ngIf="group.esercizi.length > 1" class="exercise-superset">Superset</div>
+        <div *ngIf="group.esercizi.length > 1" class="list-badge">Superset</div>
 
-        <div class="exercise-action">
+        <div class="list-action">
           <div class="action">
             <ion-icon name="add-outline"></ion-icon>
           </div>

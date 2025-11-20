@@ -31,30 +31,30 @@
     </div>
 
     <div *ngIf="!initialLoad && workout">
-        <div class="workout-info">
-            <div class="workout-title">{{ workout.descrizione }}</div>
+        <div class="details-block">
+            <div class="details-title">{{ workout.descrizione }}</div>
             
-            <div *ngIf="workout.note" class="workout-notes">
+            <div *ngIf="workout.note" class="details-text">
                 {{ workout.note }}
             </div>
             
-            <div class="workout-meta-double">
-                <div class="detail">
+            <div class="details-meta-double">
+                <div class="item">
                     <span class="label">Data inizio</span>
                     <span class="value">{{ workout.data_inizio }}</span>
                 </div>
-                <div class="detail">
+                <div class="item">
                     <span class="label">Data fine</span>
                     <span class="value">{{ workout.data_scadenza }}</span>
                 </div>
             </div>
 
-            <div class="workout-meta-single">
+            <div class="details-meta-single">
                 <span class="label">Durata</span>
                 <span class="value">{{ workout.durata }} settimane</span>
             </div>
 
-            <div class="workout-meta-single">
+            <div class="details-meta-single">
                 <span class="label">Consegnata il</span>
                 <span class="value">{{ workout.data_consegna }}</span>
             </div>

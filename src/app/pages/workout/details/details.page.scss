@@ -1,3 +1,5 @@
+@import 'src/theme/details-block.scss';
+
 ion-header {
   ion-toolbar {
         --background: var(--ion-color-primary);
@@ -19,104 +21,12 @@ ion-header {
 }
 
 .container {
-    .workout-info {
-        position: relative;
+    .details-block {
         padding: 200px 12px 12px;
         background-image: url(../../../../assets/images/bg-workout-details.png);
         background-position: center;
         background-size: cover;
         background-repeat: no-repeat;
-
-        &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .workout-title {
-            position: relative;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
-            font-size: 27px;
-            color: #FFF;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-
-        .workout-notes {
-            position: relative;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 400;
-            font-size: 15px;
-            margin: 15px 0 0;
-            z-index: 2;
-        }
-
-        .workout-meta-double {
-            position: relative;
-            margin: 15px 0 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            z-index: 2;
-
-            .detail {
-                flex: 0 0 50%;
-
-                .label {
-                    display: block;
-                    font-family: 'Roboto', sans-serif;
-                    font-weight: 700;
-                    font-size: 12px;
-                    color: #B8B8B8;
-                    text-transform: uppercase;
-                }
-
-                .value {
-                    display: block;
-                    font-family: 'Roboto', sans-serif;
-                    font-weight: 700;
-                    font-size: 17px;
-                    margin-top: 2px;
-                    color: #FFF;
-                }
-            }
-        }
-
-        .workout-meta-single {
-            position: relative;
-            margin: 4px 0 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-            padding: 8px;
-            z-index: 2;
-
-            .label {
-                display: inline-block;
-                font-family: 'Roboto', sans-serif;
-                font-weight: 700;
-                font-size: 12px;
-                color: #B8B8B8;
-                text-transform: uppercase;
-            }
-
-            .value {
-                display: inline-block;
-                font-family: 'Roboto', sans-serif;
-                font-weight: 700;
-                font-size: 17px;
-                margin-left: 5px;
-                color: #FFF;
-            }
-        }
     }
 
     .workout-day {

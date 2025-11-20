@@ -13,8 +13,8 @@ export const environment = {
   },
 
   cache: {
-    userData: 5 * 60 * 1000,
-    workoutDetailsData: 5 * 60 * 1000,
+    userData: 60 * 60 * 1000,
+    workoutDetailsData: 60 * 60 * 1000,
   },
 
   urls: {

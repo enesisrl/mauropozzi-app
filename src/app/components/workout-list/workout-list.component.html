@@ -1,32 +1,32 @@
-<div class="workout-list">
+<div class="list-block">
   <ion-card 
       *ngFor="let workout of workouts; trackBy: trackById"
-      class="workout-item" 
+      class="list-item" 
       button="true"
       (click)="onWorkoutClick(workout)"
     >
-    <div class="workout-inner">
-      <div class="workout-no-cover">
+    <div class="list-inner">
+      <div class="list-no-cover">
         <img src="assets/images/icon-workout.svg" alt="Workout">
       </div>
 
-      <div class="workout-info">
-        <div class="workout-title">{{ workout.descrizione }}</div>
-        <div class="workout-detail">
+      <div class="list-info">
+        <div class="list-title">{{ workout.descrizione }}</div>
+        <div class="list-detail">
           <span class="label">Durata</span>
           <span class="value">{{ workout.durata }} settimane</span>
         </div>
-        <div class="workout-detail">
+        <div class="list-detail">
           <span class="label">Data inizio</span>
           <span class="value">{{ workout.data_inizio }}</span>
         </div>
-        <div class="workout-detail">
+        <div class="list-detail">
           <span class="label">Data fine</span>
           <span class="value">{{ workout.data_scadenza }}</span>
         </div>
       </div>
 
-      <div class="workout-action">
+      <div class="list-action">
         <div class="action">
           <ion-icon name="add-outline"></ion-icon>
         </div>
