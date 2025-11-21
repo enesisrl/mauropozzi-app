@@ -78,6 +78,16 @@ export class CalendarPage implements OnInit {
 
   nextMonth(): void {
     if (this.isNavigating) return;
+    
+    // Controlla se il prossimo mese sarebbe nel futuro
+    const nextMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+    const currentMonth = new Date();
+    currentMonth.setDate(1); // Primo giorno del mese corrente
+    
+    if (nextMonth > currentMonth) {
+      return; // Blocca la navigazione nel futuro
+    }
+    
     this.isNavigating = true;
     
     this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
@@ -134,6 +144,14 @@ export class CalendarPage implements OnInit {
 
   get currentMonthYear(): string {
     return `${this.monthNames[this.currentDate.getMonth()]} ${this.currentDate.getFullYear()}`;
+  }
+
+  get isNextMonthDisabled(): boolean {
+    const nextMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+    const currentMonth = new Date();
+    currentMonth.setDate(1); // Primo giorno del mese corrente
+    
+    return nextMonth > currentMonth;
   }
 
   private generateCalendar(): void {

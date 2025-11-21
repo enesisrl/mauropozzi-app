@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-button slot="start" fill="clear" (click)="previousMonth()">
+    <ion-button slot="start" fill="clear" (click)="previousMonth()" >
       <ion-icon name="chevron-back-outline"></ion-icon>
     </ion-button>
     
     <div class="title">{{ currentMonthYear }}</div>
     
-    <ion-button slot="end" fill="clear" (click)="nextMonth()">
+    <ion-button slot="end" fill="clear" (click)="nextMonth()" [disabled]="isNextMonthDisabled" [class.disabled-opacity]="isNextMonthDisabled">
       <ion-icon name="chevron-forward-outline"></ion-icon>
     </ion-button>
   </ion-toolbar>
