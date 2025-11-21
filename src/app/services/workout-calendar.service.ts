@@ -176,7 +176,7 @@ export class WorkoutCalendarService {
     this.loadedMonthsCache.add(`${nextYear}-${nextMonth}`);
   }
 
-  private clearCache(): void {
+  public clearCache(): void {
     this.serverCallsCache.clear();
     this.loadedMonthsCache.clear();
     this.data.clear();

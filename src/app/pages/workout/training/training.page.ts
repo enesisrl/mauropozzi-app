@@ -179,6 +179,8 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   }
 
   goBack() {
+    this.workoutService.clearCache();
+    this.workoutCalendarService.clearCache();
     this.auth.loadProfile().subscribe();
     this.router.navigate(['/workout-details', this.workoutId]);
   }
