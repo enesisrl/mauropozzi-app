@@ -1,9 +1,11 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Auth } from '../../../services/auth';
+import { CanComponentDeactivate } from '../../../guards/can-deactivate.guard';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 import { ModalController, AlertController } from '@ionic/angular/standalone';
 import { WorkoutCalendarService } from '../../../services/workout-calendar.service';
 import { WorkoutExerciseExplanationPage } from '../exercise-explanation/exercise-explanation.page';
@@ -30,7 +32,7 @@ import {
   ]
 })
 
-export class WorkoutTrainingPage implements OnInit, OnDestroy {
+export class WorkoutTrainingPage implements OnInit, OnDestroy, CanComponentDeactivate {
   
   workoutId: string = '';
   exerciseId: string = '';
@@ -49,6 +51,10 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   // Log progresso
   private progressStartTime: Date | null = null;
   
+  // Protezione back browser
+  private hasUnsavedChanges: boolean = true;
+  private isExitConfirmed: boolean = false;
+  
   // Timer properties
   timerSeconds: number = 0;
   timerInterval?: number;
@@ -62,12 +68,14 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
   constructor(
     private alertController: AlertController,
     private auth: Auth,
+    private location: Location,
     private modalController: ModalController,
     private route: ActivatedRoute,
     private router: Router,
     private workoutCalendarService: WorkoutCalendarService,
     private workoutService: WorkoutService,
   ) {}
+
 
   ngOnInit() {
     // Recupera i parametri dalla route
@@ -86,6 +94,25 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.stopTimer();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification(event: BeforeUnloadEvent): string | void {
+    if (this.hasUnsavedChanges && !this.isExitConfirmed) {
+      event.preventDefault();
+      event.returnValue = 'Hai un allenamento in corso. Sei sicuro di voler uscire?';
+      return 'Hai un allenamento in corso. Sei sicuro di voler uscire?';
+    }
+    return;
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if (!this.hasUnsavedChanges || this.isExitConfirmed) {
+      return true;
+    }
+    
+    // Usa il metodo workoutStop esistente
+    return this.workoutStop();
   }
   
   
@@ -112,6 +139,9 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
       this.supersetExercises = [];
       this.isSuperset = false;
       this.currentSupersetIndex = 0;
+      
+      // Allenamento completato - disattiva protezione
+      this.hasUnsavedChanges = false;
     }
 
     return this.workoutTimer();
@@ -157,25 +187,29 @@ export class WorkoutTrainingPage implements OnInit, OnDestroy {
     );
   }
 
-  async workoutStop() {
-    const alert = await this.alertController.create({
-      header: "Esci dall'allenamento",
-      message: 'Sei sicuro di voler interrompere l\'allenamento?',
-      buttons: [
-        {
-          text: 'Annulla',
-          role: 'cancel'
-        },
-        {
-          text: 'Conferma',
-          handler: () => {
-            this.goBack();
+  async workoutStop(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      this.alertController.create({
+        header: "Esci dall'allenamento",
+        message: 'Sei sicuro di voler interrompere l\'allenamento?',
+        buttons: [
+          {
+            text: 'Annulla',
+            role: 'cancel',
+            handler: () => resolve(false)
+          },
+          {
+            text: 'Conferma',
+            handler: () => {
+              this.isExitConfirmed = true;
+              this.hasUnsavedChanges = false;
+              this.goBack();
+              resolve(true);
+            }
           }
-        }
-      ]
+        ]
+      }).then(alert => alert.present());
     });
-
-    await alert.present();
   }
 
   goBack() {

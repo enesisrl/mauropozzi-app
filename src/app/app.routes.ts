@@ -1,4 +1,5 @@
 import { authGuard } from './guards/auth-guard';
+import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { subscriptionGuard } from './guards/subscription-guard';
 import { Routes } from '@angular/router';
 
@@ -61,6 +62,7 @@ export const routes: Routes = [
   {
     path: 'workout-details/:workoutId/:exerciseId/training',
     loadComponent: () => import('./pages/workout/training/training.page').then( m => m.WorkoutTrainingPage),
-    canActivate: [authGuard, subscriptionGuard]
+    canActivate: [authGuard, subscriptionGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
 ];
